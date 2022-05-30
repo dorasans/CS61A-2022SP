@@ -9,4 +9,12 @@
     <option name="format" value="GOOGLE" />
     <option name="myDocStringFormat" value="Google" />
   </component>
+  <component name="TemplatesService">
+    <option name="TEMPLATE_CONFIGURATION" value="Jinja2" />
+    <option name="TEMPLATE_FOLDERS">
+      <list>
+        <option value="$MODULE_DIR$/lab/lab00/parsons/templates" />
+      </list>
+    </option>
+  </component>
 </module>
