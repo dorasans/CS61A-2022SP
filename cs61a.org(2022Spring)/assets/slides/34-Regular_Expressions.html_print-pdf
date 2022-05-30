@@ -1,0 +1,980 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Regular Expressions</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:valid {
+                background-color: #b9e1b9;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Regular expressions</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="34-Regular_Expressions.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Declarative languages
+                        <li>Regular expression syntax
+                        <li>Regular expressions in Python
+                    </ul>
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>Declarative languages</h2>
+                </section>
+
+                <section>
+                    <h3>Declarative programming</h3>
+
+                    <p>In <strong>imperative</strong> languages:</p>
+                    <ul>
+                        <li>A "program" is a description of computational processes
+                        <li>The interpreter carries out execution/evaluation rules
+                    </ul>
+
+                    <p>In <strong>declarative</strong> languages:</p>
+                    <ul>
+                        <li>A "program" is a description of the desired result
+                        <li>The interpreter figures out how to generate the result 
+                        <li>Examples:
+                            <ul style="font-size:0.8em;">
+                                <li>Regular expressions: <code>Good (?:morning|evening)</code>
+                                <li>Backus-Naur Form:<br>
+                                <code>?calc_expr: NUMBER | calc_op</code><br>
+                                <code>calc_op: "(" OPERATOR calc_expr* ")"</code><br>
+                                <code>OPERATOR: "+" | "-" | "*" | "/"</code>
+                            </ul>
+                    </ul>
+                    
+                    
+                </section>
+
+                <section>
+                    <h3>Domain-specific languages</h3>
+
+                    <p>Many declarative languages are <strong>domain-specific</strong>:
+                        they are designed to tackle problems in a particular domain,
+                        instead of being general purpose multi-domain programming languages.</p>
+
+                    <table style="font-size:0.8em;">
+                        <thead>
+                            <tr>
+                                <th>Language
+                                <th>Domain
+                        <tbody>
+                            <tr>
+                                <td>Regular expressions
+                                <td>Pattern-matching strings
+                            <tr>
+                                <td>Backus-Naur Form
+                                <td>Parsing strings into parse trees
+                            <tr>
+                                <td>SQL
+                                <td>Querying and modifying database tables
+                            <tr>
+                                <td>HTML
+                                <td>Describing the semantic structure of webpage content
+                            <tr>
+                                <td>CSS
+                                <td>Styling webpages based on selectors
+                            <tr>
+                                <td>Prolog
+                                <td>Describes and queries logical relations
+                    </table>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Regular expressions</h2>
+                </section>
+
+                <section>
+                    <h3>Pattern matching</h3>
+
+                    <p>Pattern matching in strings is a common problem in computer programming.</p>
+
+                    <p>An imperative approach:</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    def is_email_address(str):
+                        parts = str.split('@')
+                        if len(parts) != 2:
+                            return False
+                        domain_parts = parts[1].split('.')
+                        return len(domain_parts) >= 2 and len(domain_parts[-1]) == 3
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p class="padded">An equivalent regular expression:</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="text">
+                    (.+)@(.+)\.(.{3})
+                    </code></pre>
+
+                    <p class="smaller">With regular expressions, a programmer can just describe the pattern
+                        using a common syntax, and a regular expression engine figures out how
+                        to do the pattern matching for them.</p> 
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Matching exact strings</h3>
+
+                    <p>The following are special characters in regular expressions:
+                        <code>\</code> <code>(</code> <code>)</code> <code>[</code> <code>]</code> <code>{</code> <code>}</code> <code>+</code> <code>*</code> <code>?</code> <code>|</code> <code>$</code> <code>^</code> <code>.</code>
+                    <p>
+
+                    <p>To match an exact string that has no special characters, just use the string:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="text">
+                    Berkeley, CA 94720
+                    </code></pre>
+                    <div class="regex-input"><label>Fully matched by: <input type="text" pattern="Berkeley, CA 94720" value="Berkeley, CA 94720"></label></div>
+
+                    <p>But if the matched string contains special characters, they must be escaped using a backslash.</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="text">
+                    \(1\+3\)
+                    </code></pre>
+                    <div class="regex-input"><label>Fully matched by: <input type="text" pattern="\(1\+3\)" value="(1+3)"></label></div>
+
+                </section>
+
+                <section>
+                    <h3>The dot</h3>
+
+                    <p>The <code>.</code> character matches any single character
+                        that is not a new line.</p>
+                    
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="text">
+                    .a.a.a
+                    </code></pre>
+                    <div class="regex-input"><label>Fully matched by: <input type="text" pattern=".a.a.a" value="banana"></label></div>
+
+                    <p class="padded smaller">It's typically better to match a more specific range of characters, however...</p>
+                </section>
+
+
+                <section>
+                    <h3>Character classes</h3>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                            <th>Pattern</th>
+                            <th>Description</th>
+                            <th>Example</th>
+                            <th>Fully Matched By</th>
+                            </tr>
+                        <tbody>
+                        <tr>
+                          <td><code>[]</code></td>
+                          <td style="font-size:0.5em; vertical-align:top;">Denotes a <em>character class</em>. Matches characters in a set (including ranges of characters like <code>0-9</code>). Use <code>[^]</code> to match characters outside a set.</td>
+                          <td><div style="padding-bottom:20px"><code>[top]</code></div>
+                            <code>[h-p]</code>
+                          <td><div class="regex-input" style="margin-bottom:8px;"><input type="text" pattern="[top]" value="t"></label></div>
+                            <div class="regex-input"><input type="text" pattern="[h-p]" value="j"></label></div>
+                        </tr>
+                        <tr>
+                          <td><code>.</code></td>
+                          <td style="font-size:0.5em; vertical-align:top;">Matches <em>any character</em> other than the newline character.</td>
+                          <td><code>1.</code></td>
+                          <td><div class="regex-input"><input type="text" pattern="1." value="1?"></label></div>
+                        </tr>
+                        <tr>
+                          <td><code>\d</code></td>
+                          <td style="font-size:0.5em; vertical-align:top;">Matches any <em>digit character</em>. Equivalent to <code>[0-9]</code>. <code>\D</code> matches the inverse (all non-digit characters).</td>
+                          <td><code>\d\d</code></td>
+                          <td><div class="regex-input"><input type="text" pattern="\d\d" value="12"></label></div>
+                        </tr>
+                        <tr>
+                          <td><code>\w</code></td>
+                          <td style="font-size:0.5em; vertical-align:top;">Matches any <em>word character</em>. Equivalent to <code>[A-Za-z0-9_]</code>. <code>\W</code> matches the inverse.</td>
+                          <td><code>\d\w</code></td>
+                          <td><div class="regex-input"><input type="text" pattern="\d\w" value="4Z"></label></div>
+                        </tr>
+                        <tr>
+                          <td><code>\s</code></td>
+                          <td style="font-size:0.5em; vertical-align:top;">Matches any <em>whitespace character</em>: spaces, tabs, or line breaks. <code>\S</code> matches the inverse.</td>
+                          <td><code>\d\s\w</code></td>
+                          <td><div class="regex-input"><input type="text" pattern="\d\s\w" value="9 a"></label></div>
+                        </tr>
+                      </tbody></table>
+
+                </section>
+
+
+                <section>
+                    <h3>Quantifiers</h3>
+
+                    <p class="smaller">These indicate how many of a character/character class to match.</p>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Pattern</th>
+                                <th>Description</th>
+                                <th>Example</th>
+                                <th>Fully Matched By</th>
+                        <tbody>
+                        <tr>
+                          <td><code>*</code></td>
+                          <td style="font-size:0.6em; vertical-align:top;">Matches <em>0 or more</em> of the previous pattern.</td>
+                          <td><code>a*</code></td>
+                          <td><div class="regex-input"><input type="text" pattern="a*" value="aaa"></label></div>
+                        </tr>
+                        <tr>
+                          <td><code>+</code></td>
+                          <td style="font-size:0.6em; vertical-align:top;">Matches <em>1 or more</em> of the previous pattern.</td>
+                          <td><code>lo+l</code></td>
+                          <td><div class="regex-input"><input type="text" pattern="lo+l" value="lool"></label></div>
+                        </tr>
+                        <tr>
+                          <td><code>?</code></td>
+                          <td style="font-size:0.6em; vertical-align:top;">Matches <em>0 or 1</em> of the previous pattern.</td>
+                          <td><code>lo?l</code></td>
+                          <td><div class="regex-input"><input type="text" pattern="lo?l" value="lol"></label></div>
+                        </tr>
+                        <tr>
+                          <td><code>{}</code></td>
+                          <td style="font-size:0.6em; vertical-align:top;">Used like <code>{Min, Max}</code>. Matches a <em>quantity</em> between Min and Max of the previous pattern.</td>
+                          <td>
+                            <div style="margin-bottom:20px"><code>a{2}</code></div>
+                            <div style="margin-bottom:20px"><code>a{2,}</code></div>
+                            <div style="margin-bottom:0px"><code>a{2,4}</code></div>
+                          <td><div class="regex-input" style="margin-bottom:8px"><input type="text" pattern="a{2}" value="aa"></label></div>
+                            <div class="regex-input" style="margin-bottom:8px"><input type="text" pattern="a{2,}" value="aaaaaa"></label></div>
+                            <div class="regex-input"><input type="text" pattern="a{2,4}" value="aaa"></label></div>
+                        </tr>
+                      </tbody></table>
+                </section>
+
+                <section>
+                    <h3>Combining patterns</h3>
+
+                    <p>Patterns <code>P₁</code> and <code>P₂</code> can be combined in various ways.</p>
+
+                    <table class="table table-bordered">
+                        <thead><tr>
+                          <th>Combination</th>
+                          <th>Description</th>
+                          <th>Example</th>
+                          <th>Fully Matched By
+                        </tr>
+                        <tbody>
+                        <tr>
+                          <td><code>P₁P₂</code></td>
+                          <td style="font-size:0.6em; vertical-align:top;">A match for P₁ followed immediately by one for P₂.
+                          <td><code>ab[.,]</code></td>
+                          <td><div class="regex-input"><input type="text" pattern="ab[.,]" value="ab,"></label></div>
+                        </tr>
+                        <tr>
+                          <td><code>P₁|P₂</code></td>
+                          <td style="font-size:0.6em; vertical-align:top;">Matches anything that either P₁ or P₂ does.
+                          <td><code>\d+|Inf</code></td>
+                          <td><div class="regex-input"><input type="text" pattern="\d+|Inf" value="Inf"></label></div>
+                        </tr>
+                        <tr>
+                          <td><code>(P₁)</code></td>
+                          <td style="font-size:0.6em; vertical-align:top;">Matches whatever P₁ does. Parentheses group, just as in
+                            arithmetic expressions.
+                          <td><code>(&lt;3)+</code></td>
+                          <td><div class="regex-input"><input type="text" pattern="(&lt;3)+" value="&lt;3&lt;3&lt;3"></label></div>
+                        </tr>
+                    </tbody></table>
+
+                </section>
+
+
+                <section>
+                    <h3>Anchors</h3>
+
+                    <p>These don't match an actual character, they indicate the position 
+                        where the surrounding pattern should be found.</p>
+
+                    <table class="table table-bordered">
+                        <thead><tr>
+                          <th>Pattern</th>
+                          <th>Description</th>
+                          <th>Example</th>
+                          <th style="width:350px;">What parts match?
+                        </tr>
+                        <tbody>
+                        <tr>
+                          <td><code>^</code></td>
+                          <td style="font-size:0.6em; vertical-align:top;">Matches the <em>beginning</em> of a string.</td>
+                          <td><code>^aw+</code></td>
+                          <td><span style="background-color:#b9e1b9;">aww</span> aww
+                        </tr>
+                        <tr>
+                          <td><code>$</code></td>
+                          <td style="font-size:0.6em; vertical-align:top;">Matches the <em>end</em> of a string.</td>
+                          <td><code>\w+y$</code></td>
+                          <td>stay <span style="background-color:#b9e1b9;">stay</span>
+                        </tr>
+                        <tr>
+                          <td><code>\b</code></td>
+                          <td style="font-size:0.6em; vertical-align:top;">Matches a <em>word boundary</em>, the beginning or end of a word.</td>
+                          <td><code>\w+e\b</code></td>
+                          <td>broken <span style="background-color:#b9e1b9;">bridge</span> team
+                        </tr>
+                    </tbody></table>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Regular expressions in Python</h2>
+                </section>
+
+                <section>
+                    <h3>Support for regular expressions</h3>
+
+                    <p>Regular expressions are supported natively in many languages and tools.</p>
+
+                    <p>Languages: Perl, ECMAScript, Java, Python, ..</p>
+
+                    <p>Tools: Excel/Google Spreadsheets, SQL, BigQuery, VSCode, grep, ...</p>
+                </section>
+
+                <section>
+                    <h3>Raw strings</h3>
+
+                    <p>In normal Python strings, a backslash indicates an escape sequence, like <code>\n</code> for new line 
+                        or <code>\b</code> for bell.</p>
+                    
+                    <pre style="font-size:1.0em" class="no-code-badge"><code data-trim data-noescape class="python">
+                    >>> print("I have\na newline in me.")
+                    I have
+                    a newline in me 
+                    </code></pre>
+
+                    <p>But backslash has a special meaning in regular expressions. To make it easy to write regular expressions
+                        in Python strings, use raw strings by prefixing the string with an <code>r</code>:</p>
+
+                    <pre style="font-size:1.0em" class="no-code-badge"><code data-trim data-noescape class="python">
+                    pattern = r"\b[ab]+\b"
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>The re module</h3>
+
+                    <p>The <a target="_blank" href="https://docs.python.org/3/library/re.html">re module</a> provides many helpful functions.</p>
+
+                    <table style="font-size:0.7em;">
+                        <thead>
+                            <tr>
+                                <th style="width:400px;">Function
+                                <th>Description
+                        <tbody>
+                            <tr>
+                                <td><code>re.search(pattern, string)</code>
+                                <td>returns a <code>Match</code> object representing the first occurrence of pattern within string
+                            <tr>
+                                <td><code>re.fullmatch(pattern, string)</code>
+                                <td>returns a <code>Match</code> object, requiring that pattern matches the <em>entirety</em> of string
+                            <tr>
+                                <td><code>re.match(pattern, string)</code>
+                                <td>returns a <code>Match</code> object, requiring that string starts with a substring that matches pattern
+                            <tr>
+                                <td><code>re.findall(pattern, string)</code>
+                                <td>returns a list of strings representing all matches of pattern within string, from left to right
+                            <tr>
+                                <td><code>re.sub(pattern, repl, string)</code>
+                                <td>substitutes all matches of pattern within string with repl
+                    </table>
+                </section>
+
+                <section>
+                    <h3>Match objects</h3>
+
+                    <p class="smaller">The functions <code>re.search</code>, <code>re.match</code>, and <code>re.fullmatch</code>
+                        all take a string containing a regular expression and a string of text.
+                        They return either a <a target="_blank" href="https://docs.python.org/3/library/re.html#match-objects">
+                        <code>Match</code></a> object or, if there is no match, <code>None</code>.</p>
+
+                    <p class="smaller"><code>re.search</code> requires that the pattern exists somewhere in the string:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    import re
+
+                    re.search(r'-?\d+', '123 peeps')           # &lt;re.Match object&gt;
+                    re.search(r'-?\d+', 'So many peeps')       # None
+                    </code></pre>
+                    <div class="fragment">
+                    <p class="smaller">Match objects are treated as true values, so you
+                    can use the result as a boolean:</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    bool(re.search(r'-?\d+', '123'))           # True
+                    bool(re.search(r'-?\d+', 'So many peeps')) # False
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Inspecting a match</h3>
+
+                    <p><code>re.search</code> returns a <code>Match</code> object representing the first occurrence of pattern within string.</p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    title = "I Know Why the Caged Bird Sings"
+                    re.search(r'Bird', title)   # <re.Match object; span=(21, 25), match='Bird'>
+                    </code></pre>
+                    <br>
+                    <p>Match objects carry information about what has been matched.
+                        The <code>Match.group()</code> method allows you to retrieve it.
+                    </p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    x = "This string contains 35 characters."
+                    mat = re.search(r'\d+', x)
+                    mat.group(0)  # 35
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Match groups</h3>
+
+                    <p>If there are parentheses in a patterns, each of the parenthesized groups
+                        will become groups in the match object.</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    x = "There were 12 pence in a shilling and 20 shillings in a pound."
+                    mat = re.search(r'(\d+)[a-z\s]+(\d+)', x)
+                    </code></pre>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    mat.group(0)  <span class="fragment"># '12 pence in a shilling and 20'</span>
+                    mat.group(1)  <span class="fragment"># 12</span>
+                    mat.group(2)  <span class="fragment"># 20</span>
+                    mat.groups()  <span class="fragment"># (12, 20)</span>
+                    </code></pre>
+
+                    <p>It's also common to use parentheses in combination with quantifiers
+                        and other modifiers, however.</p>
+
+                </section>
+
+                <section data-visibility="hidden">
+                    <h3>Finding multiple matches</h3>
+
+                    <p><code>re.findall()</code> returns a list of strings representing all matches of pattern within string, from left to right.</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    locations = "CA 91105, NY 13078, CA 94702"
+                    re.findall(r'\d\d\d\d\d', locations)
+                    # ['91105', '13078', '94702']
+                    </code></pre>
+                </section>
+
+                <section class="heading-only" data-visibility="hidden">>
+                    <h2>Resolving ambiguity</h2>
+                </section>
+
+                <section data-visibility="hidden">>
+                    <h3>Ambiguous matches</h3>
+
+                    <p>Regular expressions can match a given string in more than one way.
+                    Especially when there are parenthesized groups, this can lead to ambiguity:</p>
+                    
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    mat = re.match(r'wind|window', 'window')
+                    mat.group()  <span class="fragment"># 'wind'</span>
+                    
+                    mat = re.match(r'window|wind', 'window')
+                    mat.group() <span class="fragment"># 'window'</span>
+                    
+                    mat = re.match(r'(wind|window)(.*)shade', 'window shade')
+                    mat.groups() <span class="fragment"># ('wind', 'ow ')</span>
+                    
+                    mat = re.match(r'(window|wind)(.*)shade', 'window shade')
+                    mat.groups() <span class="fragment"># ('window', ' ')</span>
+                    </code></pre>
+
+                    <p>Python resolves these particular ambiguities in favor of the first option.</p>
+                </section>
+
+                <section data-visibility="hidden">>
+                    <h3>Ambiguous quantifiers</h3>
+
+                    <p>Likewise, there is ambiguity with <code>*</code>, <code>+</code>, and <code>?</code>.</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    mat = re.match(r'(x*)(.*)', 'xxx')
+                    mat.groups()  <span class="fragment"># ('xxx', '')</span>
+
+                    mat = re.match(r'(x+)(.*)', 'xxx')
+                    mat.groups()  <span class="fragment"># ('xxx', '')</span>
+                    
+                    mat = re.match(r'(x?)(.*)', 'xxx')
+                    mat.groups()  <span class="fragment"># ('x', 'xx')</span>
+                    
+                    mat = re.match(r'(.*)/(.+)', '12/10/2020')
+                    mat.groups()  <span class="fragment"># ('12/10', '2020')</span>
+                    </code></pre>
+
+                    <p>Python chooses to match <strong>greedily</strong>, matching the pattern
+                        left-to-right and, when given a choice, matching as much as possible
+                        while still allowing the rest of the pattern to match.</p>
+                </section>
+
+                <section data-visibility="hidden">>
+                    <h3>Lazy operators</h3>
+
+                    <p>Sometimes, you don’t want to match as much as possible.</p>
+
+                    <p>The lazy operators <code>*?</code>, <code>+?</code>, and <code>??</code>
+                        match only as much as necessary for the whole pattern to match.</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    mat = re.match(r'(.*)(\d*)', 'I have 5 dollars')
+                    mat.groups() # ('I have 5 dollars', '')
+                    
+                    mat = re.match(r'(.*?)(\d+)', 'I have 5 dollars')
+                    mat.groups() # ('I have ', '5')
+                    
+                    mat = re.match(r'(.*?)(\d*)', 'I have 5 dollars')
+                    mat.groups() # ('', '')
+                    </code></pre>
+
+                    <p>The ambiguities introduced by <code>*</code>, <code>+</code>, <code>?</code>, and | don’t matter if
+                        all you care about is whether there is a match!</p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Exercises</h2>
+                </section>
+
+                <section>
+
+                    <h3>Name That Pattern! #1</h3>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="regex">
+                    [A-Za-z]{3}
+                    </code></pre>
+
+                    <div class="regex-input">
+                    <label><span contenteditable>Fully matched by:</span>
+                    <input name="tbd" type="text" pattern="[A-Za-z]{3}" value="?">
+                    </label>
+                    </div>
+
+                    <br>
+                    <ul>
+                    <li>What's a valid input? <span class="fragment" data-fragment-index="1">AUS, aus</span>
+                    <li>What's an invalid input? <span class="fragment" data-fragment-index="1">australia, au</span>
+                    </ul>
+
+                </section>
+
+                <section>
+
+                    <h3>Name That Pattern! #2</h3>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="regex">
+                    \d{4}-\d{2}-\d{2}
+                    </code></pre>
+
+                    <div class="regex-input">
+                    <label><span contenteditable>Fully matched by:</span>
+                    <input name="tbd" type="text" pattern="\d{4}-\d{2}-\d{2}" value="?">
+                    </label>
+                    </div>
+
+                    <br>
+                    <ul>
+                    <li>What's a valid input? <span class="fragment" data-fragment-index="1">2020-03-13</span>
+                    <li>What's an invalid input? <span class="fragment" data-fragment-index="1">2020/03/13, 03-13-2020</span>
+                    </p>
+
+                </section>
+
+                <section>
+
+                    <h3>Name That Pattern! #3</h3>
+
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="regex">
+                    [a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$
+                    </code></pre>
+
+                    <div class="regex-input">
+                    <label><span contenteditable>Fully matched by:</span>
+                    <input name="tbd" type="text" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" value="?" style="width:610px">
+                    </label>
+                    </div>
+
+                    <br>
+                    <ul>
+                    <li>What's a valid input? <span class="fragment" data-fragment-index="1">someone@someplace.org</span>
+                    <li>What's an invalid input? <span class="fragment" data-fragment-index="1">someone@mod%cloth.co</span>
+                    </ul>
+
+                </section>
+
+                <section data-visibility="hidden">
+
+                    <h3>RegEx Makeover! #1</h3>
+
+                    <p>Let's make a regular expression to match 24-hour times
+                        of the format <code>HH:MM</code>.
+                    </p>
+
+                    <p>First draft: <code>[0-2]\d:\d\d</code></p>
+
+                    <ul>
+                        <li>What invalid times would that match? <span class="fragment" data-fragment-index="1">24:99</span>
+                        <li>How do we fix minutes? <span class="fragment" data-fragment-index="1"><code>[0-2]\d:[0-5]\d</code></span>
+                        <li>How do we fix hours?
+                            <span class="fragment" data-fragment-index="1"><code>((2[0-3])|([0-1]\d)):[0-5]\d</code></span>
+                    </ul>
+
+                    <p>Try in <a href="http://regexr.com">regexr.com</a>!</p>
+
+                </section>
+
+                <section>
+
+                    <h3>Exercise: Stocks</h3>
+
+                    <p>Make a regular expression to
+                        match any tweet talking about GME stock.
+                    </p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    import re
+
+                    def match_gme(tweet):
+                        """
+                        >>> match_gme('GME')
+                        True
+                        >>> match_gme('yooo buy GME right now!')
+                        True
+                        >>> match_gme('#HUGME')
+                        False
+                        >>> match_gme('#HUGMEHARDER')
+                        False
+                        """
+                        return bool(re.search(______, tweet))
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Tips</h3>
+
+                    <ul>
+                        <li>When learning, use sites like <a href="http://regexr.com">regexr.com</a>
+                        <li>Get used to referencing a regular expressions cheat sheet
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>⚠️ A word of caution ⚠️</h3>
+
+                    <p>Regular expressions can be very useful. However:</p>
+
+                    <ul>
+                        <li><a target="_blank" href="https://blog.codinghorror.com/regex-use-vs-regex-abuse/">
+                            Very long regular expressions</a> can be difficult
+                            for other programmers to read and modify. 🤯
+                            <br>See also: <a target="_blank" href="https://en.wikipedia.org/wiki/Write-only_language">Write-only</a>
+                        <li>Since regular expressions are declarative, it's not always clear
+                            how efficiently they'll be processed. 🐌 Some processing can be so time-consuming,
+                            it can <a target="_blank" href="https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS">take down a server.</a>
+                        <li>Regular expressions can't parse everything!
+                            <a target="_blank" href="https://stackoverflow.com/questions/1732348/regex-match-open-tags-except-xhtml-self-contained-tags">Don't write an HTML parser with regular expressions.</a>
+                    </ul>
+                </section>
+
+
+			</div>
+		</div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-menu@2.1.0/menu.js"></script>
+        <!-- The loading of KaTeX is deferred to speed up page rendering -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.js" integrity="sha384-31El76TwmbHj4rF9DyLsygbq6xoIobG0W+jqXim+a3dU9W53tdH3A/ngRPxOzzaB" crossorigin="anonymous"></script>
+        <!-- To automatically render math in text elements, include the auto-render extension: -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"
+            onload="renderMathInElement(document.body, {fleqn: true});"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight, RevealMenu ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge();
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+        </script>
+    </body>
+</html>

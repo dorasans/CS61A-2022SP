@@ -1,0 +1,615 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Scheme Programs as Data</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Scheme Programs as Data</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="32-Scheme_Programs_as_Data.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Eval
+                        <li>Quasiquotation
+                        <li>Generating code
+                        <li>Apply
+                    </ul>
+                </section>
+
+
+
+                <section>
+                    <h3>A Scheme Expression is a Scheme List</h3>
+
+                    <p>Scheme programs consist of expressions, which can be:</p>
+                    <ul>
+                        <li>Primitive expressions: <code>2</code> <code>3.3</code> <code>#t</code> <code>+</code> <code>quotient</code></li>
+                        <li>Combinations: <code>(quotient 10 2)</code> <code>(not #t)</code>
+                    </ul>
+
+                    <p>The built-in Scheme list data structure can represent combinations:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (list 'quotient 10 2)        <span class="fragment">; (quotient 10 2)</span>
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>The eval procedure</h3>
+
+                    <p>The <code>eval</code> procedure evaluates a given expression
+                        in the current environment.</p>
+                    
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (eval &lt;expression&gt;)
+                    </code></pre>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (eval (list 'quotient 10 2))  <span class="fragment">; 5</span>
+                    </code></pre>
+
+                    <div class="padded fragment">
+                    <p>Quote supresses evaluation, while eval forces evaluation. They can cancel each other out!</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (define x 3)
+                    'x           <span class="fragment">; x</span>
+                    (eval 'x)    <span class="fragment">; 3</span>
+                    </code></pre>
+                    </div>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Generating call expressions</h2>
+                </section>
+
+                <section>
+                    <h3>Generating factorial expressions</h3>
+
+                    <p>Compare standard factorial:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (fact n)
+                        (if (= n 0)
+                            1
+                            (* n (fact (- n 1)))))
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (fact 5)  ; 120
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p class="padded">...to a version that generates an expression:
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (fact-exp n)
+                        (if (= n 0)
+                            1
+                            (list '* n (fact-exp (- n 1)))))
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (fact-exp 5)        <span class="fragment">; (* 5 (* 4 (* 3 (* 2 (* 1 1)))))</span>
+                    (eval (fact-exp 5)) <span class="fragment">; 5</span>
+                    </code></pre>
+                    </div>
+
+                </section>
+
+                <section>
+                    <h3>Generating virfib expressions</h3>
+
+                    <p>Compare standard Virahanka-Fibonacci:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (virfib n)
+                        (if (&lt;= n 1)
+                            n
+                            (+ (virfib (- n 2)) (virfib (- n 1)))))
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (virfib 6)  ; 8
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p class="padded">...to a version that generates an expression:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (virfib-exp n)
+                        (if (&lt;= n 1)
+                            n
+                            (list '+ (virfib-exp (- n 2)) (virfib-exp (- n 1)))))
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (virfib-exp 6)        <span class="fragment">; (+ (+ (+ 0 1) (+ 1 (+ 0 1))) (+ (+ 1 (+ 0 1)) (+ (+ 0 1) (+ 1 (+ 0 1)))))</span>
+                    (eval (virfib-exp 6)) <span class="fragment">; 8</span>
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Generating programs</h2>
+                </section>
+
+                <section>
+                    <h3>Quasiquotation</h3>
+
+                    <p>There are two ways to quote an expression:</p>
+
+                    <table style="margin-left:0px;">
+                        <tr>
+                            <td>Quote
+                            <td><code>'(a b)</code> → <code>(a b)</code>
+                        <tr>
+                            <td>Quasiquote
+                            <td><code>`(a b)</code> → <code>(a b)</code>
+                    </table>
+
+                    <p>They are different because parts of a quasiquoted expression can be <strong>unquoted</strong> with <code>,</code></p>
+
+                    <table style="margin-left:0px;">
+                        <tr>
+                            <td>
+                            <td><code>(define b 4)</code>
+                        <tr>
+                            <td>Quote
+                            <td><code>'(a ,(+ b 1))</code> → <code>(a (unquote (+ b 1))</code>
+                        <tr>
+                            <td>Quasiquote
+                            <td><code>`(a ,(+ b 1))</code> → <code>(a 5)</code>
+                    </table>
+                </section>
+
+                <section>
+                    <h3>Generating code with quasiquotation</h3>
+                    <p>Quasiquotation is particularly convenient for generating Scheme expressions:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (define (make-adder n) `(lambda (d) (+ d ,n)))
+
+                    (make-adder 2)        <span class="fragment">; (lambda (d) (+ d 2))</span>
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p class="padded">Remember, the generated expression is a Scheme list:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (define new-func (make-adder 2))
+
+                    new-func         ; (lambda (d) (+ d 2))
+                    (list? new-func) <span class="fragment">; #t</span>
+                    (car new-func)   <span class="fragment">; lambda</span>
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Example: While loops</h3>
+
+                    <p style="font-size:0.7em;">Calculate the sum of the squares of even numbers less than 10, starting with 2</p>
+
+                    <table style="margin-left:0;">
+                        <tr>
+                            <td style="width:450px;">
+                                <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                                x = 2
+                                total = 0
+                                while x < 10:
+                                    total = total + x * x
+                                    x = x + 2
+                                </code></pre>
+                            <td style="width:450px;">
+                                <pre style="font-size:0.6em" class="fragment"><code data-trim data-noescape class="scheme">
+                                (begin (define (loop x total)
+                                    (if (< x 10)
+                                        (loop (+ x 2) (+ total (* x x)))
+                                        total))
+                                  (loop 2 0))
+                                </code></pre>
+                    </table>
+
+                    <p style="font-size:0.7em;" class="fragment">Calculate the sum of numbers whose squares are less than 50, starting with 1</p>
+                    <table style="margin-left:0;">
+                        <tr>
+                            <td style="width:450px;">
+                                <pre style="font-size:0.6em" class="fragment"><code data-trim data-noescape class="python">
+                                x = <span style="background-color:yellow">1</span>
+                                total = 0
+                                while <span style="background-color:yellow">x *  x < 50</span>:
+                                    total = total + <span style="background-color:yellow">x</span>
+                                    x = x + <span style="background-color:yellow">1</span>
+                                </code></pre>
+                            <td style="width:450px;">
+                                <pre style="font-size:0.6em" class="fragment"><code data-trim data-noescape class="scheme">
+                                (begin (define (loop x total)
+                                    (if (< <span style="background-color:yellow">(* x x) 50</span>)
+                                        (loop (+ x <span style="background-color:yellow">1</span>) (+ total <span style="background-color:yellow">x</span>))
+                                        total))
+                                  (loop <span style="background-color:yellow">1</span> 0))
+                                </code></pre>
+                    </table>
+
+                </section>
+
+                <section>
+                    <h3>Generating while loops</h3>
+
+                    <p class="smaller">Could a procedure generate custom loop expressions for us?</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (sum-while initial-x condition add-to-total update-x)
+                        
+                    )
+                    </code></pre>
+
+                    <p class="smaller">The goal is for this call:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (sum-while 1 '(&lt; (* x x) 50) 'x '(+ x 1))
+                    </code></pre>
+                    <p class="smaller">...to generate this expression:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (begin (define (loop x total)
+                        (if (< (* x x) 50)
+                            (loop (+ x 1) (+ total x))
+                            total))
+                        (loop 1 0))
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Generating while loops (Solution)</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (sum-while initial-x condition add-to-total update-x)
+                        `(begin (define (loop x total)
+                            (if ,condition
+                                (loop ,update-x (+ total ,add-to-total ))
+                                total))
+                        (loop ,initial-x 0))
+                    )
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (sum-while 1 '(&lt; (* x x) 50) 'x '(+ x 1))
+                    ; (begin (define (loop x total) (if (< (* x x) 50) (loop (+ x 1) (+ total x)) total)) (loop 1 0))
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (eval (sum-while 1 '(&lt; (* x x) 50) 'x '(+ x 1))) ; 28
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (eval (sum-while 2 '(&lt; x 10) '(* x x) '(+ x 2))) ; 120
+                    </code></pre>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Apply</h2>
+                </section>
+
+                <section>
+                    <h3>The apply procedure</h3>
+
+                    <p>The <code>apply</code> procedure applies a given procedure to a list of arguments.</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (apply &lt;procedure&gt; &lt;arguments&gt;)
+                    </code></pre>
+
+                    <p class="padded">Examples:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (apply + '(1 2 3 ))
+                    </code></pre>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme"> 
+                    (define (sum s) (apply + s))
+
+                    (sum '(1 2 3))
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Combining eval and apply</h3>
+
+                    <p>A function that can apply any function expression to any list of arguments:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (define (call-func func-expression func-args)
+                        (apply (eval func-expression) func-args)
+                    )
+                    </code></pre>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (call-func '(lambda (a b) (+ a b)) '(3 4))  <span class="fragment">; 7</span>
+                    </code></pre>
+                </section>
+
+
+			</div>
+		</div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-menu@2.1.0/menu.js"></script>
+        <!-- The loading of KaTeX is deferred to speed up page rendering -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.js" integrity="sha384-31El76TwmbHj4rF9DyLsygbq6xoIobG0W+jqXim+a3dU9W53tdH3A/ngRPxOzzaB" crossorigin="anonymous"></script>
+        <!-- To automatically render math in text elements, include the auto-render extension: -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"
+            onload="renderMathInElement(document.body, {fleqn: true});"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight, RevealMenu ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge();
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+        </script>
+    </body>
+</html>

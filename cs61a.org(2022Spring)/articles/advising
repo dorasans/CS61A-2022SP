@@ -1,0 +1,291 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS" />
+    <meta name="author" content ="Pamela Fox" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../assets/js/hl.js"></script>
+    <script src="../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/mono-blue.css">
+    <link rel="icon" href="../assets/images/favicon.ico">
+
+    
+
+    <title>
+Advising OH | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="../assets/images/logo.png"/>
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="advising#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../weekly">Weekly Schedule</a></li>
+                <li><a href="../office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="advising#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../instructor">Instructors</a></li>
+                <li><a href="../TAs">TAs</a></li>
+                <li><a href="../tutors">Tutors</a></li>
+                <li><a href="../academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="advising#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../resources/index.html">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="campus-res/index.html">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="about">Syllabus</a></li>
+            <li><a href="../contact/index.html">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>Advising OH</h1>
+    </header>
+     <p>The idea of advising OH is to give you a place to seek advice for things ranging
+from success in 61A to involvement in various activities at UC Berkeley and
+beyond. Some examples of questions you're welcome to discuss include: how to do
+well in 61A, in CS, at UC Berkeley, in life; how to get involved in teaching,
+research, clubs, side projects; how to maximize your college experience; etc.</p>
+
+<p>These appointments are for <strong>advising questions only</strong>. If you book an
+appointment for a content-related question (questions about particular
+assignments, conceptual questions, or help debugging, for example), your
+appointment is likely to be dropped.</p>
+
+<p>You can book an appointment with any of the following TAs, based on availability
+and what you'd like to discuss (click on the "book appointment" link to visit
+each TA's appointment page).</p>
+
+<p>In your appointment, please specify what you would like to discuss, so that we
+can be prepared to help you in the best way possible :)</p>
+
+
+<h2 id="cooper-linguistics-cs">Cooper (Linguistics, CS)</h2>
+
+
+<p>(<a href="https://go.cs61a.org/adv-cooper">book appointment</a>)</p>
+
+<p>I would absolutely LOVE to talk with you about anything, but some things I can
+especially say a lot about are: classes (especially math/theory/machine
+learning), doubling CS with a non-STEM major, equity and access in the CS
+department, navigating the CS department as a queer/gender non-conforming person,
+getting involved with teaching (especially through CSM), and applying to
+grad/PhD programs.</p>
+
+
+<h3 id="classes-taken">Classes Taken</h3>
+
+
+<ul>
+  <li>EE/CS Lower Division: CS 61A (Garcia), CS 61B (Hilfinger), CS 61C
+  (Garcia/Nikolic), EECS 16A (Stojanovic/Liu), EECS 16B (Arcak/Sanders), CS 70
+  (Sinclair/Song)</li>
+  <li>EE/CS Upper Div: EECS 127 (Anantharam), CS 170 (Chiesa/Nelson), CS 189
+  (Shewchuk), CS 194-100 (Canny),</li>
+  <li>EE/CS Grad/Pedagogy: CS 288 (Klein), CS 302 (Fox/Ball), CS 370 (Hunn)</li>
+  <li>Other Relevant Classes: LING 100 (Johnson)</li>
+</ul>
+
+
+<h2 id="jordan-cs-cogsci">Jordan (CS, CogSci)</h2>
+
+
+<p>(<a href="https://go.cs61a.org/adv-jordan">book appointment</a>)</p>
+
+<p>I'd be happy to chat about anything! Including (but not limited to): studying
+for 61a, scheduling and organizing your schedule, cog sci, education and
+CalTeach, AWE &amp; womxn in stem, and restaurants (and cooking) in Berkeley! :))</p>
+
+
+<h3 id="classes-taken-2">Classes Taken</h3>
+
+
+<ul>
+  <li>EE/CS Lower Division: CS 10 (Student Instructors/Garcia), CS 24 (Ranade), CS
+  61A (DeNero/Farid), CS 61B (Hug), CS 61C (Weaver), EECS 16A (Ranade), EECS 16B
+  (Ranade/Stojanovic), CS 70 (Rao/Ayazifar)</li>
+  <li>EE/CS Grad/Pedagogy: CS 375 (Huang)</li>
+  <li>Data Science: DATA 8 (Wagner/Adhikari), DATA 100 (Hug/Yan)</li>
+  <li>Other Relevant Classes: COGSCI 1 (Isaac), EDSTEM 82 (Warburton), LING 100
+  (Johnson)</li>
+</ul>
+
+
+<h2 id="connie-eecs">Connie (EECS)</h2>
+
+
+<p>(<a href="https://go.cs61a.org/adv-connie">book appointment</a>)</p>
+
+<p>feel free to ask me anything at all, including all things 61a, choosing classes,
+studying methods, research, recruiting and internships, tech clubs on campus,
+womxn in STEM, teaching, general life advice and more!</p>
+
+
+<h3 id="classes-taken-3">Classes Taken</h3>
+
+
+<ul>
+  <li>EE/CS Lower Division: CS 61A (DeNero), CS 61B (Hilfinger), CS 61C
+  (Garcia/Nikolic), EECS 16A (Ranade/Boser), EECS 16B (Arcak/Sanders), CS 70
+  (Liu/Sarwari/Ghafari)</li>
+  <li>EE/CS Upper Div: CS 161 (Popa/Weaver), CS 162 (Kubiatowicz/Joseph), CS 170
+  (Vazirani/Tal), CS 184 (Ng/Kanazawa), CS W186 (Cheung/Jain), CS 188
+  (Dragan/Abbeel), CS 195 (Hug/Ball)</li>
+  <li>EE/CS Grad/Pedagogy: CS 288 (Klein), CS 294-164 (Ng), CS 375 (Fox)</li>
+  <li>Data Science: DATA 100 (Gonzalez/Bray)</li>
+</ul>
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="advising#cooper-linguistics-cs">Cooper (Linguistics, CS)</a></li>
+  <ul>
+    <li><a href="advising#classes-taken">Classes Taken</a></li>
+  </ul>
+  <li><a href="advising#jordan-cs-cogsci">Jordan (CS, CogSci)</a></li>
+  <ul>
+    <li><a href="advising#classes-taken-2">Classes Taken</a></li>
+  </ul>
+  <li><a href="advising#connie-eecs">Connie (EECS)</a></li>
+  <ul>
+    <li><a href="advising#classes-taken-3">Classes Taken</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="../index.html">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="../weekly">Weekly Schedule</a></li>
+            <li><a href="../office-hours">Office Hours</a></li>
+            <li><a href="../staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="studying">Studying Guide</a></li>
+            <li><a href="debugging">Debugging Guide</a></li>
+            <li><a href="composition">Composition Guide</a></li>
+            <li><a href="pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="about#assignments">Assignments</a></li>
+            <li><a href="about#exams">Exams</a></li>
+            <li><a href="about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../assets/js/network_storage.js"></script>
+    <script src="../assets/js/storable.js"></script>
+    <script src="../assets/js/editor.js"></script>
+    <script src="../assets/js/copy-button.js"></script>
+    <script src="../assets/js/env-diagram.js"></script>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+<script src="../assets/js/storable.js"></script>
+<script src="../assets/js/env-diagram.js"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,683 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>MT2 Review Part 1</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>MT2 Review Pt 1</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="22-MT2_Review_Part_1.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Linked lists
+                        <li>Lists
+                        <li>Objects
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Linked lists</h2>
+                </section>
+
+                <section>
+                    <h3>Exercise: Is it ordered?</h3>
+
+                    <p>Is a linked list ordered from least to greatest?</p>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="width: 100%;"><rect id="SvgjsRect1028" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1025" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1022" width="77.208" height="38.604" x="238.01999999999998" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1007" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1008" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1009" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1010" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1011" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1012" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1013" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1014" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1015" r="2.5" cx="203.718" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1016" points="238.01999999999998,33.302 228.01999999999998,38.302 228.01999999999998,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1017" x1="203.718" y1="33.302" x2="233.01999999999998" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1018" x1="276.62399999999997" y1="14" x2="276.62399999999997" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1019" x1="276.62399999999997" y1="52.604" x2="315.22799999999995" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1020" font-family="Monaco, monospace" fill="black" font-size="14" x="253.118875" y="20.5285625"><tspan id="SvgjsTspan1021" dy="18.2" x="253.118875">4</tspan></text><text id="SvgjsText1023" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1024" dy="18.2" x="160.910875">3</tspan></text><text id="SvgjsText1026" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1027" dy="18.2" x="68.702875">1</tspan></text></svg>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="width: 100%;"><rect id="SvgjsRect1051" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1048" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1045" width="77.208" height="38.604" x="238.01999999999998" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1030" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1031" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1032" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1033" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1034" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1035" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1036" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1037" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1038" r="2.5" cx="203.718" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1039" points="238.01999999999998,33.302 228.01999999999998,38.302 228.01999999999998,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1040" x1="203.718" y1="33.302" x2="233.01999999999998" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1041" x1="276.62399999999997" y1="14" x2="276.62399999999997" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1042" x1="276.62399999999997" y1="52.604" x2="315.22799999999995" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1043" font-family="Monaco, monospace" fill="black" font-size="14" x="253.118875" y="20.5285625"><tspan id="SvgjsTspan1044" dy="18.2" x="253.118875">3</tspan></text><text id="SvgjsText1046" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1047" dy="18.2" x="160.910875">4</tspan></text><text id="SvgjsText1049" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1050" dy="18.2" x="68.702875">1</tspan></text></svg>
+
+                    <pre style="font-size:0.45em"><code data-trim data-noescape class="python">
+                    def ordered(s):
+                        """Is Link s ordered?
+
+                        >>> ordered(Link(1, Link(3, Link(4))))
+                        True
+                        >>> ordered(Link(1, Link(4, Link(3))))
+                        False
+                        >>> ordered(Link(1, Link(-3, Link(4))))
+                        False
+                        """
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <h3>Exercise: Is it ordered? (Solution)</h3>
+
+                    <p>Is a linked list ordered from least to greatest?</p>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="width: 100%;"><rect id="SvgjsRect1028" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1025" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1022" width="77.208" height="38.604" x="238.01999999999998" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1007" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1008" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1009" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1010" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1011" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1012" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1013" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1014" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1015" r="2.5" cx="203.718" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1016" points="238.01999999999998,33.302 228.01999999999998,38.302 228.01999999999998,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1017" x1="203.718" y1="33.302" x2="233.01999999999998" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1018" x1="276.62399999999997" y1="14" x2="276.62399999999997" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1019" x1="276.62399999999997" y1="52.604" x2="315.22799999999995" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1020" font-family="Monaco, monospace" fill="black" font-size="14" x="253.118875" y="20.5285625"><tspan id="SvgjsTspan1021" dy="18.2" x="253.118875">4</tspan></text><text id="SvgjsText1023" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1024" dy="18.2" x="160.910875">3</tspan></text><text id="SvgjsText1026" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1027" dy="18.2" x="68.702875">1</tspan></text></svg>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="width: 100%;"><rect id="SvgjsRect1051" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1048" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1045" width="77.208" height="38.604" x="238.01999999999998" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1030" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1031" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1032" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1033" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1034" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1035" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1036" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1037" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1038" r="2.5" cx="203.718" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1039" points="238.01999999999998,33.302 228.01999999999998,38.302 228.01999999999998,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1040" x1="203.718" y1="33.302" x2="233.01999999999998" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1041" x1="276.62399999999997" y1="14" x2="276.62399999999997" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1042" x1="276.62399999999997" y1="52.604" x2="315.22799999999995" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1043" font-family="Monaco, monospace" fill="black" font-size="14" x="253.118875" y="20.5285625"><tspan id="SvgjsTspan1044" dy="18.2" x="253.118875">3</tspan></text><text id="SvgjsText1046" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1047" dy="18.2" x="160.910875">4</tspan></text><text id="SvgjsText1049" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1050" dy="18.2" x="68.702875">1</tspan></text></svg>
+
+                    <pre style="font-size:0.45em"><code data-trim data-noescape class="python">
+                    def ordered(s, key=lambda x: x):
+                        """Is Link s ordered?
+
+                        >>> ordered(Link(1, Link(3, Link(4))))
+                        True
+                        >>> ordered(Link(1, Link(4, Link(3))))
+                        False
+                        >>> ordered(Link(1, Link(-3, Link(4))))
+                        False
+                        """
+                        if s is Link.empty or s.rest is Link.empty:
+                            return True
+                        elif s.first > s.rest.first:
+                            return False
+                        else:
+                            return ordered(s.rest)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise: Is it ordered? Part 2</h3>
+
+                    <p>Is it ordered when a key function is applied, like <code>abs</code>?</p>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="width: 100%;"><rect id="SvgjsRect1074" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1071" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1068" width="77.208" height="38.604" x="238.01999999999998" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1053" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1054" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1055" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1056" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1057" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1058" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1059" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1060" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1061" r="2.5" cx="203.718" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1062" points="238.01999999999998,33.302 228.01999999999998,38.302 228.01999999999998,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1063" x1="203.718" y1="33.302" x2="233.01999999999998" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1064" x1="276.62399999999997" y1="14" x2="276.62399999999997" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1065" x1="276.62399999999997" y1="52.604" x2="315.22799999999995" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1066" font-family="Monaco, monospace" fill="black" font-size="14" x="248.91575" y="20.5285625"><tspan id="SvgjsTspan1067" dy="18.2" x="248.91575">-3</tspan></text><text id="SvgjsText1069" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1070" dy="18.2" x="160.910875">4</tspan></text><text id="SvgjsText1072" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1073" dy="18.2" x="68.702875">1</tspan></text></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="width: 100%;"><rect id="SvgjsRect1097" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1094" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1091" width="77.208" height="38.604" x="238.01999999999998" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1076" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1077" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1078" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1079" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1080" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1081" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1082" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1083" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1084" r="2.5" cx="203.718" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1085" points="238.01999999999998,33.302 228.01999999999998,38.302 228.01999999999998,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1086" x1="203.718" y1="33.302" x2="233.01999999999998" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1087" x1="276.62399999999997" y1="14" x2="276.62399999999997" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1088" x1="276.62399999999997" y1="52.604" x2="315.22799999999995" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1089" font-family="Monaco, monospace" fill="black" font-size="14" x="253.118875" y="20.5285625"><tspan id="SvgjsTspan1090" dy="18.2" x="253.118875">4</tspan></text><text id="SvgjsText1092" font-family="Monaco, monospace" fill="black" font-size="14" x="156.70775" y="20.5285625"><tspan id="SvgjsTspan1093" dy="18.2" x="156.70775">-3</tspan></text><text id="SvgjsText1095" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1096" dy="18.2" x="68.702875">1</tspan></text></svg>
+
+                    <pre style="font-size:0.45em"><code data-trim data-noescape class="python">
+                    def ordered(s, key=lambda x: x):
+                        """Is Link s ordered?
+
+                        >>> ordered(Link(1, Link(3, Link(4))))
+                        True
+                        >>> ordered(Link(1, Link(4, Link(3))))
+                        False
+                        >>> ordered(Link(1, Link(-3, Link(4))))
+                        False
+                        >>> ordered(Link(1, Link(-3, Link(4))), key=abs)
+                        True
+                        >>> ordered(Link(-4, Link(-1, Link(3))))
+                        True
+                        >>> ordered(Link(-4, Link(-1, Link(3))), key=abs)
+                        False
+                        """
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <h3>Exercise: Is it ordered? Part 2 (Solution)</h3>
+
+                    <p>Is it ordered when a key function is applied, like <code>abs</code>?</p>
+                    
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="width: 100%;"><rect id="SvgjsRect1074" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1071" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1068" width="77.208" height="38.604" x="238.01999999999998" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1053" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1054" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1055" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1056" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1057" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1058" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1059" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1060" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1061" r="2.5" cx="203.718" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1062" points="238.01999999999998,33.302 228.01999999999998,38.302 228.01999999999998,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1063" x1="203.718" y1="33.302" x2="233.01999999999998" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1064" x1="276.62399999999997" y1="14" x2="276.62399999999997" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1065" x1="276.62399999999997" y1="52.604" x2="315.22799999999995" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1066" font-family="Monaco, monospace" fill="black" font-size="14" x="248.91575" y="20.5285625"><tspan id="SvgjsTspan1067" dy="18.2" x="248.91575">-3</tspan></text><text id="SvgjsText1069" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1070" dy="18.2" x="160.910875">4</tspan></text><text id="SvgjsText1072" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1073" dy="18.2" x="68.702875">1</tspan></text></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="width: 100%;"><rect id="SvgjsRect1097" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1094" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1091" width="77.208" height="38.604" x="238.01999999999998" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1076" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1077" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1078" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1079" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1080" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1081" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1082" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1083" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1084" r="2.5" cx="203.718" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1085" points="238.01999999999998,33.302 228.01999999999998,38.302 228.01999999999998,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1086" x1="203.718" y1="33.302" x2="233.01999999999998" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1087" x1="276.62399999999997" y1="14" x2="276.62399999999997" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1088" x1="276.62399999999997" y1="52.604" x2="315.22799999999995" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1089" font-family="Monaco, monospace" fill="black" font-size="14" x="253.118875" y="20.5285625"><tspan id="SvgjsTspan1090" dy="18.2" x="253.118875">4</tspan></text><text id="SvgjsText1092" font-family="Monaco, monospace" fill="black" font-size="14" x="156.70775" y="20.5285625"><tspan id="SvgjsTspan1093" dy="18.2" x="156.70775">-3</tspan></text><text id="SvgjsText1095" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1096" dy="18.2" x="68.702875">1</tspan></text></svg>
+
+                    <pre style="font-size:0.45em"><code data-trim data-noescape class="python">
+                    def ordered(s, key=lambda x: x):
+                        """Is Link s ordered?
+
+                        >>> ordered(Link(1, Link(3, Link(4))))
+                        True
+                        >>> ordered(Link(1, Link(4, Link(3))))
+                        False
+                        >>> ordered(Link(1, Link(-3, Link(4))))
+                        False
+                        >>> ordered(Link(1, Link(-3, Link(4))), key=abs)
+                        True
+                        >>> ordered(Link(-4, Link(-1, Link(3))))
+                        True
+                        >>> ordered(Link(-4, Link(-1, Link(3))), key=abs)
+                        False
+                        """
+                        if s is Link.empty or s.rest is Link.empty:
+                            return True
+                        elif key(s.first) > key(s.rest.first):
+                            return False
+                        else:
+                            return ordered(s.rest, key)
+                    </code></pre>
+                </section>
+                    
+                <section>
+                    <h3>Exercise: Sorted merged list</h3>
+                    
+                    <p>Create a sorted Link containing all the elements of two sorted Links.</p>
+                    
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="display:inline;"><rect id="SvgjsRect1113" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1110" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1099" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1100" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1101" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1102" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1103" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1104" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1105" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1106" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1107" x1="184.416" y1="52.604" x2="223.01999999999998" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1108" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1109" dy="18.2" x="160.910875">5</tspan></text><text id="SvgjsText1111" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1112" dy="18.2" x="68.702875">1</tspan></text></svg>
+                    <span style="vertical-align: top; padding-top: 14px; display: inline-block; margin-right: 20px;">+</span> 
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="display:inline;"><rect id="SvgjsRect1129" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1126" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1115" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1116" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1117" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1118" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1119" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1120" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1121" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1122" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1123" x1="184.416" y1="52.604" x2="223.01999999999998" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1124" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1125" dy="18.2" x="160.910875">4</tspan></text><text id="SvgjsText1127" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1128" dy="18.2" x="68.702875">1</tspan></text></svg>
+                    <span style="vertical-align: top; padding-top: 14px; display: inline-block; margin-right: 20px;">=</span> 
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="width: 100%;"><rect id="SvgjsRect1159" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1156" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1153" width="77.208" height="38.604" x="238.01999999999998" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1150" width="77.208" height="38.604" x="330.22799999999995" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1131" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1132" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1133" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1134" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1135" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1136" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1137" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1138" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1139" r="2.5" cx="203.718" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1140" points="238.01999999999998,33.302 228.01999999999998,38.302 228.01999999999998,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1141" x1="203.718" y1="33.302" x2="233.01999999999998" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1142" x1="276.62399999999997" y1="14" x2="276.62399999999997" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1143" r="2.5" cx="295.926" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1144" points="330.22799999999995,33.302 320.22799999999995,38.302 320.22799999999995,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1145" x1="295.926" y1="33.302" x2="325.22799999999995" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1146" x1="368.83199999999994" y1="14" x2="368.83199999999994" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1147" x1="368.83199999999994" y1="52.604" x2="407.4359999999999" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1148" font-family="Monaco, monospace" fill="black" font-size="14" x="345.326875" y="20.5285625"><tspan id="SvgjsTspan1149" dy="18.2" x="345.326875">5</tspan></text><text id="SvgjsText1151" font-family="Monaco, monospace" fill="black" font-size="14" x="253.118875" y="20.5285625"><tspan id="SvgjsTspan1152" dy="18.2" x="253.118875">4</tspan></text><text id="SvgjsText1154" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1155" dy="18.2" x="160.910875">1</tspan></text><text id="SvgjsText1157" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1158" dy="18.2" x="68.702875">1</tspan></text></svg>
+                    
+                    <pre style="font-size:0.45em"><code data-trim data-noescape class="python">
+                    def merge(s, t):
+                        """Return a sorted Link containing the elements of sorted s & t.
+                    
+                        >>> a = Link(1, Link(5))
+                        >>> b = Link(1, Link(4))
+                        >>> merge(a, b)
+                        Link(1, Link(1, Link(4, Link(5))))
+                        >>> a
+                        Link(1, Link(5))
+                        >>> b
+                        Link(1, Link(4))
+                        """
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <h3>Exercise: Sorted merged list (Solution)</h3>
+                    
+                    <p>Create a sorted Link containing all the elements of two sorted Links.</p>
+                    
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="display:inline;"><rect id="SvgjsRect1113" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1110" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1099" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1100" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1101" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1102" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1103" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1104" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1105" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1106" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1107" x1="184.416" y1="52.604" x2="223.01999999999998" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1108" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1109" dy="18.2" x="160.910875">5</tspan></text><text id="SvgjsText1111" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1112" dy="18.2" x="68.702875">1</tspan></text></svg>
+                    <span style="vertical-align: top; padding-top: 14px; display: inline-block; margin-right: 20px;">+</span> 
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="display:inline;"><rect id="SvgjsRect1129" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1126" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1115" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1116" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1117" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1118" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1119" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1120" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1121" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1122" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1123" x1="184.416" y1="52.604" x2="223.01999999999998" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1124" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1125" dy="18.2" x="160.910875">4</tspan></text><text id="SvgjsText1127" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1128" dy="18.2" x="68.702875">1</tspan></text></svg>
+                    <span style="vertical-align: top; padding-top: 14px; display: inline-block; margin-right: 20px;">=</span> 
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="width: 100%;"><rect id="SvgjsRect1159" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1156" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1153" width="77.208" height="38.604" x="238.01999999999998" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1150" width="77.208" height="38.604" x="330.22799999999995" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1131" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1132" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1133" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1134" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1135" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1136" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1137" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1138" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1139" r="2.5" cx="203.718" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1140" points="238.01999999999998,33.302 228.01999999999998,38.302 228.01999999999998,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1141" x1="203.718" y1="33.302" x2="233.01999999999998" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1142" x1="276.62399999999997" y1="14" x2="276.62399999999997" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1143" r="2.5" cx="295.926" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1144" points="330.22799999999995,33.302 320.22799999999995,38.302 320.22799999999995,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1145" x1="295.926" y1="33.302" x2="325.22799999999995" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1146" x1="368.83199999999994" y1="14" x2="368.83199999999994" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1147" x1="368.83199999999994" y1="52.604" x2="407.4359999999999" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1148" font-family="Monaco, monospace" fill="black" font-size="14" x="345.326875" y="20.5285625"><tspan id="SvgjsTspan1149" dy="18.2" x="345.326875">5</tspan></text><text id="SvgjsText1151" font-family="Monaco, monospace" fill="black" font-size="14" x="253.118875" y="20.5285625"><tspan id="SvgjsTspan1152" dy="18.2" x="253.118875">4</tspan></text><text id="SvgjsText1154" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1155" dy="18.2" x="160.910875">1</tspan></text><text id="SvgjsText1157" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1158" dy="18.2" x="68.702875">1</tspan></text></svg>
+                    
+                    <pre style="font-size:0.45em"><code data-trim data-noescape class="python">
+                    def merge(s, t):
+                        """Return a sorted Link containing the elements of sorted s & t.
+                    
+                        >>> a = Link(1, Link(5))
+                        >>> b = Link(1, Link(4))
+                        >>> merge(a, b)
+                        Link(1, Link(1, Link(4, Link(5))))
+                        >>> a
+                        Link(1, Link(5))
+                        >>> b
+                        Link(1, Link(4))
+                        """
+                        if s is Link.empty:
+                            return t
+                        elif t is Link.empty:
+                            return s
+                        elif s.first <= t.first:
+                            return Link(s.first, merge(s.rest, t))
+                        else:
+                            return Link(t.first, merge(s, t.rest))
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise: Sorted merged list II</h3>
+                    
+                    <p>This time, do it <em>without</em> creating any new <code>Link</code> objects.</p>
+                    
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="display:inline;"><rect id="SvgjsRect1113" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1110" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1099" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1100" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1101" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1102" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1103" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1104" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1105" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1106" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1107" x1="184.416" y1="52.604" x2="223.01999999999998" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1108" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1109" dy="18.2" x="160.910875">5</tspan></text><text id="SvgjsText1111" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1112" dy="18.2" x="68.702875">1</tspan></text></svg>
+                    <span style="vertical-align: top; padding-top: 14px; display: inline-block; margin-right: 20px;">+</span> 
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="display:inline;"><rect id="SvgjsRect1129" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1126" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1115" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1116" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1117" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1118" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1119" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1120" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1121" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1122" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1123" x1="184.416" y1="52.604" x2="223.01999999999998" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1124" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1125" dy="18.2" x="160.910875">4</tspan></text><text id="SvgjsText1127" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1128" dy="18.2" x="68.702875">1</tspan></text></svg>
+                    <span style="vertical-align: top; padding-top: 14px; display: inline-block; margin-right: 20px;">=</span> 
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="width: 100%;"><rect id="SvgjsRect1159" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1156" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1153" width="77.208" height="38.604" x="238.01999999999998" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1150" width="77.208" height="38.604" x="330.22799999999995" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1131" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1132" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1133" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1134" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1135" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1136" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1137" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1138" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1139" r="2.5" cx="203.718" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1140" points="238.01999999999998,33.302 228.01999999999998,38.302 228.01999999999998,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1141" x1="203.718" y1="33.302" x2="233.01999999999998" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1142" x1="276.62399999999997" y1="14" x2="276.62399999999997" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1143" r="2.5" cx="295.926" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1144" points="330.22799999999995,33.302 320.22799999999995,38.302 320.22799999999995,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1145" x1="295.926" y1="33.302" x2="325.22799999999995" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1146" x1="368.83199999999994" y1="14" x2="368.83199999999994" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1147" x1="368.83199999999994" y1="52.604" x2="407.4359999999999" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1148" font-family="Monaco, monospace" fill="black" font-size="14" x="345.326875" y="20.5285625"><tspan id="SvgjsTspan1149" dy="18.2" x="345.326875">5</tspan></text><text id="SvgjsText1151" font-family="Monaco, monospace" fill="black" font-size="14" x="253.118875" y="20.5285625"><tspan id="SvgjsTspan1152" dy="18.2" x="253.118875">4</tspan></text><text id="SvgjsText1154" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1155" dy="18.2" x="160.910875">1</tspan></text><text id="SvgjsText1157" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1158" dy="18.2" x="68.702875">1</tspan></text></svg>
+                    
+                    <pre style="font-size:0.45em"><code data-trim data-noescape class="python">
+                    def merge_in_place(s, t):
+                        """Return a sorted Link containing the elements of sorted s & t.
+                    
+                        >>> a = Link(1, Link(5))
+                        >>> b = Link(1, Link(4))
+                        >>> merge_in_place(a, b)
+                        Link(1, Link(1, Link(4, Link(5))))
+                        >>> a
+                        Link(1, Link(1, Link(4, Link(5))))
+                        >>> b
+                        Link(1, Link(4, Link(5)))
+                        """
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <h3>Exercise: Sorted merged list II (Solution)</h3>
+                    
+                    <p>This time, do it <em>without</em> creating any new <code>Link</code> objects.</p>
+                    
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="display:inline;"><rect id="SvgjsRect1113" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1110" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1099" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1100" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1101" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1102" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1103" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1104" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1105" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1106" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1107" x1="184.416" y1="52.604" x2="223.01999999999998" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1108" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1109" dy="18.2" x="160.910875">5</tspan></text><text id="SvgjsText1111" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1112" dy="18.2" x="68.702875">1</tspan></text></svg>
+                    <span style="vertical-align: top; padding-top: 14px; display: inline-block; margin-right: 20px;">+</span> 
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="display:inline;"><rect id="SvgjsRect1129" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1126" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1115" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1116" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1117" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1118" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1119" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1120" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1121" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1122" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1123" x1="184.416" y1="52.604" x2="223.01999999999998" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1124" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1125" dy="18.2" x="160.910875">4</tspan></text><text id="SvgjsText1127" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1128" dy="18.2" x="68.702875">1</tspan></text></svg>
+                    <span style="vertical-align: top; padding-top: 14px; display: inline-block; margin-right: 20px;">=</span> 
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="width: 100%;"><rect id="SvgjsRect1159" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1156" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1153" width="77.208" height="38.604" x="238.01999999999998" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1150" width="77.208" height="38.604" x="330.22799999999995" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1131" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1132" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1133" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1134" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1135" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1136" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1137" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1138" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1139" r="2.5" cx="203.718" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1140" points="238.01999999999998,33.302 228.01999999999998,38.302 228.01999999999998,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1141" x1="203.718" y1="33.302" x2="233.01999999999998" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1142" x1="276.62399999999997" y1="14" x2="276.62399999999997" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1143" r="2.5" cx="295.926" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1144" points="330.22799999999995,33.302 320.22799999999995,38.302 320.22799999999995,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1145" x1="295.926" y1="33.302" x2="325.22799999999995" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1146" x1="368.83199999999994" y1="14" x2="368.83199999999994" y2="52.604" stroke="black" stroke-width="2"></line><line id="SvgjsLine1147" x1="368.83199999999994" y1="52.604" x2="407.4359999999999" y2="14" stroke="black" stroke-width="2"></line><text id="SvgjsText1148" font-family="Monaco, monospace" fill="black" font-size="14" x="345.326875" y="20.5285625"><tspan id="SvgjsTspan1149" dy="18.2" x="345.326875">5</tspan></text><text id="SvgjsText1151" font-family="Monaco, monospace" fill="black" font-size="14" x="253.118875" y="20.5285625"><tspan id="SvgjsTspan1152" dy="18.2" x="253.118875">4</tspan></text><text id="SvgjsText1154" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.5285625"><tspan id="SvgjsTspan1155" dy="18.2" x="160.910875">1</tspan></text><text id="SvgjsText1157" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.5285625"><tspan id="SvgjsTspan1158" dy="18.2" x="68.702875">1</tspan></text></svg>
+                    
+                    <pre style="font-size:0.45em"><code data-trim data-noescape class="python">
+                    def merge_in_place(s, t):
+                        """Return a sorted Link containing the elements of sorted s & t.
+                    
+                        >>> a = Link(1, Link(5))
+                        >>> b = Link(1, Link(4))
+                        >>> merge_in_place(a, b)
+                        Link(1, Link(1, Link(4, Link(5))))
+                        >>> a
+                        Link(1, Link(1, Link(4, Link(5))))
+                        >>> b
+                        Link(1, Link(4, Link(5)))
+                        """
+                        if s is Link.empty:
+                            return t
+                        elif t is Link.empty:
+                            return s
+                        elif s.first <= t.first:
+                            s.rest = merge_in_place(s.rest, t)
+                            return s
+                        else:
+                            t.rest = merge_in_place(s, t.rest)
+                            return t
+                    </code></pre>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Iterables & Iterators</h2>
+                </section>
+
+                <section>
+                    <h3>Exercise: Find indices</h3>
+                    
+                    <p>What are the indices of all elements in a list that have the smallest absolute value?</p>
+
+                    <pre style="font-size:0.6em" class="no-code-badge"><code data-trim data-noescape >
+                    [-4, -3, -2,  3,  2,  4]  → [2, 4]
+                    <span style="color:blue;">  0   1   2   3   4   5</span> 
+                    </code></pre>
+
+                    <pre style="font-size:0.6em" class="no-code-badge"><code data-trim data-noescape >
+                    [ 1,  2,  3,  4,  5,  6]  → [0]
+                    <span style="color:blue;">  0   1   2   3   4   5</span>  
+                    </code></pre>
+
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    def min_abs_indices(s):
+                        """Indices of all elements in list s that have the smallest absolute value.
+
+                        >>> min_abs_indices([-4, -3, -2, 3, 2, 4])
+                        [2, 4]
+                        >>> min_abs_indices([1, 2, 3, 4, 5])
+                        [0]
+                        """
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <h3>Exercise: Find indices (Solution)</h3>
+                    
+                    <p>What are the indices of all elements in a list that have the smallest absolute value?</p>
+
+                    <pre style="font-size:0.6em" class="no-code-badge"><code data-trim data-noescape class="no-code-badge">
+                    [-4, -3, -2,  3,  2,  4]  → [2, 4]
+                    <span style="color:blue;">  0   1   2   3   4   5</span> 
+                    </code></pre>
+
+                    <pre style="font-size:0.6em" class="no-code-badge"><code data-trim data-noescape class="no-code-badge">
+                    [ 1,  2,  3,  4,  5,  6]  → [0]
+                    <span style="color:blue;">  0   1   2   3   4   5</span>  
+                    </code></pre>
+
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    def min_abs_indices(s):
+                        """Indices of all elements in list s that have the smallest absolute value.
+
+                        >>> min_abs_indices([-4, -3, -2, 3, 2, 4])
+                        [2, 4]
+                        >>> min_abs_indices([1, 2, 3, 4, 5])
+                        [0]
+                        """
+                        min_abs = min(map(abs, s))
+                        return list(filter(lambda i: abs(s[i]) == min_abs, range(len(s))))
+                        # OR
+                        return [i for i in range(len(s)) if abs(s[i]) == min_abs]
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise: Largest sum</h3>
+
+                    <p>What's the largest sum of two adjacent elements in a list? (Assume length > 1)</p>
+
+                    <pre style="font-size:0.6em" class="no-code-badge"><code data-trim data-noescape class="no-code-badge">
+                    [-4,  -3,  -2,   3,   2,   4]  → 6
+                    <span style="color:blue;">   -7    -5    1    5    6</span> 
+                    </code></pre>
+
+                    <pre style="font-size:0.6em" class="no-code-badge"><code data-trim data-noescape class="no-code-badge">
+                    [-4,   3,  -2,  -3,   2,   -4]  → 1
+                    <span style="color:blue;">   -1    1    -5   -1   -2</span> 
+                    </code></pre>
+
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    def largest_adj_sum(s):
+                        """Largest sum of two adjacent elements in a list s.
+                    
+                        >>> largest_adj_sum([-4, -3, -2, 3, 2, 4])
+                        6
+                        >>> largest_adj_sum([-4, 3, -2, -3, 2, -4])
+                        1
+                        """
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise: Largest sum (Solution)</h3>
+
+                    <p>What's the largest sum of two adjacent elements in a list? (Assume length > 1)</p>
+
+                    <pre style="font-size:0.6em" class="no-code-badge"><code data-trim data-noescape class="no-code-badge">
+                    [-4,  -3,  -2,   3,   2,   4]  → 6
+                    <span style="color:blue;">   -7    -5    1    5    6</span> 
+                    </code></pre>
+
+                    <pre style="font-size:0.6em" class="no-code-badge"><code data-trim data-noescape class="no-code-badge">
+                    [-4,   3,  -2,  -3,   2,   -4]  → 1
+                    <span style="color:blue;">   -1    1    -5   -1   -2</span> 
+                    </code></pre>
+
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    def largest_adj_sum(s):
+                        """Largest sum of two adjacent elements in a list s.
+                    
+                        >>> largest_adj_sum([-4, -3, -2, 3, 2, 4])
+                        6
+                        >>> largest_adj_sum([-4, 3, -2, -3, 2, -4])
+                        1
+                        """
+                        return max([x + y for x, y in zip(s[:-1], s[1:])])
+                        # OR
+                        return max([s[i] + s[i + 1] for i in range(len(s) - 1)])
+                        # OR
+                        return max(map(lambda i: s[i] + s[i + 1], range(len(s) - 1)))
+                    </code></pre>
+                </section>
+
+			</div>
+		</div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-menu@2.1.0/menu.js"></script>
+        <!-- The loading of KaTeX is deferred to speed up page rendering -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.js" integrity="sha384-31El76TwmbHj4rF9DyLsygbq6xoIobG0W+jqXim+a3dU9W53tdH3A/ngRPxOzzaB" crossorigin="anonymous"></script>
+        <!-- To automatically render math in text elements, include the auto-render extension: -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"
+            onload="renderMathInElement(document.body, {fleqn: true});"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight, RevealMenu ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge();
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+        </script>
+    </body>
+</html>

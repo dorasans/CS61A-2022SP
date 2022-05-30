@@ -1,0 +1,991 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Final Examples</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:valid {
+                background-color: rgb(192, 255, 216);
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+        <style>
+            .reveal .slides section .fragment.bordered-fragment.visible {
+                border: 1px dashed blue;
+                border-radius: 8px;
+            }
+            .reveal .slides section .fragment.bordered-fragment {
+                opacity: 1;
+                visibility: inherit;
+                padding: 6px;
+                border: 1px dashed transparent;
+            }
+            </style>
+        
+        <style>
+        .node, .edge, .node text {
+            visibility: hidden;
+        }
+        .node.activated text:first-of-type {
+            visibility: visible;
+        }
+        .node.activated path {
+            visibility: visible;
+        }
+        .node text.activated {
+            visibility: visible;
+        }
+        .edge.activated {
+            visibility: visible;
+        }
+        .svg-controls {
+            width: 600px;
+            display: grid;
+            grid-template-rows: 1fr;
+            grid-template-columns: 100px 1fr 100px;
+            grid-gap: 8px;
+            position: fixed;
+            right: 0;
+            top: 0;
+            background: #80808070;
+        }
+        .svg-controls button:first-of-type {
+            grid-row: 1;
+            grid-column: 1;
+        }
+        .svg-controls input {
+            grid-row: 1;
+            grid-column: 2;
+        }
+        .svg-controls button:last-of-type {
+            grid-row: 1;
+            grid-column: 3;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Final Examples</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="38-Final_Examples.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Trees
+                        <li>Recursive accumulation
+                        <li>Regular expressions
+                        <li>Interpreters
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Trees</h2>
+                </section>
+
+                <section>
+                    <h3>Tree abstractions</h3>
+
+                    <p class="padded">In Python, using a class:</p>
+                    <pre style="font-size:0.6em; margin-top: 0px;"><code data-trim data-noescape class="python">
+                    class Tree:
+                        def __init__(self, label, branches=[]):
+                            self.label = label
+                            self.branches = list(branches)
+
+                        def is_leaf(self):
+                            return not self.branches
+                    </code></pre>
+
+
+                    <p>In Scheme, using procedures to build a data abstraction:</p>
+                    <pre style="font-size:0.6em; margin-top: 0px;"><code data-trim data-noescape class="scheme">
+                    (define (tree label branches)
+                        (cons label branches))
+                      
+                    (define (label t) (car t))
+                      
+                    (define (branches t) (cdr t))
+                      
+                    (define (is-leaf t) (null? (branches t)))
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Tree-structured data</h3>
+
+                    <p>A tree is a recursive structure, where each branch
+                        may itself be a tree.</p>
+
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="text">
+                    [5, [6, 7], 8, [[9], 10]]
+                    </code></pre>
+
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="text">
+                    (+ 5 (- 6 7) 8 (* (- 9) 10))
+                    </code></pre>
+
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="text">
+                    (S
+                        (NP (JJ Short) (NNS cuts))
+                        (VP (VBP make) 
+                            (NP (JJ long) (NNS delays)))
+                        (. .))
+                    </code></pre>
+
+                    <pre style="font-size:0.7em; margin-top: 0px;"><code data-trim data-noescape class="text">
+                        &lt;ul&gt;
+                            &lt;li&gt;Midterm &lt;strong&gt;1&lt;/strong&gt;&lt;/li&gt;
+                            &lt;li&gt;Midterm &lt;strong&gt;2&lt;/strong&gt;&lt;/li&gt;
+                        &lt;/ul&gt;
+                    </code></pre>
+
+                    <p>Tree processing often involves recursive calls on subtrees.</p>
+                </section>
+
+                <section>
+                    <h3>Solving tree problems</h3>
+
+                    <p class="smaller">Implement <code>bigs</code>, which takes a <code>Tree</code> instance <code>t</code> containing integer labels. It returns the number of nodes in <code>t</code> whose labels are larger than all labels of their ancestor nodes.</p>
+
+                    <pre style="font-size:0.6em;"><code data-trim data-noescape class="python">
+                    def bigs(t):
+                        """Return the number of nodes in t that are larger than all their ancestors.
+
+                        >>> a = Tree(1, [Tree(4, [Tree(4), Tree(5)]), Tree(3, [Tree(0, [Tree(2)])])])
+                        >>> bigs(a)
+                        4
+                        """
+                    </code></pre>
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+
+                        <ol style="grid-row: 1; grid-column: 1; vertical-align: top;">
+                            <li>Understand the question and function signature.
+                            <li class="fragment" data-fragment-index="2">Make any diagrams that may be helpful.
+                            <li class="fragment" data-fragment-index="3">Work through the examples and make observations.
+                        </ol>
+
+                        <svg id="diagramSvg" xmlns="http://www.w3.org/2000/svg" style="width: 400px; height: 300px; grid-row: 1; grid-column: 2; vertical-align: top;" class="fragment" data-fragment-index="2">
+                            <style id="stylesheet">#diagramSvg text {
+                                text-anchor: middle;
+                                font-size: small;
+                                font-weight: bold;
+                            }
+                            
+                            #diagramSvg rect {
+                                fill: lightblue;
+                                stroke: black;
+                                opacity: 0.5;
+                                stroke-width: 1.5;
+                            }
+                            
+                            #diagramSvg line {
+                                stroke: black;
+                                opacity: 0.5;
+                                stroke-width: 1.5;
+                            }
+                                </style>
+                            <defs>
+                            <marker id="arrowHead" viewBox="-10 -5 10 10" markerUnits="strokeWidth" markerWidth="6" markerHeight="5" orient="auto">
+                                <path d="M -10 -5 L 0 0 L -10 5 z"></path>
+                            </marker>
+                            </defs>
+                            <g id="diagramGroup"><rect x="186px" y="0px" width="60px" height="39px"></rect><text x="216px" y="0px"><tspan x="216" dy="25.236842105263158">1 <tspan class="fragment" data-fragment-index="4">✅</tspan></tspan></text><rect x="103px" y="86px" width="60px" height="39px"></rect><text x="133px" y="86px"><tspan x="133" dy="25.236842105263158">4 <tspan class="fragment" data-fragment-index="5">✅</tspan></tspan></text><line x1="206px" y1="39px" x2="133px" y2="86px" marker-end="url(#arrowHead)"></line><rect x="270px" y="86px" width="60px" height="39px"></rect><text x="300px" y="86px"><tspan x="300" dy="25.236842105263158">3 <tspan class="fragment" data-fragment-index="7">✅</tspan></tspan></text><line x1="226px" y1="39px" x2="300px" y2="86px" marker-end="url(#arrowHead)"></line><rect x="69px" y="173px" width="60px" height="39px"></rect><text x="99px" y="173px"><tspan x="99" dy="25.236842105263158">4</tspan></text><line x1="123px" y1="126px" x2="99px" y2="173px" marker-end="url(#arrowHead)"></line><rect x="136px" y="173px" width="60px" height="39px"></rect><text x="166px" y="173px"><tspan x="166" dy="25.236842105263158">5 <tspan class="fragment" data-fragment-index="6">✅</tspan></tspan></text><line x1="143px" y1="126px" x2="166px" y2="173px" marker-end="url(#arrowHead)"></line><rect x="270px" y="173px" width="60px" height="39px"></rect><text x="300px" y="173px"><tspan x="300" dy="25.236842105263158">0</tspan></text><line x1="300px" y1="126px" x2="300px" y2="173px" marker-end="url(#arrowHead)"></line><rect x="270px" y="260px" width="60px" height="39px"></rect><text x="300px" y="260px"><tspan x="300" dy="25.236842105263158">2</tspan></text><line x1="300px" y1="213px" x2="300px" y2="260px" marker-end="url(#arrowHead)"></line></g>
+                        </svg>
+                    </div>
+                    <aside class="notes">
+                        The root node is always larger than its ancestors.
+                        You can't just check parents, you have to check all ancestors.
+                    </aside>
+                </section>
+
+                <section>
+                    <h3>Solving bigs #2</h3>
+
+                    <pre style="font-size:0.6em;"><code data-trim data-noescape class="python">
+                    def bigs(t):
+                        """Return the number of nodes in t that are larger than all their ancestors.
+
+                        >>> a = Tree(1, [Tree(4, [Tree(4), Tree(5)]), Tree(3, [Tree(0, [Tree(2)])])])
+                        >>> bigs(a)
+                        4
+                        """
+                    </code></pre>
+
+                    <ol start="4">
+                        <li>Consider what you expect to see in the solution.</li>
+                    </ol>
+
+                    <div class="fragment">
+                    <p class="smaller padded">Typical tree processing structure?</p>
+
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                        if t.is_leaf():
+                            return ___
+                        else:
+                            return ___([___ for b in t.branches])
+                    </code></pre>
+
+                    <p class="fragment smaller">❌ That won't work, since we need to know about ancestors.</p>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h3>Solving bigs #3</h3>
+
+                    <pre style="font-size:0.6em;"><code data-trim data-noescape class="python">
+                    def bigs(t):
+                        """Return the number of nodes in t that are larger than all their ancestors.
+
+                        >>> a = Tree(1, [Tree(4, [Tree(4), Tree(5)]), Tree(3, [Tree(0, [Tree(2)])])])
+                        >>> bigs(a)
+                        4
+                        """
+                    </code></pre>
+
+                    <ol start="4">
+                        <li>Consider what you expect to see in the solution.</li>
+                    </ol>
+
+                    <div class="fragment">
+                    <p class="smaller">Some code that increments the total count</p>
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    1 + _____
+                    </code></pre>
+                    </div>
+
+                    <div class="fragment">
+                    <p class="smaller padded">Some way of tracking ancestor labels or max of ancestors seen so far.</p>
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    if node.label > max(ancestors):
+                    </code></pre>
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    if node.label > max_ancestor:
+                    </code></pre>
+                    </div>
+
+                </section>
+
+
+                <section>
+                    <h3>Solving bigs #4</h3>
+
+                    <pre style="font-size:0.6em;"><code data-trim data-noescape class="python">
+                    def bigs(t):
+                        """Return the number of nodes in t that are larger than all their ancestors.
+
+                        >>> a = Tree(1, [Tree(4, [Tree(4), Tree(5)]), Tree(3, [Tree(0, [Tree(2)])])])
+                        >>> bigs(a)
+                        4
+                        """
+                    </code></pre>
+
+                    <ol start="5">
+                        <li>Check out the provided template.</li>
+                        <li class="fragment" data-fragment-index="1">Figure out where what you expected fits into the template.</li>
+                        <li class="fragment" data-fragment-index="4">Label any ambiguously named variables if its helpful.</li>
+                    </ol>
+
+                    <pre style="font-size:0.6em;"><code data-trim data-noescape class="python">
+                        <span class="fragment" data-fragment-index="5"># a is the current subtree, x is the largest ancestor</span>
+                        def f(a, x): 
+                            if ______________________: <span class="fragment" data-fragment-index="3"># Track the largest ancestor</span>
+                                return 1 + __________ <span class="fragment" data-fragment-index="2"># Increment total</span>
+                            else:
+                                return ______________
+                        return ______________________
+                    </code></pre>
+
+                </section>
+
+
+                <section>
+                    <h3>Solving bigs #5</h3>
+
+                    <pre style="font-size:0.6em;"><code data-trim data-noescape class="python">
+                    def bigs(t):
+                        """Return the number of nodes in t that are larger than all their ancestors.
+
+                        >>> a = Tree(1, [Tree(4, [Tree(4), Tree(5)]), Tree(3, [Tree(0, [Tree(2)])])])
+                        >>> bigs(a)
+                        4
+                        """
+                    </code></pre>
+
+                    <ol start="8">
+                        <li>Finish filling in the skeleton.
+                    </ol>
+
+                    <pre style="font-size:0.6em;"><code data-trim data-noescape class="python">
+                        def f(a, x):
+                            if a.label > x:
+                                return 1 + sum([f(b, a.label) for b in a.branches])
+                            else:
+                                return sum([f(b, x) for b in a.branches])
+                        return f(t, t.label - 1)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Solving bigs #6</h3>
+
+                    <pre style="font-size:0.6em;"><code data-trim data-noescape class="python">
+                    def bigs(t):
+                        """Return the number of nodes in t that are larger than all their ancestors.
+
+                        >>> a = Tree(1, [Tree(4, [Tree(4), Tree(5)]), Tree(3, [Tree(0, [Tree(2)])])])
+                        >>> bigs(a)
+                        4
+                        """
+                        def f(a, x):
+                            if a.label > x:
+                                return 1 + sum([f(b, a.label) for b in a.branches])
+                            else:
+                                return sum([f(b, x) for b in a.branches])
+                        return f(t, t.label - 1)
+                    </code></pre>
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+
+                        <ol start="8" style="grid-row: 1; grid-column: 1; vertical-align: top;">
+                            <li>Check your work!
+                        </ol>
+
+                    <svg id="diagramSvg" xmlns="http://www.w3.org/2000/svg" style="width: 400px; height: 300px; grid-row: 1; grid-column: 2;">
+                        <style id="stylesheet">#diagramSvg text {
+                            text-anchor: middle;
+                            font-size: small;
+                            font-weight: bold;
+                        }
+                        
+                        #diagramSvg rect {
+                            fill: lightblue;
+                            stroke: black;
+                            opacity: 0.5;
+                            stroke-width: 1.5;
+                        }
+                        
+                        #diagramSvg line {
+                            stroke: black;
+                            opacity: 0.5;
+                            stroke-width: 1.5;
+                        }
+                            </style>
+                        <defs>
+                          <marker id="arrowHead" viewBox="-10 -5 10 10" markerUnits="strokeWidth" markerWidth="6" markerHeight="5" orient="auto">
+                            <path d="M -10 -5 L 0 0 L -10 5 z"></path>
+                          </marker>
+                        </defs>
+                        <g id="diagramGroup"><rect x="186px" y="0px" width="60px" height="39px"></rect><text x="216px" y="0px"><tspan x="216" dy="25.236842105263158">1</tspan></text><rect x="103px" y="86px" width="60px" height="39px"></rect><text x="133px" y="86px"><tspan x="133" dy="25.236842105263158">4</tspan></text><line x1="206px" y1="39px" x2="133px" y2="86px" marker-end="url(#arrowHead)"></line><rect x="270px" y="86px" width="60px" height="39px"></rect><text x="300px" y="86px"><tspan x="300" dy="25.236842105263158">3</tspan></text><line x1="226px" y1="39px" x2="300px" y2="86px" marker-end="url(#arrowHead)"></line><rect x="69px" y="173px" width="60px" height="39px"></rect><text x="99px" y="173px"><tspan x="99" dy="25.236842105263158">4</tspan></text><line x1="123px" y1="126px" x2="99px" y2="173px" marker-end="url(#arrowHead)"></line><rect x="136px" y="173px" width="60px" height="39px"></rect><text x="166px" y="173px"><tspan x="166" dy="25.236842105263158">5</tspan></text><line x1="143px" y1="126px" x2="166px" y2="173px" marker-end="url(#arrowHead)"></line><rect x="270px" y="173px" width="60px" height="39px"></rect><text x="300px" y="173px"><tspan x="300" dy="25.236842105263158">0</tspan></text><line x1="300px" y1="126px" x2="300px" y2="173px" marker-end="url(#arrowHead)"></line><rect x="270px" y="260px" width="60px" height="39px"></rect><text x="300px" y="260px"><tspan x="300" dy="25.236842105263158">2</tspan></text><line x1="300px" y1="213px" x2="300px" y2="260px" marker-end="url(#arrowHead)"></line></g>
+                      </svg>
+                    </div>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Recursive accumulation</h2>
+
+                    <p>Initialize some data structure to an empty/zero value, and populate it as you go.</p>
+                </section>
+
+                <section>
+                    <h3>Solving smalls</h3>
+
+                    <p class="smaller">Implement <code>smalls</code>, which takes a <code>Tree</code> instance <code>t</code> containing integer labels. It returns the non-leaf nodes in <code>t</code> whose labels are smaller than any labels of their descendant nodes.</p>
+
+                    <pre style="font-size:0.6em;"><code data-trim data-noescape class="python">
+                    def smalls(t):
+                        """Return the non-leaf nodes in t that are smaller than all their descendants.
+
+                        >>> a = Tree(1, [Tree(2, [Tree(4), Tree(5)]), Tree(3, [Tree(0, [Tree(6)])])])
+                        >>> sorted([t.label for t in smalls(a)])
+                        [0, 2]
+                        """
+                    </code></pre>
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+
+                        <ol style="grid-row: 1; grid-column: 1; vertical-align: top;">
+                            <li>Understand the question and function signature.
+                            <li class="fragment" data-fragment-index="2">Make any diagrams that may be helpful.
+                            <li class="fragment" data-fragment-index="3">Work through the examples and make observations.
+                        </ol>
+
+                        <svg id="diagramSvg2" xmlns="http://www.w3.org/2000/svg" style="width: 400px; height: 300px; grid-row: 1; grid-column: 2; vertical-align: top;" class="fragment" data-fragment-index="2">
+                            <style id="stylesheet">#diagramSvg2 text {
+                                text-anchor: middle;
+                                font-size: small;
+                                font-weight: bold;
+                            }
+                            
+                            #diagramSvg2 rect {
+                                fill: lightblue;
+                                stroke: black;
+                                opacity: 0.5;
+                                stroke-width: 1.5;
+                            }
+                            
+                            #diagramSvg2 line {
+                                stroke: black;
+                                opacity: 0.5;
+                                stroke-width: 1.5;
+                            }
+                                </style>
+                            <defs>
+                            <marker id="arrowHead" viewBox="-10 -5 10 10" markerUnits="strokeWidth" markerWidth="6" markerHeight="5" orient="auto">
+                                <path d="M -10 -5 L 0 0 L -10 5 z"></path>
+                            </marker>
+                            </defs>
+                            <g id="diagramGroup"><rect x="186px" y="0px" width="60px" height="39px"></rect><text x="216px" y="0px"><tspan x="216" dy="25.236842105263158">1</tspan></text><rect x="103px" y="86px" width="60px" height="39px"></rect><text x="133px" y="86px"><tspan x="133" dy="25.236842105263158">2 <tspan class="fragment" data-fragment-index="5">✅</tspan></tspan></text><line x1="206px" y1="39px" x2="133px" y2="86px" marker-end="url(#arrowHead)"></line><rect x="270px" y="86px" width="60px" height="39px"></rect><text x="300px" y="86px"><tspan x="300" dy="25.236842105263158">3</tspan></text><line x1="226px" y1="39px" x2="300px" y2="86px" marker-end="url(#arrowHead)"></line><rect x="69px" y="173px" width="60px" height="39px"></rect><text x="99px" y="173px"><tspan x="99" dy="25.236842105263158">4</tspan></text><line x1="123px" y1="126px" x2="99px" y2="173px" marker-end="url(#arrowHead)"></line><rect x="136px" y="173px" width="60px" height="39px"></rect><text x="166px" y="173px"><tspan x="166" dy="25.236842105263158">5</tspan></text><line x1="143px" y1="126px" x2="166px" y2="173px" marker-end="url(#arrowHead)"></line><rect x="270px" y="173px" width="60px" height="39px"></rect><text x="300px" y="173px"><tspan x="300" dy="25.236842105263158">0 <tspan class="fragment" data-fragment-index="4">✅</tspan></tspan></text><line x1="300px" y1="126px" x2="300px" y2="173px" marker-end="url(#arrowHead)"></line><rect x="270px" y="260px" width="60px" height="39px"></rect><text x="300px" y="260px"><tspan x="300" dy="25.236842105263158">6</tspan></text><line x1="300px" y1="213px" x2="300px" y2="260px" marker-end="url(#arrowHead)"></line></g>
+                        </svg>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Solving smalls #2</h3>
+
+                    <pre style="font-size:0.6em;"><code data-trim data-noescape class="python">
+                    def smalls(t):
+                        """Return the non-leaf nodes in t that are smaller than all their descendants.
+
+                        >>> a = Tree(1, [Tree(2, [Tree(4), Tree(5)]), Tree(3, [Tree(0, [Tree(6)])])])
+                        >>> sorted([t.label for t in smalls(a)])
+                        [0, 2]
+                        """
+                    </code></pre>
+
+                    <ol start="4">
+                        <li>Consider what you expect to see in the solution.</li>
+                    </ol>
+
+                    <div class="fragment">
+                    <p>Something which finds the smallest value in a subtree</p>
+                    <pre style="font-size:0.6em; margin-top: 0"><code data-trim data-noescape class="python">
+                    min(___)
+                    </code></pre>
+                    </div>
+                    <div class="fragment">
+                    <p class="padded">Something which compares smallest to current</p>
+                    <pre style="font-size:0.6em; margin-top: 0;"><code data-trim data-noescape class="python">
+                    t.label &lt; smallest
+                    </code></pre>
+                    </div>
+
+                    <div class="fragment">
+                    <p class="padded">Something which adds a subtree to a list</p>
+                    <pre style="font-size:0.6em; margin-top: 0;"><code data-trim data-noescape class="python">
+                    __.append(t)
+                    </code></pre>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h3>Solving smalls #3</h3>
+
+                    <pre style="font-size:0.6em;"><code data-trim data-noescape class="python">
+                    def smalls(t):
+                        """Return the non-leaf nodes in t that are smaller than all their descendants.
+
+                        >>> a = Tree(1, [Tree(2, [Tree(4), Tree(5)]), Tree(3, [Tree(0, [Tree(6)])])])
+                        >>> sorted([t.label for t in smalls(a)])
+                        [0, 2]
+                        """
+                    </code></pre>
+
+                    <ol start="5" class="smaller">
+                        <li>Check out the provided template.</li>
+                        <li class="fragment" data-fragment-index="1">Figure out where what you expected fits into the template.</li>
+                        <li class="fragment" data-fragment-index="5">Label any ambiguously named variables if its helpful.</li>
+                    </ol>
+
+                    <pre style="font-size:0.6em;"><code data-trim data-noescape class="python">
+                        result = [] <span class="fragment" data-fragment-index="4"># The result list</span>
+                        def process(t): <span class="fragment" data-fragment-index="6"># t is a Tree</span>
+                            if t.is_leaf():
+                                return ______________________
+                            else:
+                                smallest = __________________ <span class="fragment" data-fragment-index="2"># Finds smallest</span>
+                                if _________________________: <span class="fragment" data-fragment-index="3"># Compares smallest</span>
+                                    _________________________ <span class="fragment" data-fragment-index="4"># Appends subtree to list</span>
+                                return min(smallest, t.label)
+                        process(t)
+                        return result
+                    </code></pre>
+
+                </section>
+
+
+                <section>
+                    <h3>Solving smalls #4</h3>
+
+                    <pre style="font-size:0.6em;"><code data-trim data-noescape class="python">
+                    def smalls(t):
+                        """Return the non-leaf nodes in t that are smaller than all their descendants.
+
+                        >>> a = Tree(1, [Tree(2, [Tree(4), Tree(5)]), Tree(3, [Tree(0, [Tree(6)])])])
+                        >>> sorted([t.label for t in smalls(a)])
+                        [0, 2]
+                        """
+                    </code></pre>
+
+                    <ol start="8">
+                        <li>Finish filling in the skeleton.
+                    </ol>
+
+                    <pre style="font-size:0.6em;"><code data-trim data-noescape class="python">
+                        result = []
+                        def process(t):
+                            if t.is_leaf():
+                                return t.label
+                            else:
+                                smallest = min([process(b) for b in t.branches])
+                                if t.label < smallest:
+                                    result.append(t)
+                                return min(smallest, t.label)
+                        process(t)
+                        return result
+                    </code></pre>
+                </section>
+
+
+
+                <section>
+                    <h3>Solving smalls #5</h3>
+
+                    <pre style="font-size:0.4em;"><code data-trim data-noescape class="python">
+                    def smalls(t):
+                        """Return the non-leaf nodes in t that are smaller than all their descendants.
+                        >>> a = Tree(1, [Tree(2, [Tree(4), Tree(5)]), Tree(3, [Tree(0, [Tree(6)])])])
+                        >>> sorted([t.label for t in smalls(a)])
+                        [0, 2]
+                        """
+                        result = []
+                        def process(t):
+                            if t.is_leaf():
+                                return t.label
+                            else:
+                                smallest = min([process(b) for b in t.branches])
+                                if t.label < smallest:
+                                    result.append(t)
+                                return min(smallest, t.label)
+                        process(t)
+                        return result
+                    </code></pre>
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+
+                        <ol start="8" style="grid-row: 1; grid-column: 1; vertical-align: top;">
+                            <li>Check your work!
+                        </ol>
+
+                    
+                        <svg id="diagramSvg2" xmlns="http://www.w3.org/2000/svg" style="width: 400px; height: 300px; grid-row: 1; grid-column: 2; vertical-align: top;">
+                            <style id="stylesheet">#diagramSvg2 text {
+                                text-anchor: middle;
+                                font-size: small;
+                                font-weight: bold;
+                            }
+                            
+                            #diagramSvg2 rect {
+                                fill: lightblue;
+                                stroke: black;
+                                opacity: 0.5;
+                                stroke-width: 1.5;
+                            }
+                            
+                            #diagramSvg2 line {
+                                stroke: black;
+                                opacity: 0.5;
+                                stroke-width: 1.5;
+                            }
+                                </style>
+                            <defs>
+                            <marker id="arrowHead" viewBox="-10 -5 10 10" markerUnits="strokeWidth" markerWidth="6" markerHeight="5" orient="auto">
+                                <path d="M -10 -5 L 0 0 L -10 5 z"></path>
+                            </marker>
+                            </defs>
+                            <g id="diagramGroup"><rect x="186px" y="0px" width="60px" height="39px"></rect><text x="216px" y="0px"><tspan x="216" dy="25.236842105263158">1</tspan></text><rect x="103px" y="86px" width="60px" height="39px"></rect><text x="133px" y="86px"><tspan x="133" dy="25.236842105263158">2 </tspan></text><line x1="206px" y1="39px" x2="133px" y2="86px" marker-end="url(#arrowHead)"></line><rect x="270px" y="86px" width="60px" height="39px"></rect><text x="300px" y="86px"><tspan x="300" dy="25.236842105263158">3</tspan></text><line x1="226px" y1="39px" x2="300px" y2="86px" marker-end="url(#arrowHead)"></line><rect x="69px" y="173px" width="60px" height="39px"></rect><text x="99px" y="173px"><tspan x="99" dy="25.236842105263158">4</tspan></text><line x1="123px" y1="126px" x2="99px" y2="173px" marker-end="url(#arrowHead)"></line><rect x="136px" y="173px" width="60px" height="39px"></rect><text x="166px" y="173px"><tspan x="166" dy="25.236842105263158">5</tspan></text><line x1="143px" y1="126px" x2="166px" y2="173px" marker-end="url(#arrowHead)"></line><rect x="270px" y="173px" width="60px" height="39px"></rect><text x="300px" y="173px"><tspan x="300" dy="25.236842105263158">0</tspan></text><line x1="300px" y1="126px" x2="300px" y2="173px" marker-end="url(#arrowHead)"></line><rect x="270px" y="260px" width="60px" height="39px"></rect><text x="300px" y="260px"><tspan x="300" dy="25.236842105263158">6</tspan></text><line x1="300px" y1="213px" x2="300px" y2="260px" marker-end="url(#arrowHead)"></line></g>
+                        </svg>
+                    </div>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Regular expressions</h2>
+                </section>
+
+                <section>
+                    <h3>Matching patterns</h3>
+
+                    <p>Which strings are matched by each regular expression?</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Expressions:
+                                <th>abc
+                                <th>cab
+                                <th>bac
+                                <th>baba
+                                <th>ababca
+                                <th>aabcc
+                                <th>abbaba
+                        <tbody>
+                            <tr>
+                                <td><code>[abc]*</code>
+                                <td><span class="fragment" data-fragment-index="1">✅</span>
+                                <td><span class="fragment" data-fragment-index="1">✅</span>
+                                <td><span class="fragment" data-fragment-index="1">✅</span>
+                                <td><span class="fragment" data-fragment-index="1">✅</span>
+                                <td><span class="fragment" data-fragment-index="1">✅</span>
+                                <td><span class="fragment" data-fragment-index="1">✅</span>
+                                <td><span class="fragment" data-fragment-index="1">✅</span>
+                            <tr>
+                                <td><code>a*b*c*</code>
+                                <td><span class="fragment" data-fragment-index="1">✅</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                                <td><span class="fragment" data-fragment-index="1">✅</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                            <tr>
+                                <td><code>ab|[bc]*</code>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                            <tr>
+                                <td><code>(a[bc]+)+a?</code>
+                                <td><span class="fragment" data-fragment-index="1">✅</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                                <td><span class="fragment" data-fragment-index="1">✅</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                                <td><span class="fragment" data-fragment-index="1">✅</span>
+                            <tr>
+                                <td><code>(ab|ba)+(ab|[bc])?</code>
+                                <td><span class="fragment" data-fragment-index="1">✅</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                                <td><span class="fragment" data-fragment-index="1">✅</span>
+                                <td><span class="fragment" data-fragment-index="1">✅</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                                <td><span class="fragment" data-fragment-index="1">❌</span>
+                                <td><span class="fragment" data-fragment-index="1">✅</span>
+
+                    </table>
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>Interpreters</h2>
+                </section>
+
+                <section>
+                    <h3>Interpreter analysis</h3>
+
+                    <p>What expressions are passed to <code>scheme_eval</code> when evaluating the following expressions?</p>
+
+                    <pre style="font-size:1.0em;"><code data-trim data-noescape class="scheme">
+                    <span class="bordered-fragment fragment" data-fragment-index="1">(define x <span class="bordered-fragment fragment" data-fragment-index="2">(<span class="bordered-fragment fragment" data-fragment-index="3">+</span> <span class="bordered-fragment fragment" data-fragment-index="4">1</span> <span class="bordered-fragment fragment" data-fragment-index="5">2</span>)</span>)</span>
+                   
+                    <span class="bordered-fragment fragment" data-fragment-index="6">(define (f y) <span class="bordered-fragment fragment" data-fragment-index="15">(<span class="bordered-fragment fragment" data-fragment-index="16">+</span> <span class="bordered-fragment fragment" data-fragment-index="17">x</span> <span class="bordered-fragment fragment" data-fragment-index="18">y</span>)</span>)</span>
+
+                    <span class="bordered-fragment fragment"data-fragment-index="7" >(<span class="bordered-fragment fragment" data-fragment-index="8">f</span> <span class="bordered-fragment fragment" data-fragment-index="9">(if <span class="bordered-fragment fragment" data-fragment-index="10">(<span class="bordered-fragment fragment" data-fragment-index="11">&gt;</span> <span class="bordered-fragment fragment" data-fragment-index="12">3</span> <span class="bordered-fragment fragment" data-fragment-index="13">2</span>)</span> <span class="bordered-fragment fragment" data-fragment-index="14">4</span> 5)</span>)</span>
+                    </code></pre>
+                </section>
+
+
+			</div>
+		</div>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight ],
+                pdfSeparateFragments: true,
+                transition: "none"
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge(options);
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+        </script>
+    </body>
+</html>

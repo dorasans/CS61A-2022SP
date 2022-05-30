@@ -1,0 +1,1048 @@
+
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Functions, Expressions, Values</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Functions</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="02-Functions.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+					</div>
+                    <!-- Zoom poll- where are you watching from? -->
+				</section>
+
+                <section>
+                    <h2>What we'll discuss today...</h2>
+
+                    <ul>
+                        <li>Zoom rules</li>
+                        <li>Values</li>
+                        <li>Expressions</li>
+                        <li>Functions</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>The Rules of the Zoom</h3>
+
+                    <ul>
+                        <li>Chat will be enabled. Please hide it and/or disable notifications if distracting.</li>
+                        <li>Chat is for questions & comments on <strong>the current topic</strong>.</li>
+                        <li>If the chat goes off-topic, we'll ask you to focus or we'll disable it. 🙀</li>
+                        <li>You can also post questions in the Zoom Q&A.</li>
+                        <li>If you have unanswered or tangential questions, post in the Piazza Q&A thread.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Community guidelines</h3>
+
+                    <p>Your goal should be to learn and help others learn.</p>
+                    <p>Even if everyone here has programming experience,
+                        there is still a wide range of experience levels.
+                        All are welcome! <br>
+                        🧑🏻‍💻🧑🏼‍💻👩🏻‍💻🧑🏽‍💻🧑🏾‍💻👩🏽‍💻🧑🏿‍💻👩🏾‍💻👨🏻‍💻👩🏿‍💻👨🏼‍💻👨🏽‍💻👩🏼‍💻👨🏾‍💻👨🏿‍💻
+                    </p>
+
+                    <p>There are no "stupid" questions. Ask all your questions
+                        and welcome everyone else's questions.
+                        <br>
+                        🙋🏻🙋🏼🙋🏿‍♀️🙋🏽🙋🏾‍♀️🙋🏾🙋🏿🙋🏽‍♀️🙋🏻‍♂️🙋🏼‍♀️🙋🏼‍♂️🙋🏽‍♂️🙋🏻‍♀️🙋🏾‍♂️🙋🏿‍♂️🙋🏻‍♀️
+                    </p>
+                </section>
+
+
+
+                <section class="heading-only">
+                    <h2>Expressions & Values</h2>
+                </section>
+
+                <section>
+                    <h3>What do programs do?</h3>
+
+                    <ul>
+                        <li>Programs work by manipulating <strong>values</strong></li>
+                        <li><strong>Expressions</strong> in programs evaluate to values
+                            <ul>
+                                <li>Expression: <code>'a' + 'hoy'</code></li>
+                                <li>Value: <code>'ahoy'</code></li>
+                            </ul>
+                        </li>
+                        <li>The Python interpreter evaluates expressions and displays their values</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Values</h3>
+
+                    <p>Programs manipulate <strong>values</strong>.</p>
+                    <p>Each value has a certain <strong>data type</strong>.</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data type
+                                <th>Example values
+                        <tbody>
+                            <tr>
+                                <td>Integers
+                                <td><code>2</code> <code>44</code> <code>-3</code>
+                            <tr>
+                                <td>Floats
+                                <td><code>3.14</code> <code>4.5</code> <code>-2.0</code>
+                            <tr>
+                                <td>Booleans
+                                <td><code>True</code> <code>False</code>
+                            <tr>
+                                <td>Strings
+                                <td><code>'¡hola!'</code> <code>'its python time!'</code>
+                    </table>
+
+                    <p>Try in a Python interpreter, like on <a href="https://code.cs61a.org">code.cs61a.org</a>.</p>
+                </section>
+
+                <section>
+                    <h3>Expressions <span class="smaller">(with operators)</span></h3>
+
+                    <p class="smaller">An expression describes a computation and evaluates to a value.</p>
+
+                    <p class="smaller">Some expressions use operators:</p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    18 + 69
+                    </code></pre>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    6/23
+                    </code></pre>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    2 * 100
+                    </code></pre>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    2 ** 100
+                    </code></pre>
+
+                    <p>Try in a Python interpreter, like on <a href="https://code.cs61a.org">code.cs61a.org</a>.</p>
+
+                </section>
+
+                <section>
+                    <h3>Call expressions</h3>
+
+                    <p class="smaller">Many expressions use function calls:</p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    pow(2, 100)
+                    </code></pre>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    max(50, 300)
+                    </code></pre>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    min(-1, -300)
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Expressions (both ways)</h3>
+
+                    <p>Expressions with operators can also be expressed with function call notation:</p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    2 ** 100
+                    pow(2, 100)
+                    </code></pre>
+
+                    <div class="fragment">
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    from operator import add
+
+                    18 + 69
+                    add(18, 69)
+                    </code></pre>
+
+                    <p class="smaller">
+                        The <code>pow()</code> function is a <strong>built-in</strong>; it's provided in every
+                        Python environment.
+                     Other functions (<code>add()</code>, <code>div()</code>, etc)
+                        must be imported from the
+                        <a target="_blank" href="https://docs.python.org/3/library/operator.html"><code>operator</code></a> module in the Python standard library.</p>
+                    </p>
+                </div>
+
+                </section>
+
+
+
+                <section>
+                    <h3>Anatomy of a Call Expression</h3>
+
+                    <style type="text/css">
+                    table.anatomy_of_call {
+                        border: 2px dotted #0072c1;
+                        border-radius: 8px;
+                        border-collapse: separate;
+                        padding: 10px;
+                    }
+
+                    table.anatomy_of_call tr:first-child td {
+                        font-family:monospace;
+                    }
+
+                    table.anatomy_of_call td {
+                        text-align:center;
+                    }
+
+                    table.anatomy_of_call tr:first-child td {
+                        border-bottom: none;
+                    }
+
+                    table.anatomy_of_call td.anatomy_of_call_operator {
+                        border-top: 1px solid purple;
+                    }
+
+                    table.anatomy_of_call td.anatomy_of_call_operand {
+                        border-top: 1px solid green;
+                    }
+
+                    .anatomy_of_call_operator {
+                        color: purple;
+                    }
+
+                    .anatomy_of_call_operand {
+                        color: green;
+                    }
+                    </style>
+
+                    <table class="anatomy_of_call">
+                        <tr>
+                            <td>add
+                            <td>(
+                            <td>18
+                            <td>,
+                            <td>69
+                            <td>)
+                        <tr>
+                            <td class="anatomy_of_call_operator"><span class="fragment" data-fragment-index="1">Operator</span>
+                            <td>
+                            <td class="anatomy_of_call_operand"><span class="fragment" data-fragment-index="2">Operand</span>
+                            <td>
+                            <td class="anatomy_of_call_operand"><span class="fragment" data-fragment-index="2">Operand</span>
+                            <td>
+                    </table>
+
+                    <p>How Python evaluates a call expression:</p>
+
+                    <ol>
+                        <li class="fragment" data-fragment-index="1">Evaluate the <span class="anatomy_of_call_operator">operator</span>
+                        <li class="fragment" data-fragment-index="2">Evaluate the <span class="anatomy_of_call_operand">operands</span>
+                        <li class="fragment" data-fragment-index="3">Apply the <span class="anatomy_of_call_operator">operator (a function)</span> to the evaluated <span class="anatomy_of_call_operand">operands (arguments)</span>
+                    </ol>
+
+                    <p class="fragment">Operators and operands are also expressions, so they must be evaluated to discover their values.</p>
+
+                </section>
+
+                <!--<section>
+                    <h3>Nested call expressions</h3>
+
+                    <table class="anatomy_of_call">
+                        <tr>
+                            <td>add
+                            <td>(
+                            <td>add(6, mul(4, 6))
+                            <td>,
+                            <td>mul(3, 5)
+                            <td>)
+                        <tr>
+                            <td class="anatomy_of_call_operator">Operator
+                            <td>
+                            <td class="anatomy_of_call_operand">Operand
+                            <td>
+                            <td class="anatomy_of_call_operand">Operand
+                            <td>
+                    </table>
+
+                    <p>Humans evaluate inside out:</p>
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    add(add(6, <strong>mul(4, 6)</strong>), mul(3, 5))
+                    <span class="fragment">add(add(6,    <strong>24</strong>    ), mul(3, 5))</span>
+                    <span class="fragment">add(<strong>add(6,    24    )</strong>, mul(3, 5))</span>
+                    <span class="fragment">add(        <strong>30</strong>       , mul(3, 5))</span>
+                    <span class="fragment">add(        30       , <strong>mul(3, 5)</strong>)</span>
+                    <span class="fragment">add(        30       ,    <strong>15</strong>    )</span>
+                    <span class="fragment"><strong>add(        30       ,    15    )</strong></span>
+                    <span class="fragment">45</span>
+                    </code></pre>
+
+                </section>-->
+
+                <section>
+                    <h3>Evaluating nested expressions</h3>
+
+                    <svg id="Layer_1" data-name="Layer 1"
+                    xmlns="http://www.w3.org/2000/svg" width="629.21" height="494.89" viewBox="0 0 629.21 494.89">
+                    <defs>
+                        <style>
+                      .cls-1 {
+                        font-size: 26px;
+                        font-family: Courier;
+                      }
+
+                      .cls-2, .cls-3 {
+                        fill: #662d91;
+                        stroke: #662d91;
+                      }
+
+                      .cls-2, .cls-3, .cls-4, .cls-5 {
+                        stroke-miterlimit: 10;
+                      }
+
+                      .cls-2, .cls-5 {
+                        stroke-width: 2px;
+                      }
+
+                      .cls-4, .cls-5 {
+                        fill: none;
+                        stroke: #006837;
+                      }
+
+                      .cls-6 {
+                        fill: #f15a24;
+                      }
+
+                      .cls-7 {
+                        font-size: 31.16px;
+                        fill: #fff;
+                      }
+                    </style>
+                    </defs>
+                    <text class="cls-1" transform="translate(103.72 101.18)">add(add(6, mul(4, 6)), mul(3, 5))</text>
+                    <g class="fragment">
+                        <text class="cls-1" transform="translate(0 241.41)">add</text>
+                        <line class="cls-2" x1="105.34" y1="113.35" x2="146.34" y2="113.35"/>
+                        <line class="cls-3" x1="25.34" y1="215.35" x2="124.34" y2="113.35"/>
+                    </g>
+                    <g class="fragment">
+                        <line class="cls-4" x1="203.34" y1="215.35" x2="282.34" y2="113.35"/>
+                        <text class="cls-1" transform="translate(98.96 241.41)">add(6, mul(4, 6))</text>
+                        <line class="cls-5" x1="162.84" y1="113.35" x2="419.84" y2="113.35"/>
+                    </g>
+                    <g class="fragment">
+                        <text class="cls-1" transform="translate(35.78 373.25)">add</text>
+                        <line class="cls-2" x1="101.34" y1="254.35" x2="142.34" y2="254.35"/>
+                        <line class="cls-3" x1="59.84" y1="345.85" x2="120.34" y2="253.35"/>
+                    </g>
+                    <g class="fragment">
+                        <text class="cls-1" transform="translate(139 373.25)">6</text>
+                        <line class="cls-5" x1="161.34" y1="254.35" x2="185.34" y2="254.35"/>
+                        <line class="cls-4" x1="151.84" y1="345.85" x2="172.84" y2="255.35"/>
+                    </g>
+                    <g class="fragment">
+                        <line class="cls-4" x1="269.84" y1="345.85" x2="269.84" y2="253.85"/>
+                        <text class="cls-1" transform="translate(212.4 373.25)">mul(4, 6)</text>
+                        <line class="cls-5" x1="213.34" y1="254.35" x2="339.34" y2="254.35"/>
+                    </g>
+                    <g class="fragment">
+                        <text class="cls-1" transform="translate(191.6 484.25)">mul</text>
+                        <line class="cls-2" x1="213.34" y1="384.35" x2="254.34" y2="384.35"/>
+                        <line class="cls-3" x1="217.84" y1="462.85" x2="232.34" y2="383.35"/>
+                    </g>
+                    <g class="fragment">
+                        <text class="cls-1" transform="translate(279.71 484.25)">4</text>
+                        <line class="cls-5" x1="274.34" y1="384.35" x2="298.34" y2="384.35"/>
+                        <line class="cls-4" x1="285.84" y1="455.85" x2="285.84" y2="385.35"/>
+                    </g>
+                    <g class="fragment">
+                        <text class="cls-1" transform="translate(336.6 484.25)">6</text>
+                        <line class="cls-5" x1="323.46" y1="384.35" x2="347.46" y2="384.35"/>
+                        <line class="cls-4" x1="347.84" y1="455.85" x2="334.96" y2="385.19"/>
+                    </g>
+                    <g class="fragment">
+                        <rect class="cls-6" x="203.59" y="288.01" width="151" height="57.35" rx="28.67"/>
+                        <text class="cls-7" transform="translate(268.75 326.43)">24</text>
+                    </g>
+                    <g class="fragment">
+                        <rect class="cls-6" x="90.52" y="158.01" width="267.83" height="57.35" rx="28.67"/>
+                        <text class="cls-7" transform="translate(211.91 196.43)">30</text>
+                    </g>
+                    <g class="fragment">
+                        <line class="cls-4" x1="543.34" y1="215.35" x2="541.16" y2="113.76"/>
+                        <text class="cls-1" transform="translate(483.21 241.41)">mul(3, 5)</text>
+                        <line class="cls-5" x1="461.34" y1="113.35" x2="606.34" y2="113.35"/>
+                    </g>
+                    <g class="fragment">
+                        <text class="cls-1" transform="translate(457.01 373.25)">mul</text>
+                        <line class="cls-2" x1="484.36" y1="252.2" x2="525.36" y2="252.2"/>
+                        <line class="cls-3" x1="488.86" y1="346.35" x2="503.36" y2="251.2"/>
+                    </g>
+                    <g class="fragment">
+                        <text class="cls-1" transform="translate(550.91 373.25)">3</text>
+                        <line class="cls-5" x1="545.36" y1="252.2" x2="569.36" y2="252.2"/>
+                        <line class="cls-4" x1="556.84" y1="345.85" x2="556.86" y2="253.59"/>
+                    </g>
+                    <g class="fragment">
+                        <text class="cls-1" transform="translate(613.6 373.25)">5</text>
+                        <line class="cls-5" x1="594.47" y1="252.2" x2="618.47" y2="252.2"/>
+                        <line class="cls-4" x1="619.84" y1="345.85" x2="605.97" y2="253.4"/>
+                    </g>
+                    <g class="fragment">
+                        <rect class="cls-6" x="475.34" y="158.01" width="151" height="57.35" rx="28.67"/>
+                        <text class="cls-7" transform="translate(540.5 196.43)">15</text>
+                    </g>
+                    <g class="fragment">
+                        <rect class="cls-6" x="124.34" width="469" height="57.35" rx="28.67"/>
+                        <text class="cls-7" transform="translate(324.74 38.42)">45</text>
+                    </g>
+                </svg>
+
+                    <p class="fragment">This is called an <strong>expression tree</strong>.</p>
+                </section>
+
+                <section>
+                    <h3>Exercise: Expressions</h3>
+
+                    <p>After the lecture, you can try out <a target="_blank" href="https://code.cs61a.org/operator_expressions">this exercise</a>.
+                        (Not graded, just another way to engage with the material!)
+                    </p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Names</h2>
+                </section>
+
+                <section>
+                    <img src="https://girldevelopit.github.io/gdi-python/images/name_value.png" alt="Name bound to value" width="200" style="float:right;">
+                    <h3>Names</h3>
+
+                    <p>A <strong>name</strong> can be bound to a value.
+                    </p>
+                    <br>
+                    <p>One way to bind a name is with an <strong>assignment statement</strong>:</p>
+
+                    <table class="anatomy_of_call">
+                        <tr>
+                            <td>x
+                            <td>=
+                            <td>7
+                        <tr>
+                            <td class="anatomy_of_call_operator">Name
+                            <td>
+                            <td class="anatomy_of_call_operand">Value
+                    </table>
+
+                    <div class="fragment">
+                    <p>The value can be any expression:</p>
+
+                    <table class="anatomy_of_call">
+                        <tr>
+                            <td>x
+                            <td>=
+                            <td>1 + 2 * 3 - 4 // 5
+                        <tr>
+                            <td class="anatomy_of_call_operator">Name
+                            <td>
+                            <td class="anatomy_of_call_operand">Expression
+                    </table>
+                    </div>
+
+                </section>
+
+                <section>
+                    <h3>Using names</h3>
+
+                    <p>A name can be referenced multiple times:</p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    x = 10
+                    y = 3
+
+                    result1 = x * y
+                    result2 = x + y
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p>A name that's bound to a data value is also known as a <strong>variable</strong>.</p>
+
+                    <!--<p>💬 How many variables are in that code snippet? <br>
+                        <span class="fragment">4 variables: <code>x</code>, <code>y</code>, <code>result1</code>, <code>result2</code></span>
+                    </p>-->
+                    </div>
+
+                </section>
+
+                <section>
+                    <h3>Name rebinding</h3>
+
+                    <p>A name can only be bound to a single value.</p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    my_name = 'Pamela'
+
+                    my_name = my_name + 'ela'
+                    </code></pre>
+
+                    <p>💬  Will that code error? If not, what will <code>my_name</code> store? <br>
+                        <span class="fragment">It will not error (similar code in other languages might, however).
+                        The name <code>my_name</code> is now bound to the value 'Pamelaela'.
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Exercise</h3>
+
+                    <p>Try this after the lecture...</p>
+                    <p>What will be the value of the final expression in this sequence?</p>
+                    <pre style="font-size:1.0em" class="no-code-badge"><code data-trim data-noescape class="python">
+                    f = min
+                    f = max
+                    g = min
+                    h = max
+                    max = g
+                    max(f(2, g(h(1, 5), 3)), 4)
+                    </code></pre>
+
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>Environment diagrams</h2>
+                </section>
+
+                <section>
+                    <h2>Environment diagrams</h2>
+
+                    <p>An environment diagram is a visualization of how Python interprets a program.
+                        Use the free website PythonTutor to generate diagrams.
+                        <a href="http://pythontutor.com/composingprograms.html#code=x%20%3D%201%0Ay%20%3D%20x%0Ax%20%3D%202%20%2B%20x%0Az%20%3D%20x%20%2B%20y&cumulative=false&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false" target="_blank">View example</a>
+                    </p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:50%;">Code (left)
+                                <th>Frames (right)
+                        <tbody>
+                            <tr>
+                                <td><img src="https://girldevelopit.github.io/gdi-python/images/pythontutor_code.png" alt="screenshot of left side of PythonTutor" height="200">
+                                <td><img src="https://girldevelopit.github.io/gdi-python/images/pythontutor_frames.png" alt="screenshot of right side of PythonTutor" height="200">
+                            <tr><td class="smaller">Arrows indicate the order of execution. Green = just executed, red = up next.
+                                <td class="smaller">Each name is bound to a value.<br>
+                                    Within a frame, each name cannot be repeated.
+                    </table>
+                </section>
+
+                <section>
+                    <h3>Assignments in Environment diagrams</h3>
+
+                    <p>How Python interprets an assignment statement:</p>
+
+                    <ul>
+                        <li>Evaluate the expression to the right of <code>=</code>.
+                        <li>Bind the expression's value to the name that's on the left side of the <code>=</code> sign.
+                    </ul>
+
+                    <img src="https://girldevelopit.github.io/gdi-python/images/pythontutor_assignment.png" alt="screenshot of left side of PythonTutor" height="150">
+                    <p class="python-tutor-link"><a target="_blank" href="http://pythontutor.com/composingprograms.html#code=x%20%3D%201%0Ay%20%3D%20x%0Ax%20%3D%202%20%2B%20x%0Az%20%3D%20x%20%2B%20y&cumulative=true&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false">View in PythonTutor</a></p>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Functions</h2>
+                </section>
+
+                <section>
+                    <h3>What is a function?</h3>
+
+                    <p>A <strong>function</strong> is a sequence of code that performs a particular task
+                        and can be easily reused. ♻️
+                    </p>
+
+                    <p>We've already used functions:</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    add(18, 69)
+                    mul(60, sub(5, 4))
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p>A function takes inputs (the <strong>arguments</strong>) and returns an output (the <strong>return value</strong>).</p>
+
+                    <p style="font-family:monospace">18, 69 → <span style="display:inline-block; padding: 10px; border-radius: 2px; background: rgb(195, 212, 233)">add</span> → 87
+                    </p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Defining functions</h3>
+
+                    <p>The most common way to define functions is Python is the <code>def</code> statement.</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    def &lt;name&gt;(&lt;parameters&gt;):
+                        return &lt;return expression&gt;
+                    </code></pre>
+
+                    <p>Example:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    def add(num1, num2):
+                        return num1 + num2
+                    </code></pre>
+
+                    <p>Once defined, we can call it:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    add(2, 2)
+                    add(18, 69)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Anatomy of a function definition</h3>
+
+                    <p>The first line is called the <strong>function signature</strong>,
+                        all lines after are considered the <strong>function body</strong>.</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def &lt;name&gt;(&lt;parameters&gt;):        # ← Function signature
+                        return &lt;return expression&gt;   # ← Function body
+                    </code></pre>
+
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def add(num1, num2):             # ← Function signature
+                        return num1 + num2           # ← Function body
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p>The function body can have multiple lines:</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def add(num1, num2):             # ← Function signature
+                        sum = num1 + num2            # ← Function body
+                        return sum                   # ← Function body
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Function arguments</h3>
+
+                    <p>We can pass in any expressions as arguments.</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def add(num1, num2):
+                        return num1 + num2
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    x = 1
+                    y = 2
+                    add(x, y)
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    x = 3
+                    add(x * x, x + x)
+                    </code></pre>
+
+                    <p><a target="_blank" href="http://code.cs61a.org/texter">Example with strings</a></p>
+                </section>
+
+                <section>
+                    <h3>Return values</h3>
+
+                    <p>The return keyword returns a value to whoever calls the function (and exits the function).</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def add(num1, num2):
+                        return num1 + num2
+
+                    sum = add(2, 4)
+                    </code></pre>
+
+                    <p>Reminder: You can use function calls in expressions:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    big_sum = add(200, 412) + add(312, 256)
+                    </code></pre>
+
+                    <p>...and nest function calls inside function calls:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    huge_sum = add(add(200, 412), add(312, 256))
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Spot the bug #1</h3>
+
+                    <p>What's wrong with this code?</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def add(num1, num2):
+                        return sum
+                        sum = num1 + num2
+
+                    sum = add(2, 4)
+                    </code></pre>
+
+                    <p class="fragment">The code after the return statement will not be executed,
+                    that line belongs before the return.</p>
+                </section>
+
+                <section>
+                    <h3>Spot the bug #2</h2>
+                    <p>What's wrong with this code?</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def add():
+                        return num1 + num2
+
+                    sum = add(2, 4)
+                    </code></pre>
+                    <p class="fragment">The function body is referring to variables
+                        that don't seem to exist. Most likely, they should be parameters
+                        in the function signature.</p>
+                </section>
+
+                <section>
+                    <h3>Spot the bug #3</h2>
+
+                    <p>What's wrong with this code?</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def add(num1, num2):
+                        sum = num1 + num2
+
+                    sum = add(2, 4)
+                    </code></pre>
+                    <p class="fragment">The function body does not return any value.
+                        However, the code that calls it tries to use the result of the expression.
+                        It should have a return statement that returns the sum.
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Functions in environment diagrams</h3>
+
+                    <p>How Python interprets a def statement:</p>
+
+                        <ul>
+                            <li>It creates a function with the <code>name</code> and <code>parameters</code>
+                            <li>It sets the function body to everything indented after the first line
+                            <li>It binds the function name to that function body (similar to an assignment statement)
+                        </ul>
+
+                    <img src="https://girldevelopit.github.io/gdi-python/images/pythontutor_defstatement.png" alt="screenshot of PythonTutor executing a def statement">
+
+                    <p class="python-tutor-link">
+                        <a target="_blank" href="http://pythontutor.com/composingprograms.html#code=def%20add%28num1,%20num2%29%3A%0A%20%20%20%20sum%20%3D%20num1%20%2B%20num2%0A%20%20%20%20return%20sum%0A%20%20%20%20%0Aresult%20%3D%20add%282,%204%29&cumulative=true&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false">
+                            View in PythonTutor
+                        </a>
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Function calls in environment diagrams</h3>
+
+                    <p>How Python interprets a function call:</p>
+
+                        <ul>
+                            <li>It creates a new <strong>frame</strong> in the environment
+                            <li>It binds the function call's arguments to the parameters in that frame
+                            <li>It executes the body of the function in the new frame
+                        </ul>
+
+                        <img src="https://girldevelopit.github.io/gdi-python/images/pythontutor_functioncall.png" alt="screenshot of PythonTutor executing a def statement">
+
+                        <p class="python-tutor-link">
+                            <a target="_blank" href="http://pythontutor.com/composingprograms.html#code=def%20add%28num1,%20num2%29%3A%0A%20%20%20%20sum%20%3D%20num1%20%2B%20num2%0A%20%20%20%20return%20sum%0A%20%20%20%20%0Aresult%20%3D%20add%282,%204%29&cumulative=true&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false">
+                                View in PythonTutor
+                            </a>
+                        </p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>More on names</h2>
+                </section>
+
+                <section>
+                    <h3>Names and environments</h3>
+
+                    <p>All Python code is evaluated in the context of an <strong>environment</strong>, which is a sequence of frames.</p>
+                    <p>We've seen two possible environments:</p>
+                    <table>
+                        <tr>
+                            <td style="vertical-align:middle;">Global frame
+                            <td><img src="https://girldevelopit.github.io/gdi-python/images/envdiagram_names_global.png" alt="screenshot of PythonTutor environment diagram" width="400">
+                        <tr>
+                            <td style="vertical-align:middle;">Function's local frame,<br> child of Global frame
+                            <td><img src="https://girldevelopit.github.io/gdi-python/images/envdiagram_names_in_func.png" alt="screenshot of PythonTutor environment diagram" width="400">
+                    </table>
+
+                </section>
+
+                <section>
+                    <h3>Name lookup rules</h3>
+
+                    <p>How Python looks up names in a user-defined function:</p>
+
+                    <ol>
+                        <li>Look it up in the local frame
+                        <li>If name isn't in local frame, look it up in the global frame
+                        <li>If name isn't in either frame, throw a NameError
+                    </ol>
+
+                    <p>*This is simplified since we haven't learned all the Python features that complicate the rules.</p>
+                </section>
+
+                <section>
+                    <h3>Name lookup example #1</h3>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    def exclamify(text):
+                        start_exclaim = "¡"
+                        end_exclaim = "!"
+                        return start_exclaim + text + end_exclaim
+
+                    exclamify("the snails are eating my lupines")
+                    </code></pre>
+
+                    <ul>
+                        <li>On line 4, which frame is <code>start_exclaim</code> found in? <br><span class="fragment">The local frame for exclamify</span>
+                        <li>On line 4, Which frame is <code>text</code> found in? <br><span class="fragment">The local frame for exclamify</span>
+                        <li>On line 6, which frame is <code>exclamify</code> found in? <br><span class="fragment">The global frame</span>
+                    </ul>
+                    <p class="python-tutor-link"><a target="_blank" href="http://pythontutor.com/composingprograms.html#code=def%20exclamify%28text%29%3A%0A%20%20%20%20start_exclaim%20%3D%20%22%C2%A1%22%0A%20%20%20%20end_exclaim%20%3D%20%22!%22%0A%20%20%20%20return%20start_exclaim%20%2B%20text%20%2B%20end_exclaim%0A%0Aexclamify%28%22the%20snails%20are%20eating%20my%20lupines%22%29&cumulative=false&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false">View in PythonTutor</a></p>
+
+
+                </section>
+
+                <section>
+                    <h3>Name lookup example #2</h3>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    start_exclaim = "¡"
+                    end_exclaim = "❣️"
+
+                    def exclamify(text):
+                        return start_exclaim + text + end_exclaim
+
+                    exclamify("the voles are digging such holes")
+                    </code></pre>
+
+                    <ul>
+                        <li>On line 5, which frame is <code>start_exclaim</code> found in? <br><span class="fragment">The global frame</span>
+                        <li>On line 5, Which frame is <code>text</code> found in? <br><span class="fragment">The local frame for exclamify</span>
+                        <li>On line 6, which frame is <code>exclamify</code> found in? <br><span class="fragment">The global frame</span>
+                    </ul>
+                    <p class="python-tutor-link"><a target="_blank" href="http://pythontutor.com/composingprograms.html#code=start_exclaim%20%3D%20%22%C2%A1%22%0Aend_exclaim%20%3D%20%22%E2%9D%A3%EF%B8%8F%22%0A%0Adef%20exclamify%28text%29%3A%0A%20%20%20%20return%20start_exclaim%20%2B%20text%20%2B%20end_exclaim%0A%0Aexclamify%28%22the%20voles%20are%20digging%20such%20holes%22%29&cumulative=false&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false">View in PythonTutor</a></p>
+
+                </section>
+
+                <section>
+                    <h3>Name lookup example #3</h3>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    def exclamify(text):
+                        end_exclaim = "⁉️️️"
+                        return start_exclaim + text + end_exclaim
+
+                    exclamify("the voles are digging such holes")
+                    </code></pre>
+
+                    <ul>
+                        <li>Which name will cause a <code>NameError</code>?<br>
+                            <span class="fragment">The <code>start_exclaim</code> name, since it was never assigned.</span>
+                        <li>When will that error happen?<br>
+                            <span class="fragment">It will happen when <code>exclamify</code> is called and Python tries to execute the return statement.</span>
+                    </ul>
+
+                    <p class="python-tutor-link"><a target="_blank" href="http://pythontutor.com/composingprograms.html#code=def%20exclamify%28text%29%3A%0A%20%20%20%20end_exclaim%20%3D%20%22%E2%81%89%EF%B8%8F%EF%B8%8F%EF%B8%8F%22%0A%20%20%20%20return%20start_exclaim%20%2B%20text%20%2B%20end_exclaim%0A%0Aexclamify%28%22the%20voles%20are%20digging%20such%20holes%22%29&cumulative=false&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false">View in PythonTutor</a></p>
+
+                </section>
+
+                <section>
+                    <h3>Summary</h3>
+
+                    <ul class="smaller">
+                        <li>Programs consist of <strong>statements</strong>, or instructions for the computer, containing <strong>expressions</strong>, which describe computation and evaluate to values.
+                        <li><strong>Values</strong> can be assigned to <strong>names</strong> to avoid repeating computations.
+                        <li>An <strong>assignment statement</strong> assigns the value of an expression to a name in the current <strong>environment</strong>.
+                        <li><strong>Functions</strong> encapsulate a series of statements that maps <strong>arguments</strong> to a <strong>return value</strong>.
+                        <li>A <strong>def statement</strong> creates a function object with certain <strong>parameters</strong> and a <strong>body</strong> and binds it to a name in the current environment.
+                        <li>A <strong>call expression</strong> applies the value of its <strong>operator</strong>, a function, to the value(s) or its <strong>operand(s)</strong>, some arguments.
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Exercises</h3>
+
+                    <p>You can try these exercises after the lecture for some additional practice:</p>
+
+                    <ul>
+                        <li><a target="_blank" href="https://code.cs61a.org/operator_expressions">Operator expressions</a></li>
+                        <li><a target="_blank" href="https://code.cs61a.org/fortune_teller">Fortune Teller</a>
+                        <li><a target="_blank" href="https://code.cs61a.org/dog_age">Dog Age</a>
+                        <li><a target="_blank" href="https://code.cs61a.org/lifetime_supply">Lifetime Supply</a>
+                        <li><a target="_blank" href="https://code.cs61a.org/temperature_converter">Temperature Converter</a>
+                    </ul>
+
+                    <p>To run the doctests, press the red test tube in the upper right corner.</p>
+                </section>
+
+			</div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+		<script>
+			const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+			Reveal.initialize({
+				hash: true,
+				center: false,
+				slideNumber: true,
+				showNotes: false,
+				margin: 0.1,
+				preloadIframes: true,
+				plugins: [ RevealHighlight ],
+				pdfSeparateFragments: true
+			});
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge(options);
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+		</script>
+	</body>
+</html>

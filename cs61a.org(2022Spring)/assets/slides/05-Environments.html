@@ -1,0 +1,1294 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Environments</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+        <link rel="stylesheet" href="https://unpkg.com/balloon-css/balloon.min.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 12px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                border: none;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+            </style>
+            <style>
+                .circle-marker {
+                    position: absolute;
+                    background: blue;
+                    color: white;
+                    font-size: 20px;
+                    border-radius: 30px;
+                    width: 30px;
+                    height: 30px;
+                    text-align: center;
+                }
+                .circle-marker-arc {
+                    position: absolute;
+                    width: 60px;
+                    height: 90px;
+                    background: transparent;
+                    border-radius: 100px;
+                    border-left: 1px solid blue;
+                }
+            </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Environments</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="05-Environments.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Multiple environments</li>
+                        <li>Environments for HOFs</li>
+                        <li>Local names</li>
+                        <li>Function composition</li>
+                        <li>Currying</li>
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Multiple Environments</h2>
+                </section>
+
+                <section>
+                    <h3>Life cycle of a function</h3>
+
+                    <style>
+                    .bordered {
+                        border: 1px dashed blue;
+                        border-radius: 8px;
+                        padding: 6px;
+                        --balloon-font-size: 20px;
+                    }
+
+                    </style>
+                    <style>
+                    .functionbox {
+                        width: 340px;
+                        height: 80px;
+                        display: grid;
+                        grid-template-columns: 20% 5% 50% 5% 20%;
+                        grid-template-rows: 40% 20% 40%;
+                        font-size: 18px;
+                    }
+                    .functionbox-arguments {
+                        padding-right: 6px; color: #0028ff; text-align: right; grid-column: 1; grid-row: 1
+                    }
+                    .functionbox-input {
+                        background: rgb(245, 245, 245);
+                        grid-column: 2;grid-row: 1
+                    }
+                    .functionbox-inside {
+                        background: rgb(245, 245, 245);
+                        font-family: monospace;
+                        white-space: pre;
+                        padding: 5px;
+                        grid-column: 3;
+                        grid-row: 1 / span 3;
+                    }
+                    .functionbox-output {
+                        background: rgb(245, 245, 245);
+                        grid-column: 4;
+                        grid-row: 3
+                    }
+                    .functionbox-return {
+                        padding-left: 6px;
+                        color: #0028ff;
+                        grid-column: 5;
+                        grid-row: 3;
+                    }
+
+                    table.lifecycle-table tr td:first-child {
+                        font-size: 0.6em;
+                        font-weight: bold;
+                    }
+                    table.lifecycle-table tr td {
+                        vertical-align: top;
+                    }
+                    </style>
+
+                    <table class="lifecycle-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>What happens?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Def statement</td>
+                                <td>
+                                    <pre class="no-code-badge" style="font-size:0.9em; line-height: 2.0em"><code data-trim data-noescape style="overflow:visible;">
+                                    def <span class="bordered" aria-label="Name" data-balloon-pos="up" title="Name">square</span>( <span class="bordered" aria-label="Formal parameter" data-balloon-pos="up">x</span>):
+                                        <span class="bordered" aria-label="Body (return statement)" data-balloon-pos="down" style="padding:12px;">return <span class="bordered" aria-label="Return expression" data-balloon-pos="right">x * x</span></span>
+                                    </code></pre>
+                                </td>
+                                <td style="font-size:0.6em">
+                                    <ul>
+                                        <li>A new function is created!</li>
+                                        <li>Name bound to that function 
+                                            in the current frame.</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Call expression</td>
+                                <td>
+                                    <pre class="no-code-badge" style="font-size:0.9em; line-height: 2.0em"><code data-trim data-noescape style="overflow:visible;">
+                                    <span class="bordered" aria-label="operator: square; function: func square(x)" data-balloon-pos="up">square</span>( <span class="bordered" aria-label="operand: 2+2; argument: 4" data-balloon-pos="up">2 + 2</span>)
+                                    </code></pre>
+                                </td>
+                                <td style="font-size:0.6em">
+                                    <ul>
+                                        <li>Operator & operands evaluated</li>
+                                        <li>Function (value of operator) 
+                                            called on arguments  
+                                            (values of operands)</li>
+                                    </ul>
+                                </td>
+                            <tr>
+                                <td>Calling/applying</td>
+                                <td>
+
+                                    <div class="functionbox">
+                                        <div class="functionbox-arguments"><span class="bordered" aria-label="Argument" data-balloon-pos="left">4</span> ▶ </div>
+                                        <div class="functionbox-input"></div>
+                                        <div class="functionbox-inside">def square( x )</div>
+                                        <div class="functionbox-output"></div>
+                                        <div class="functionbox-return">▶ <span class="bordered" aria-label="Return value"  data-balloon-pos="right">16</span></div>
+                                    </div>
+                                </td>
+                                <td style="font-size:0.6em">
+                                    <ul>
+                                        <li>A new frame is created!</li>
+                                        <li>Parameters bound to arguments</li>
+                                        <li>Body is executed in that new 
+                                            environment</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </section>
+
+                <section>
+                    <h3>A nested call expression</h3>
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+
+                    <div class="numbered-code" style="grid-row: 1; grid-column: 1; display: grid; grid-template-rows: 1fr; grid-template-columns: 10% 1fr;">
+                        <div style="grid-row: 1; grid-column: 1">
+                            <ol>
+                                <li>
+                                    <span class="line-arrow line-current fragment fade-in-then-out" data-fragment-index="1">next</span>
+
+                                    <span class="line-arrow line-previous fragment fade-in-then-out" data-fragment-index="2">prev</span>
+                                    <span class="line-arrow line-previous fragment fade-in-then-out" data-fragment-index="3">prev</span>
+                                    <span class="line-arrow line-previous fragment fade-in-then-out" data-fragment-index="4">prev</span>
+                                    <span class="line-arrow line-previous fragment fade-in-then-out" data-fragment-index="5">prev</span>
+                                    <span class="line-arrow line-previous fragment fade-in-then-out" data-fragment-index="6">prev</span>
+                                    <span class="line-arrow line-previous fragment fade-in-then-out" data-fragment-index="7">prev</span>
+                                    <span class="line-arrow line-previous fragment fade-in-then-out" data-fragment-index="8">prev</span>
+
+                                    <span class="line-arrow line-current fragment fade-in-then-out" data-fragment-index="9">next</span>
+                                    <span class="line-arrow line-previous fragment fade-in-then-out" data-fragment-index="10">prev</span>
+                                    <span class="line-arrow line-current fragment fade-in-then-out" data-fragment-index="11">next</span>
+                                    <span class="line-arrow line-current fragment fade-in-then-out" data-fragment-index="12">next</span>
+                                    <span class="line-arrow line-previous fragment fade-in-then-out" data-fragment-index="13">prev</span>
+
+
+                                </li>
+                                <li>
+                                    <span class="line-arrow line-current fragment fade-in-then-out" data-fragment-index="10">next</span>
+                                    <span class="line-arrow line-current fragment fade-in-then-out" data-fragment-index="13">next</span>
+                                </li>
+                                <li>
+                                    <span class="line-arrow line-current fragment fade-in-then-out" data-fragment-index="2">next</span>
+                                    <span class="line-arrow line-current fragment fade-in-then-out" data-fragment-index="3">next</span>
+                                    <span class="line-arrow line-current fragment fade-in-then-out" data-fragment-index="4">next</span>
+                                    <span class="line-arrow line-current fragment fade-in-then-out" data-fragment-index="5">next</span>
+                                    <span class="line-arrow line-current fragment fade-in-then-out" data-fragment-index="6">next</span>
+                                    <span class="line-arrow line-current fragment fade-in-then-out" data-fragment-index="7">next</span>
+                                    <span class="line-arrow line-current fragment fade-in-then-out" data-fragment-index="8">next</span>
+
+                                    <span class="line-arrow line-previous fragment fade-in-then-out" data-fragment-index="9">prev</span>
+                                    <span class="line-arrow line-previous fragment fade-in-then-out" data-fragment-index="11">prev</span>
+                                    <span class="line-arrow line-previous fragment fade-in-then-out" data-fragment-index="12">prev</span>
+
+                                </li>
+                            </ol>
+                        </div>
+                        <div style="grid-row: 1; grid-column: 2">
+                            <pre class="no-code-badge" style="font-size:1.0em; line-height: 1.7em"><code data-trim data-noescape>
+                                def square(x):
+                                    return x * x
+                                square(square(3))
+                            </code></pre>
+                        </div>
+                    </div>
+
+                    <div class="env-diagram" style="grid-row: 1; grid-column: 2">
+                        <div class="env-diagram-frame fragment" data-fragment-index="2">
+                            <div>Global frame</div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>square </td>
+                                    <td>⚫️ </td>
+                                    <td style="border:none;">
+                                        ----> func square(x) [parent=Global]
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="env-diagram-frame fragment"  data-fragment-index="9">
+                            <div>
+                            f1: square [parent=Global]
+                            </div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>x</td>
+                                    <td>3</td>
+                                    <td></td>
+                                </tr>
+                                <tr class="fragment" data-fragment-index="11">
+                                    <td>Return value</td>
+                                    <td>9</td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="env-diagram-frame fragment" data-fragment-index="13">
+                            <div>
+                            f2: square [parent=Global]
+                            </div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>x</td>
+                                    <td>9</td>
+                                    <td></td>
+                                </tr>
+                                <tr class="fragment" data-fragment-index="14">
+                                    <td>Return value</td>
+                                    <td>81</td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    </div>
+
+                    <svg id="nested-call-expression" xmlns="http://www.w3.org/2000/svg" width="861.7" height="531.87" viewBox="0 0 1723 1063">
+                        <defs>
+                        <style>
+                            #nested-call-expression .cls-1 {
+                            fill: #efc9bd;
+                            }
+                    
+                            #nested-call-expression .cls-2, #nested-call-expression .cls-3 {
+                            font-size: 41px;
+                            }
+                    
+                            #nested-call-expression .cls-2 {
+                            font-family: MyriadPro-Regular, Myriad Pro;
+                            }
+                    
+                            #nested-call-expression .cls-3 {
+                            font-family: Courier;
+                            }
+                    
+                            #nested-call-expression .cls-4, .cls-5 {
+                            fill: #662d91;
+                            stroke: #662d91;
+                            }
+                    
+                            #nested-call-expression .cls-4, #nested-call-expression .cls-5, #nested-call-expression .cls-6, #nested-call-expression  .cls-7, #nested-call-expression  .cls-8, #nested-call-expression  .cls-9 {
+                            stroke-miterlimit: 10;
+                            }
+                    
+                            #nested-call-expression .cls-4, #nested-call-expression .cls-6, #nested-call-expression .cls-8, #nested-call-expression .cls-9 {
+                            stroke-width: 2px;
+                            }
+                    
+                            #nested-call-expression .cls-6, #nested-call-expression .cls-7, #nested-call-expression .cls-8, #nested-call-expression .cls-9 {
+                            fill: none;
+                            }
+                    
+                            #nested-call-expression .cls-6, #nested-call-expression .cls-7 {
+                            stroke: #006837;
+                            }
+                    
+                            #nested-call-expression .cls-8, #nested-call-expression .cls-9 {
+                            stroke: blue;
+                            }
+                    
+                            #nested-call-expression .cls-8 {
+                            stroke-dasharray: 11.95 11.95;
+                            }
+                    
+                            #nested-call-expression .cls-9 {
+                            stroke-dasharray: 11.94 11.94;
+                            }
+                        </style>
+                        </defs>
+                        <text class="cls-3 fragment" transform="translate(226 103.52)" data-fragment-index="3">square( square(3) )</text>
+                        <g class="fragment" data-fragment-index="4">
+                            <line class="cls-4" x1="225.7" y1="131.06" x2="361.55" y2="131.06"/>
+                            <line class="cls-5" x1="228.97" y1="199.79" x2="297.7" y2="131.06"/>
+                            <text class="cls-3" transform="translate(12.18 241.44)">func square(x)</text>
+                        </g>
+                        <g class="fragment" data-fragment-index="5">
+                            <line class="cls-6" x1="401.26" y1="131.18" x2="675.55" y2="131.18"/>
+                            <line class="cls-7" x1="610.05" y1="266.87" x2="526.05" y2="130.87"/>
+                            <text class="cls-3" transform="translate(497.89 304.47)">square(3)</text>
+                        </g>
+                        <g class="fragment" data-fragment-index="6">
+                            <line class="cls-4" x1="494.51" y1="332.11" x2="630.36" y2="332.11"/>
+                            <line class="cls-5" x1="474.05" y1="449.87" x2="573.24" y2="331.77"/>
+                            <text class="cls-3" transform="translate(281.89 496.47)">func square(x)</text>
+                        </g>
+                        <g class="fragment" data-fragment-index="7">
+                            <line class="cls-6" x1="660.27" y1="332.2" x2="711.55" y2="332.2"/>
+                            <text class="cls-3" transform="translate(754.89 496.47)">3</text>
+                            <line class="cls-7" x1="758.92" y1="452.67" x2="685.92" y2="334.67"/>
+                        </g>
+                        <rect class="cls-8 fragment" data-fragment-index="8" x="257.05" y="455.37" width="585" height="75.5" rx="17.61"/>
+                        <g class="fragment" data-fragment-index="11">
+                            <rect class="cls-1" x="556.26" y="200.87" width="88" height="57.35" rx="28.67"/>
+                            <text class="cls-2" transform="translate(589.74 241.69)">9</text>
+                        </g>
+                        <rect class="cls-9 fragment" data-fragment-index="12" x="1" y="188.37" width="659.55" height="84" rx="17.61"/>
+                        <g class="fragment" data-fragment-index="14">
+                            <rect class="cls-1" x="377.64" width="88" height="57.35" rx="28.67"/>
+                            <text class="cls-2" transform="translate(400.6 42.82)">81</text>
+                        </g>
+                        
+                    </svg>
+                </section>
+
+                <section>
+                    <h3>Multiple environments in one diagram!</h3>
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 100px;">
+
+                    <pre class="no-code-badge" style="font-size:1.0em; line-height: 1.7em"><code data-trim data-noescape>
+                        def square(x):
+                            return x * x
+                        square(square(3))
+                    </code></pre>
+
+                    <div class="env-diagram" style="grid-row: 1; grid-column: 2; position: relative;">
+                        <div class="env-diagram-frame" style="height:100px;">
+                            <div>Global frame</div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>square </td>
+                                    <td>⚫️ </td>
+                                    <td style="border:none;">
+                                        ----> func square(x) [parent=Global]
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="env-diagram-frame">
+                            <div>
+                            f1: square [parent=Global]
+                            </div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>x</td>
+                                    <td>3</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Return value</td>
+                                    <td>9</td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="env-diagram-frame">
+                            <div>
+                            f2: square [parent=Global]
+                            </div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>x</td>
+                                    <td>9</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Return value</td>
+                                    <td>81</td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="circle-marker fragment" style="top: -10px;left:-16px; background-color: #12887c;" data-fragment-index="1">1</div>
+
+                        <div class="circle-marker fragment" style="top: 70px;left:-16px;" data-fragment-index="2">2</div>
+                        <div class="circle-marker-arc fragment" style="top: 85px;left: -16px;" data-fragment-index="2"></div>
+                        <div class="circle-marker fragment" style="top: 156px;left:-16px;" data-fragment-index="2">1</div>
+
+                        <div class="circle-marker fragment" style="top: 30px;left:-16px;background: purple;" data-fragment-index="3">2</div>
+                        <div class="circle-marker-arc fragment" style="top: 30px;left: -32px;height: 250px;width: 80px;border-color: purple;" data-fragment-index="3"></div>
+                        <div class="circle-marker fragment" style="top: 250px;background: purple;left:-16px;" data-fragment-index="3">1</div>
+                    </div>
+                    </div>
+                    <p>An environment is a sequence of frames.</p>
+                    <ul>
+                        <li class="fragment" data-fragment-index="1" style="color: #12887c">Environment: Global frame</li>
+                        <li class="fragment" data-fragment-index="2" style="color: blue;">Environment: Local frame (f1), then global frame</li>
+                        <li class="fragment" data-fragment-index="3" style="color: purple;">Environment: Local frame (f2), then global frame</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3 style="font-size:1.3em;">Names have no meanings without environments</h3>
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 100px;">
+
+                    <pre class="no-code-badge" style="font-size:1.0em; line-height: 1.7em"><code data-trim data-noescape>
+                    def square(x):
+                        return x * x
+                    square(square(3))
+                    </code></pre>
+
+                    <div class="env-diagram" style="grid-row: 1; grid-column: 2; position: relative;">
+                        <div class="env-diagram-frame" style="height:100px;">
+                            <div>Global frame</div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>square </td>
+                                    <td>⚫️ </td>
+                                    <td style="border:none;">
+                                        ----> func square(x) [parent=Global]
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="env-diagram-frame">
+                            <div>
+                            f1: square [parent=Global]
+                            </div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>x</td>
+                                    <td>3</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Return value</td>
+                                    <td>9</td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="env-diagram-frame">
+                            <div>
+                            f2: square [parent=Global]
+                            </div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>x</td>
+                                    <td>9</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Return value</td>
+                                    <td>81</td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="circle-marker" style="top: -10px;left:-16px; background-color: #12887c;" data-fragment-index="1">1</div>
+
+                        <div class="circle-marker" style="top: 70px;left:-16px;" data-fragment-index="2">2</div>
+                        <div class="circle-marker-arc" style="top: 85px;left: -16px;" data-fragment-index="2"></div>
+                        <div class="circle-marker" style="top: 156px;left:-16px;" data-fragment-index="2">1</div>
+
+                        <div class="circle-marker" style="top: 30px;left:-16px;background: purple;" data-fragment-index="3">2</div>
+                        <div class="circle-marker-arc" style="top: 30px;left: -32px;height: 250px;width: 80px;border-color: purple;" data-fragment-index="3"></div>
+                        <div class="circle-marker" style="top: 250px;background: purple;left:-16px;" data-fragment-index="3">1</div>
+                    </div>
+                    </div>
+
+                    <p>Every expression is evaluated in the context of an environment.</p>
+                    <p>A name evaluates to the value bound to that name in the earliest frame of the current environment in which that name is found.</p>
+
+                </section>
+
+
+                <section>
+                    <h3 style="font-size:1.1em;">Names have different meanings in different environments</h3>
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 100px;">
+
+                    <pre style="font-size:1.0em; line-height: 1.7em"><code data-trim data-noescape>
+                    def square(square):
+                        return square * square
+                    square(4)
+                    </code></pre>
+
+                    <div class="env-diagram fragment" style="grid-row: 1; grid-column: 2; position: relative;">
+                        <div class="env-diagram-frame" style="height:100px;">
+                            <div>Global frame</div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>square </td>
+                                    <td>⚫️ </td>
+                                    <td style="border:none;">
+                                        ----> func square(square) [parent=Global]
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="env-diagram-frame">
+                            <div>
+                            f1: square [parent=Global]
+                            </div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>square</td>
+                                    <td>4</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Return value</td>
+                                    <td>16</td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="circle-marker" style="top: -10px;left:-16px; background-color: #12887c;" data-fragment-index="1">1</div>
+
+                        <div class="circle-marker" style="top: 70px;left:-16px;" data-fragment-index="2">2</div>
+                        <div class="circle-marker-arc" style="top: 85px;left: -16px;" data-fragment-index="2"></div>
+                        <div class="circle-marker" style="top: 156px;left:-16px;" data-fragment-index="2">1</div>
+
+                    </div>
+                    </div>
+
+                    <p>Every expression is evaluated in the context of an environment.</p>
+                    <p>A name evaluates to the value bound to that name in the earliest frame of the current environment in which that name is found.</p>
+
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>Environments for higher-order functions</h2>
+                </section>
+
+                <section>
+                    <h3>Review: Higher-order functions</h3>
+
+                    <h4>A higher-order function is either...</h4>
+                        <ul>
+                            <li>A function that takes a function as an argument value
+                                <br>
+                                <code>summation(5, lambda x: x**2)</code>
+                            </li>
+                            <li>A function that returns a function as a return value
+                                <br>
+                                <code>make_adder(3)(1)</code>
+                            </li>
+                        </ul>
+
+                    <p><strong>Functions are first class:</strong> Functions are values in Python.</p>
+
+                </section>
+
+                <section>
+                    <h3>Example: Apply twice</h3>
+
+                    <pre style="font-size:1.0em;"><code data-trim data-noescape>
+                    def apply_twice(f, x):
+                        return f(f(x))
+
+                    def square(x):
+                        return x ** 2
+                    
+                    apply_twice(square, 3)
+                    </code></pre>
+
+                    <p class="python-tutor-link">
+                        <a target="_blank" href="https://pythontutor.com/composingprograms.html#code=def%20apply_twice%28f,%20x%29%3A%0A%20%20%20%20return%20f%28f%28x%29%29%0A%0Adef%20square%28x%29%3A%0A%20%20%20%20return%20x%20**%202%0A%0Aapply_twice%28square,%203%29&cumulative=true&curInstr=0&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">
+                        View in PythonTutor
+                        </a>
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Arguments bound to functions</h3>
+                    
+                    <img src="../images/apply_twice_first.png" alt="Screenshot of apply_twice PythonTutor diagram (part 1)" />
+
+                    <div style="position:relative;">
+
+                        <img class="fragment" data-fragment-index="1" src="../images/apply_twice_second.png" alt="Screenshot of apply_twice PythonTutor diagram (part 2)" />
+                        <div class="circle-marker fragment" style="top:100px; left:270px;" data-fragment-index="2">2</div>
+                        <div class="circle-marker-arc fragment" style="top: 120px; left: 270px;" data-fragment-index="2"></div>
+                        <div class="circle-marker fragment" style="top: 200px; left: 270px;" data-fragment-index="2">1</div>
+                    </div>
+                </section>
+
+                <!-- TODO repeat(g) example -->
+
+                <section class="heading-only">
+                    <h2>Environments for nested definitions</h2>
+                </section>
+
+                <section>
+                    <h3>Example: Make texter</h3>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    def make_texter(emoji):
+                        def texter(text):
+                            return emoji + text + emoji
+                        return texter
+                    
+                    happy_text = make_texter("😄")
+                    result = happy_text("lets go to the beach!")
+                    </code></pre>
+
+                    <p class="python-tutor-link">
+                        <a target="_blank" href="https://pythontutor.com/composingprograms.html#code=def%20make_texter%28emoji%29%3A%0A%20%20%20%20def%20texter%28text%29%3A%0A%20%20%20%20%20%20%20%20return%20emoji%20%2B%20text%20%2B%20emoji%0A%20%20%20%20return%20texter%0A%0Ahappy_text%20%3D%20make_texter%28%22%F0%9F%98%84%22%29%0Aresult%20%3D%20happy_text%28%22dance%20party!%22%29&cumulative=true&curInstr=0&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">
+                        View in PythonTutor</a>
+                    </p>
+                </section>
+                <section>
+                    <h3>Environments for nested def statements</h3>
+
+                    <style>
+                        .bordered-highlight {
+                            position: absolute;
+                            border: 1px dashed black;
+                            border-radius: 6px;
+                        }
+                    </style>
+                    <div style="position:relative;">
+
+                        <img src="../images/make_texter.png" alt="Screenshot of make_texter in PythonTutor"/>
+                        <div class="circle-marker fragment" style="top:100px; left:340px;" data-fragment-index="3">3</div>
+                        <div class="circle-marker-arc fragment" style="top: 120px; left: 340px;" data-fragment-index="3"></div>
+                        <div class="circle-marker fragment" style="top:200px; left:340px;" data-fragment-index="3">2</div>
+                        <div class="circle-marker-arc fragment" style="top: 220px; left: 340px;" data-fragment-index="3"></div>
+                        <div class="circle-marker fragment" style="top: 300px; left: 340px;" data-fragment-index="3">1</div>
+                        <div class="bordered-highlight fragment" data-fragment-index="1" style="top: 60px; left: 803px; width: 110px; height: 30px; border-color: purple;"></div>
+                        <div class="bordered-highlight fragment" data-fragment-index="1" style="top: 95px; left: 761px; width: 79px; height: 25px; border-color: purple;"></div>
+                        <div class="bordered-highlight fragment" data-fragment-index="2" style="top: 150px; left: 465px; width: 105px; height: 22px; border-color: green;"></div>
+                        <div class="bordered-highlight fragment" data-fragment-index="2" style="top: 269px; left: 430px; width: 79px; height: 22px; border-color: green;"></div>
+                    </div>
+
+                    <ul class="smaller">
+                        <li class="fragment" data-fragment-index="1">Every user-defined <strong style="color:purple">function</strong> has a parent frame
+                        <li class="fragment" data-fragment-index="1">The parent of a <strong style="color:purple">function</strong> is the <strong>frame in which it was defined</strong>
+                        <li class="fragment" data-fragment-index="2">Every local <strong style="color:green">frame</strong> has a parent frame
+                        <li class="fragment" data-fragment-index="2">The parent of a <strong style="color:green">frame</strong> is the <strong>parent of the called function</strong>
+                        <li class="fragment" data-fragment-index="3">An environment is a <strong style="color:blue">sequence of frames</strong>.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>How to draw an environment diagram</h3>
+
+                    <h4>When a function is defined:</h4>
+                    <ol class="smaller">
+                        <li>Create a function value: <br><code>func &lt;name&gt;(&lt;formal parameters&gt;) [parent=&lt;label&gt;]</code>
+                        <li>Its parent is the current frame.
+                        <li>Bind <code>&lt;name&gt;</code> to the function value in the current frame
+                    </ol>
+                    <br><br>
+                    <h4>When a function is called:</h4>
+                    <ol class="smaller">
+                        <li>Add a local frame, titled with the <code>&lt;name&gt;</code> of the function being called.</li>
+                        <li>Copy the parent of the function to the local frame: <code>[parent=&gt;label&lt;]</code></li>
+                        <li>Bind the <code>&lt;formal parameters&gt;</code> to the arguments in the local frame.</li>
+                        <li>Execute the body of the function in the environment that starts with the local frame.</li>
+                    </ol>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Local names</h2>
+                </section>
+
+                <section>
+                    <h3>Example: Thingy Bobber</h3>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    def thingy(x, y):
+                        return bobber(y)
+                            
+                    def bobber(a):
+                        return a + y
+
+                    result = thingy("ma", "jig")
+                    </code></pre>
+
+                    <p>🤔  What do you think will happen?</p>
+
+                    <p class="python-tutor-link fragment">
+                        <a target="_blank" href="https://pythontutor.com/composingprograms.html#code=def%20thingy%28x,%20y%29%3A%0A%20%20%20%20return%20bobber%28y%29%0A%20%20%20%20%20%20%20%20%0Adef%20bobber%28a%29%3A%0A%20%20%20%20return%20a%20%2B%20y%0A%0Aresult%20%3D%20thingy%28%22ma%22,%20%22jig%22%29&cumulative=true&curInstr=0&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">View in PythonTutor</a>
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Local name visibility</h3>
+
+                    <p class="smaller">Local names are <em>not</em> visible to other (non-nested) functions.</p>
+
+                    <div style="position:relative;">
+                        <img src="../images/thingybobber.png" alt="Screenshot of ThingyBobber PythonTutor diagram">
+                        <div class="circle-marker tooltip" title="'y' is not found" style="top:100px; left:330px;">2</div>
+                        <div class="circle-marker-arc" style="top: 120px; left: 330px; height: 180px;"></div>
+                        <div class="circle-marker tooltip" title="'y' is not found" style="top: 280px; left: 330px;">1</div>
+                    </div>
+
+                    <ul class="smaller">
+                        <li>An environment is a sequence of frames. </li>
+                        <li>The environment created by calling a top-level function
+                            consists of one local frame followed by the global frame.</li>
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Function Composition</h2>
+                </section>
+
+                <section>
+                    <h3>Example: Composer</h3>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    def happy(text):
+                        return "☻" + text + "☻"
+                        
+                    def sad(text):
+                        return "☹" + text + "☹"
+
+                    def composer(f, g):
+                        def composed(x):
+                            return f(g(x))
+                        return composed
+
+                    msg1 = composer(sad, happy)("cs61a!")
+                    msg2 = composer(happy, sad)("eecs16a!")
+                    </code></pre>
+
+                    <p>🤔  What do you think will happen?</p>
+                    
+                </section>
+
+                <section>
+                    <h3>Example: Composer (Part 2)</h3>
+
+                    <p>One of the composed functions could itself be an HOF...</p>
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    def happy(text):
+                        return "☻" + text + "☻"
+                        
+                    def sad(text):
+                        return "☹" + text + "☹"
+
+                    def make_texter(emoji):
+                        def texter(text):
+                            return emoji + text + emoji
+                        return texter
+                        
+                    def composer(f, g):
+                        def composed(x):
+                            return f(g(x))
+                        return composed
+
+                    composer(happy, make_texter("☃︎"))('snow day!')
+                    </code></pre>
+
+                    <p class="python-tutor-link">
+                        <a target="_blank" href="https://pythontutor.com/composingprograms.html#code=def%20happy%28text%29%3A%0A%20%20%20%20return%20%22%E2%98%BA%22%20%2B%20text%20%2B%20%22%E2%98%BA%22%0A%20%20%20%20%0Adef%20sad%28text%29%3A%0A%20%20%20%20return%20%22%E2%98%B9%22%20%2B%20text%20%2B%20%22%E2%98%B9%22%0A%0Adef%20make_texter%28emoji%29%3A%0A%20%20%20%20def%20texter%28text%29%3A%0A%20%20%20%20%20%20%20%20return%20emoji%20%2B%20text%20%2B%20emoji%0A%20%20%20%20return%20texter%0A%20%20%20%20%0Adef%20composer%28f,%20g%29%3A%0A%20%20%20%20def%20composed%28x%29%3A%0A%20%20%20%20%20%20%20%20return%20f%28g%28x%29%29%0A%20%20%20%20return%20composed%0A%0Acomposer%28happy,%20make_texter%28%22%E2%98%83%EF%B8%8E%22%29%29%28'snow%20day!'%29&cumulative=true&curInstr=0&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">View in PythonTutor</a>
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Composer 2 expression tree</h3>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="783.1" height="413.15" viewBox="0 0 783.1 413.15">
+                        <defs>
+                          <style>
+                            .cls-1 {
+                              font-size: 18.76px;
+                              fill: #010101;
+                              font-family: Courier;
+                            }
+                      
+                            .cls-10, .cls-15, .cls-16, .cls-2, .cls-3, .cls-9 {
+                              fill: #67308f;
+                              stroke: #67308f;
+                            }
+                      
+                            .cls-10, .cls-11, .cls-12, .cls-13, .cls-14, .cls-15, .cls-16, .cls-17, .cls-18, .cls-2, .cls-3, .cls-4, .cls-5, .cls-7, .cls-8, .cls-9 {
+                              stroke-miterlimit: 10;
+                            }
+                      
+                            .cls-2 {
+                              stroke-width: 0.95px;
+                            }
+                      
+                            .cls-3 {
+                              stroke-width: 0.48px;
+                            }
+                      
+                            .cls-11, .cls-12, .cls-13, .cls-14, .cls-17, .cls-18, .cls-4, .cls-5, .cls-7, .cls-8 {
+                              fill: none;
+                            }
+                      
+                            .cls-11, .cls-12, .cls-13, .cls-14, .cls-17, .cls-4, .cls-5 {
+                              stroke: #046937;
+                            }
+                      
+                            .cls-4 {
+                              stroke-width: 1.11px;
+                            }
+                      
+                            .cls-5 {
+                              stroke-width: 0.55px;
+                            }
+                      
+                            .cls-6 {
+                              fill: #efcabe;
+                            }
+                      
+                            .cls-18, .cls-7, .cls-8 {
+                              stroke: #3a53a4;
+                            }
+                      
+                            .cls-7 {
+                              stroke-width: 1.05px;
+                              stroke-dasharray: 6.27 6.27;
+                            }
+                      
+                            .cls-8 {
+                              stroke-width: 1.53px;
+                              stroke-dasharray: 9.22 9.22;
+                            }
+                      
+                            .cls-13, .cls-9 {
+                              stroke-width: 0.92px;
+                            }
+                      
+                            .cls-10, .cls-14 {
+                              stroke-width: 0.46px;
+                            }
+                      
+                            .cls-11 {
+                              stroke-width: 0.52px;
+                            }
+                      
+                            .cls-12 {
+                              stroke-width: 0.26px;
+                            }
+                      
+                            .cls-15 {
+                              stroke-width: 1.7px;
+                            }
+                      
+                            .cls-16 {
+                              stroke-width: 0.85px;
+                            }
+                      
+                            .cls-17 {
+                              stroke-width: 0.47px;
+                            }
+                      
+                            .cls-18 {
+                              stroke-width: 1.23px;
+                              stroke-dasharray: 7.39 7.39;
+                            }
+                          </style>
+                        </defs>
+                        <text class="cls-1" transform="translate(200.59 61.47)">composer(happy, make_texter(&quot;☃&quot;))(&quot;snow day!&quot;)</text>
+                        <g class="fragment">
+                            <text class="cls-1" transform="translate(202.17 156.86)">composer(happy, make_texter(&quot;☃&quot;))</text>
+                            <line class="cls-15" x1="204.34" y1="75.07" x2="571.9" y2="75.07"/>
+                            <line class="cls-16" x1="367.82" y1="135" x2="368.54" y2="75.49"/>
+                        </g>
+                        <g class="fragment">
+                            <text class="cls-1" transform="translate(22.38 239.42)">func composer(f, g)</text>
+                            <line class="cls-9" x1="204.34" y1="166.61" x2="289.16" y2="166.61"/>
+                            <line class="cls-10" x1="172.89" y1="210.29" x2="246.75" y2="167.73"/>
+                        </g>
+                        <g class="fragment">
+                            <text class="cls-1" transform="translate(257.81 240.1)">func happy(text)</text>
+                            <line class="cls-11" x1="302.73" y1="166.7" x2="365.97" y2="166.7"/>
+                            <line class="cls-12" x1="331.5" y1="212.49" x2="331.5" y2="166.61"/>
+                        </g>
+                        <g class="fragment">
+                            <text class="cls-1" transform="translate(476.91 293.05)">make_texter(&quot;☃&quot;)</text>
+                            <line class="cls-13" x1="386.53" y1="167.73" x2="575.77" y2="167.73"/>
+                            <line class="cls-14" x1="542.6" y1="261.42" x2="490.27" y2="167.28"/>
+                          </g>
+                        <g class="fragment">
+                          <line class="cls-2" x1="477.48" y1="304.95" x2="599.98" y2="304.95"/>
+                          <line class="cls-3" x1="463.8" y1="372.79" x2="526.38" y2="304.95"/>
+                          <text class="cls-1" transform="translate(380.2 396.18)"><tspan xml:space="preserve"> func make_texter(emoji)</tspan></text>
+                        </g>
+                        <g class="fragment">
+                          <text class="cls-1" transform="translate(692.93 396.18)">&quot;☃&quot;</text>
+                          <line class="cls-4" x1="618.54" y1="303.99" x2="645.83" y2="303.99"/>
+                          <line class="cls-5" x1="702.59" y1="372.81" x2="632.19" y2="305.41"/>
+                        </g>
+                        <rect class="fragment cls-7" x="368.78" y="372.79" width="383.17" height="39.84" rx="17.61"/>
+                        <g class="fragment">
+                            <rect class="cls-6" x="448.3" y="219.38" width="206.1" height="35.24" rx="13.12"/>
+                            <text class="cls-1" transform="translate(451.59 241.49)">func texter(text)</text>
+                        </g>
+                        <rect class="fragment cls-8" x="0.77" y="212.49" width="666.62" height="48.93" rx="17.61"/>
+                        <g class="fragment">
+                            <rect class="cls-6" x="271.63" y="99.47" width="191.3" height="35.24" rx="13.12"/>
+                            <text class="cls-1" transform="translate(279.33 122.57) scale(0.97 1)">func composed(x)</text>
+                        </g>
+                        <g class="fragment">
+                          <line class="cls-17" x1="591.64" y1="75.07" x2="717.14" y2="75.07"/>
+                          <text class="cls-1" transform="translate(599.98 122.85)">&quot;snow day!&quot;</text>
+                          <line class="cls-14" x1="654.39" y1="101.85" x2="654.39" y2="75.07"/>
+                        </g>
+                        <rect class="fragment cls-18" x="263.78" y="95.26" width="473.02" height="44.6" rx="17.61"/>
+                        <g class="fragment">
+                          <rect class="cls-6" x="393.18" width="206.79" height="35.24" rx="13.12"/>
+                          <text class="cls-1" transform="translate(401.28 23.1)">&quot;☻☃snow day!☃☻&quot;</text>
+                        </g>
+                      </svg>
+                      
+                </section>
+                
+                <section class="heading-only">
+                    <h2>Currying</h2>
+                </section>
+
+                <section>
+                    <h3>add vs. make_adder</h3>
+
+                    <p>Compare...</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    from operator import add
+
+                    add(2, 3)
+                    </code></pre>
+                    <br>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    def make_adder(n):
+                        return lambda x: n + x
+                    
+                    make_adder(2)(3)
+                    </code></pre>
+                    <br>
+                    <p>🤔  What's the relationship between <code>add(2, 3)</code> and <code>make_adder(2)(3)</code>?</p>
+                </section>
+
+                <section>
+                    <h3>Function currying</h3>
+                    
+                    <p><strong>Currying:</strong> Converting a function that takes multiple arguments
+                        into a single-argument higher-order function.</p>
+
+                    <p>A function that currys any two-argument function:</p>
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    def curry2(f):
+                        def g(x):
+                            def h(y):
+                                return f(x, y)
+                            return h
+                        return g
+                    </code></pre>
+
+                    <pre style="font-size:0.6em" class="fragment"><code data-trim data-noescape class="python">
+                    make_adder = curry2(add)
+                    make_adder(2)(3)
+                    </code></pre>
+
+                    <pre style="font-size:0.6em" class="fragment"><code data-trim data-noescape class="python">
+                    curry2 = lambda f: lambda x: lambda y: f(x, y)
+                    </code></pre>
+                    
+                </section>
+
+                <section>
+                    <h3>Why "currying"?</h3>
+
+                    <p> It's not food! ❌ 🥘  ❌ 🍛 </p>
+
+                    <p>Named after American logician Haskell Curry, but actually published first by Russian Moses Schönfinkel,
+                        based on principles by German Gottlob Frege.</p>
+
+                    <p>See also: <a target="_blank" href="https://en.wikipedia.org/wiki/Stigler%27s_law_of_eponymy">Stigler's law of eponymy</a></p>
+                </section>
+
+            </div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+		<script>
+			const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+			Reveal.initialize({
+				hash: true,
+				center: false,
+				slideNumber: true,
+				showNotes: false,
+				margin: 0.1,
+				preloadIframes: true,
+				plugins: [ RevealHighlight ],
+				pdfSeparateFragments: true
+			});
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge(options);
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+            
+		</script>
+	</body>
+</html>

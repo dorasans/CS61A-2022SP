@@ -1,0 +1,1322 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Efficiency</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Efficiency</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="21-Efficiency.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Exponentiation
+                        <li>Orders of Growth
+                        <li>Memoization
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Exponentiation</h2>
+                </section>
+
+                <section>
+                    <h3>Exponentiation approach #1</h3>
+
+                    <p>Based on this recursive definition:</p>
+
+                    <p>$$\begin{equation*} 
+                        b^n= \begin{cases}
+                            1  & \text{if } n = 0 \\
+                            b \cdot b^{(n-1)} & \text{otherwise} \\
+                         \end{cases}
+                       \end{equation*}$$
+                    </p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def exp(b, n):
+                      if n == 0:
+                        return 1
+                      else:
+                        return b * exp(b, n-1)
+                    </code></pre>
+
+                    <p>How many calls are required to calculate <code>exp(2, 16)</code>?</p>
+                    <p class="fragment">Can we do better?</p>
+                </section>
+
+                <section>
+                    <h3>Exponentiation approach #2</h3>
+
+                    <p>Based on this alternate definition:</p>
+                    <p class="smaller">
+                    $$\begin{equation*} 
+                        b^n= \begin{cases}
+                            1  & \text{if } n = 0 \\
+                            (b^{\frac{1}{2}n})^2 & \text{if $n$ is even} \\
+                            b \cdot b^{(n-1)} & \text{if $n$ is odd} \\
+                         \end{cases}
+                       \end{equation*}$$
+                    </p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    def exp_fast(b, n):
+                        if n == 0:
+                            return 1
+                        elif n % 2 == 0:
+                            return square(exp_fast(b, n//2))
+                        else:
+                            return b * exp_fast(b, n-1) 
+                    
+                    square = lambda x: x * x
+                    </code></pre>
+
+                    <p>How many calls are required to calculate <code>exp(2, 16)</code>?</p>
+                    <p class="fragment">Some algorithms are more efficient than others!</p>
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>Orders of Growth</h2>
+                </section>
+
+
+                <section>
+                    <h3>Common orders of growth</h3>
+
+                    <p>One way to describe the efficiency of an algorithm according to its <strong>order of growth</strong>,
+                        the effect of increasing the size of input on the number of steps required.</p>
+
+                    <table class="smaller">
+                        <thead>
+                            <tr>
+                                <th style="width:33%">Order of growth
+                                <th>Description
+                        <tbody>
+                            <tr>
+                                <td>Constant growth
+                                <td>Always takes same number of steps, regardless of input size.
+                            <tr>
+                                <td>Logarithmic growth
+                                <td>Number of steps increases proportionally to the logarithm of the input size.
+                            <tr>
+                                <td>Linear growth
+                                <td>Number of steps increases in direct proportion to the input size.
+                            <tr>
+                                <td>Quadratic growth
+                                <td>Number of steps increases in proportion to the square of the input size.
+                            <tr>
+                                <td>Exponential growth
+                                <td>Number of steps increases faster than a polynomial function of the input size.
+                    </table>
+
+                </section>
+
+                <section>
+                    <h3>Adding to the front of linked list</h3>
+
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    def insert_front(linked_list, new_val):
+                        """Inserts NEW_VAL in front of LINKED_LIST,returning new linked list.
+                        >>> ll = Link(1, Link(3, Link(5)))
+                        >>> insert_front(ll, 0)
+                        Link(0, Link(1, Link(3, Link(5))))
+                        """
+                        return Link(new_val, linked_list)
+                    </code></pre>
+
+                    <p>How many operations will this require for increasing lengths of the list?<p>
+
+                    <table class="table table-bordered">
+                        <tbody><tr>
+                            <th>List size</th>
+                            <th>Operations</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td><span class="fragment">1</span></td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td><span class="fragment">1</span></td>
+                        </tr>
+                        <tr>
+                            <td>100</td>
+                            <td><span class="fragment">1</span></td>
+                        </tr>
+                        <tr>
+                            <td>1000</td>
+                            <td><span class="fragment">1</span></td>
+                        </tr>
+                    </tbody></table>
+
+                </section>
+
+
+                <section>
+                    <h3>Constant time</h3>
+
+                    <p>An algorithm that takes <strong>constant time</strong>,
+                        always makes a fixed number of operations
+                        regardless of the input size.
+
+                    <div style="display:grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 20px;">
+                    <table class="table table-bordered" style="grid-row:1; grid-column: 1">
+                        <tbody><tr>
+                            <th>List size</th>
+                            <th>Operations</th>
+                        </tr>
+                        <tr>
+                            <td>1
+                            <td>1
+                        </tr>
+                        <tr>
+                            <td>10
+                            <td>1
+                        </tr>
+                        <tr>
+                            <td>100
+                            <td>1
+                        </tr>
+                        <tr>
+                            <td>1000</td>
+                            <td>1
+                        </tr>
+                    </tbody></table>
+
+                    <img src="https://i.imgur.com/pZezyrD.png" alt="Graph of constant time" style="grid-row:1;grid-column:2"/>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Fast exponentiation</h3>
+
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    def exp_fast(b, n):
+                        if n == 0:
+                            return 1
+                        elif n % 2 == 0:
+                            return square(exp_fast(b, n//2))
+                        else:
+                            return b * exp_fast(b, n-1) 
+                    
+                    square = lambda x: x * x
+                    </code></pre>
+
+
+                    <p>How many operations will this require for increasing values of n?<p>
+
+                    <table class="table table-bordered">
+                        <tbody><tr>
+                            <th>N</th>
+                            <th>Operations</th>
+                        </tr>
+                        <tr>
+                            <td>0
+                            </td>
+                            <td><span class="fragment">1</span></td>
+                        </tr>
+                        <tr>
+                            <td>8
+                            </td>
+                            <td><span class="fragment">5</span></td>
+                        </tr>
+                        <tr>
+                            <td>16
+                            <td><span class="fragment">6</span></td>
+                        </tr>
+                        <tr>
+                            <td>1024
+                            <td><span class="fragment">12</span></td>
+                        </tr>
+                    </tbody></table>
+                </section>
+
+
+
+                <section>
+                    <h3>Logarithmic time</h3>
+
+                    <p>When an algorithm takes <strong>logarithmic time</strong>,
+                        the time that it takes increases proportionally to the logarithm of the input size.
+                    </p>
+
+                    <div style="display:grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 20px;">
+
+                    <table class="table table-bordered" style="grid-row:1; grid-column:1">
+                        <tbody><tr>
+                            <th>N</th>
+                            <th>Operations</th>
+                        </tr>
+                        <tr>
+                            <td>0
+                            <td>1
+                        </tr>
+                        <tr>
+                            <td>8
+                            <td>5
+                        </tr>
+                        <tr>
+                            <td>16
+                            <td>6
+                        </tr>
+                        <tr>
+                            <td>1024
+                            <td>12
+                        </tr>
+                    </tbody></table>
+
+                    <img src="https://i.imgur.com/vIUXNHS.png" alt="Graph of logarithmic time" style="grid-row:1;grid-column:2"/>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Finding value in a linked list</h3>
+
+                    <pre style="font-size:0.5em"><code data-trim data-noescape class="python">
+                    def find_in_link(ll, value):
+                        """Return true if linked list LL contains VALUE.
+                        >>> find_in_link(Link(3, Link(4, Link(5))), 4)
+                        True
+                        >>> find_in_link(Link(3, Link(4, Link(5))), 7)
+                        False
+                        """
+                        if ll is Link.empty:
+                            return False
+                        elif ll.first == value:
+                            return True
+                        return find_in_link(ll.rest, value)
+                    </code></pre>
+
+                    <p class="smaller">How many operations will this require for increasing lengths of the list?
+                        Consider both the <strong>best case</strong> and <strong>worst case</strong>.
+                        <p>
+
+                    <table class="table table-bordered smaller">
+                        <tbody><tr>
+                            <th>List size</th>
+                            <th>Best case: Operations</th>
+                            <th>Worst case: Operations</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td><span class="fragment">1</span></td>
+                            <td><span class="fragment">1</span></td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td><span class="fragment">1</span></td>
+                            <td><span class="fragment">10</span></td>
+                        </tr>
+                        <tr>
+                            <td>100</td>
+                            <td><span class="fragment">1</span></td>
+                            <td><span class="fragment">100</span></td>
+                        </tr>
+                        <tr>
+                            <td>1000</td>
+                            <td><span class="fragment">1</span></td>
+                            <td><span class="fragment">1000</span></td>
+                        </tr>
+                    </tbody></table>
+
+                </section>
+
+                <section>
+                    <h3>Linear time</h3>
+
+                    <p>When an algorithm takes <strong>linear time</strong>,
+                        its number of operations increases in direct proportion to the input size.
+                    </p>
+
+                    <div style="display:grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 20px;">
+
+                        <table class="table table-bordered" style="grid-row:1;grid-column:1">
+                        <tbody><tr>
+                            <th>List size</th>
+                            <th>Worst case: Operations</th>
+                        </tr>
+                        <tr>
+                            <td>1
+                            <td>1
+                        </tr>
+                        <tr>
+                            <td>10
+                            <td>10
+                        </tr>
+                        <tr>
+                            <td>100
+                            <td>100
+                        </tr>
+                        <tr>
+                            <td>100
+                            <td>1000
+                        </tr>
+                    </tbody></table>
+
+                    <img src="https://i.imgur.com/nl9Cvez.png" alt="Graph of linear time" style="grid-row:1;grid-column:2"/>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Counting overlapping items in lists</h3>
+
+                    <style>
+                        .matrix-table td, table.matrix-table tbody tr:last-child td  {
+                            font-size: 24px;
+                            border: 1px solid black;
+                        }
+                    </style>
+
+                    <div style="display:grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 20px;">
+
+                        <pre style="font-size:0.5em; grid-row: 1; grid-column:1"><code data-trim data-noescape class="python">
+                        def overlap(a, b):
+                            """
+                            >>> overlap([3, 5, 7, 6], [4, 5, 6, 5])
+                            3
+                            """
+                            count = 0
+                            for item in a:
+                                for other in b:
+                                    if item == other:
+                                        count += 1
+                            return count
+                        </code></pre>
+
+                        <table class="matrix-table" style="grid-row:1;grid-column:2">
+                            <tr>
+                                <td>
+                                <td>3
+                                <td>5
+                                <td>6
+                                <td>7
+                            <tr>
+                                <td>4
+                                <td>
+                                <td>
+                                <td>
+                                <td>
+                            <tr>
+                                <td>5
+                                <td>
+                                <td>+
+                                <td>
+                                <td>
+                            <tr>
+                                <td>6
+                                <td>
+                                <td>
+                                <td>
+                                <td>+
+                            <tr>
+                                <td>5
+                                <td>
+                                <td>+
+                                <td>
+                                <td>
+                        </table>
+                    </div>
+
+                    <p class="smaller">How many operations are required for increasing lengths of the lists?
+                    <p>
+
+                    <table class="table table-bordered">
+                        <tbody><tr>
+                            <th>List size</th>
+                            <th>Operations</th>
+                        </tr>
+                        <tr>
+                            <td>1
+                            <td><span class="fragment">1</span></td>
+                        </tr>
+                        <tr>
+                            <td>10
+                            <td><span class="fragment">100</span>
+                        </tr>
+                        <tr>
+                            <td>100
+                            <td><span class="fragment">10000</span>
+                        </tr>
+                        <tr>
+                            <td>1000
+                            <td><span class="fragment">1000000</span>
+                        </tr>
+                    </tbody></table>
+
+                </section>
+                
+                <section>
+                    <h3>Quadratic time</h3>
+
+                    <p>When an algorithm grows in <strong>quadratic time</strong>, its steps increase in proportion to square of the input size.</p>
+
+                    <div style="display:grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 20px;">
+
+                    <table class="table table-bordered" style="grid-row:1;grid-column:1;">
+                        <tbody><tr>
+                            <th>List size</th>
+                            <th>Operations</th>
+                        </tr>
+                        <tr>
+                            <td>1
+                            <td>1
+                        </tr>
+                        <tr>
+                            <td>10
+                            <td>100
+                        </tr>
+                        <tr>
+                            <td>100
+                            <td>10000
+                        </tr>
+                        <tr>
+                            <td>1000
+                            <td>1000000
+                        </tr>
+                    </tbody></table>
+
+                    <img src="https://i.imgur.com/S46rX16.png" alt="Graph of quadratic time" style="grid-row:1;grid-column:2"/>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Recursive Virahanka-Fibonacci</h3>
+
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    def virfib(n):
+                      if n == 0:
+                        return 0
+                      elif n == 1:
+                        return 1
+                      else:
+                        return virfib(n-2) + virfib(n-1)
+                    </code></pre>
+
+                    <p class="smaller">How many operations are required for increasing values of n?
+                    <p>
+    
+                    <table class="table table-bordered smaller">
+                        <tbody><tr>
+                            <th>N</th>
+                            <th>Operations</th>
+                        </tr>
+                        <tr>
+                            <td>1
+                            <td><span class="fragment">1</span></td>
+                        </tr>
+                        <tr>
+                            <td>2
+                            <td><span class="fragment">3</span>
+                        </tr>
+                        <tr>
+                            <td>3
+                            <td><span class="fragment">5</span>
+                        </tr>
+                        <tr>
+                            <td>4
+                            <td><span class="fragment">9</span>
+                        </tr>
+                        <tr>
+                            <td>7
+                            <td><span class="fragment">41</span>
+                        </tr>
+                        <tr>
+                            <td>8
+                            <td><span class="fragment">67</span>
+                        </tr>
+                        <tr>
+                            <td>20
+                            <td><span class="fragment">21891</span>
+                            </tr>
+                    </tbody></table>
+                </section>
+
+
+
+                <section>
+                    <h3>Exponential time</h3>
+
+                    <p>When an algorithm grows in <strong>exponential time</strong>, its number of steps increases faster than a polynomial function of the input size.</p>
+                    
+                    <div style="display:grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 20px;">
+
+                    <table class="table table-bordered" style="grid-row:1; grid-column: 1">
+                        <tbody><tr>
+                            <th>N</th>
+                            <th>Operations</th>
+                        </tr>
+                        <tr>
+                            <td>1
+                            <td>1
+                        </tr>
+                        <tr>
+                            <td>2
+                            <td>3
+                        </tr>
+                        <tr>
+                            <td>3
+                            <td>5
+                        </tr>
+                        <tr>
+                            <td>4
+                            <td>9
+                        </tr>
+                        <tr>
+                            <td>7
+                            <td>41
+                        </tr>
+                        <tr>
+                            <td>8
+                            <td>67
+                        </tr>
+                        <tr>
+                            <td>20
+                            <td>21891
+                        </tr>
+                    </tbody></table>
+
+                    <img src="https://i.imgur.com/JRkAQRN.png" alt="Graph of exponential time" style="grid-row:1;grid-column:2">
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Comparing orders of growth</h3>
+
+                    <img src="https://i.imgur.com/8psl4kk.png" alt="graph of all orders of growth overlaid"/>
+
+                </section>
+
+                <section>
+                    <h3>Big O/Big Theta Notation</h3>
+                    <style>
+                    table .katex-display {
+                        margin: 8px 0;
+                    }
+                    </style>
+                    <p>A formal notation for describing the efficiency of an algorithm, using <a target="_blank" href="https://www.khanacademy.org/computing/computer-science/algorithms/asymptotic-notation/a/asymptotic-notation">asymptotic analysis</a>.</p>
+
+                    <table class="smaller">
+                        <thead>
+                            <tr>
+                                <th style="width:33%">Order of growth
+                                <th>Example
+                                <th>Big Theta
+                                <th>Big O
+                        <tbody>
+                            <tr>
+                                <td>Exponential growth
+                                <td>recursive <code>virfib</code>
+                                <td class="fragment" data-fragment-index="1">$$\Theta(b^n)$$
+                                <td class="fragment" data-fragment-index="2">$$O(b^n)$$
+                            <tr>
+                                <td>Quadratic growth
+                                <td><code>overlap</code>
+                                <td class="fragment" data-fragment-index="1">$$\Theta(n^2)$$
+                                <td class="fragment" data-fragment-index="2">$$O(n^2)$$
+                            <tr>
+                                <td>Linear growth
+                                <td><code>find_in_link</code>
+                                <td class="fragment" data-fragment-index="1">$$\Theta(n)$$
+                                <td class="fragment" data-fragment-index="2">$$O(n)$$
+                            <tr>
+                                <td>Logarithmic growth
+                                <td><code>exp_fast</code>
+                                <td class="fragment" data-fragment-index="1">$$\Theta(log_n)$$
+                                <td class="fragment" data-fragment-index="2">$$O(log_n)$$
+                            <tr>
+                                <td>Constant growth
+                                <td><code>add_to_front</code>
+                                <td class="fragment" data-fragment-index="1">$$\Theta(1)$$
+                                <td class="fragment" data-fragment-index="2">$$O(1)$$
+                    </table>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Space</h2>
+                </section>
+
+                <section>
+                    <h3>Space and environments</h3>
+
+                    <p>The space needed for a program depends on the environments in use.</p>
+                    <p>At any moment there is a set of <strong>active environments</strong>.</p>
+                    <p>Values and frames in active environments consume memory.</p>
+                    <p>Memory that is used for other values and frames can be recycled.</p>
+
+                    <p>Active environments:</p>
+                    <ul>
+                        <li>Environments for any function calls currently being evaluated.</li>
+                        <li>Parent environments of functions named in active environments.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Active environments in PythonTutor</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def virfib(n):
+                        if n == 0:
+                            return 0
+                        elif n == 1:
+                            return 1
+                        else:
+                            return virfib(n-2) + virfib(n-1)
+                    </code></pre>
+
+                    <p class="python-tutor-link">
+                        <a target="_blank" href="https://pythontutor.com/composingprograms.html#code=def%20virfib%28n%29%3A%0A%20%20%20%20if%20n%20%3D%3D%200%3A%0A%20%20%20%20%20%20%20%20return%200%0A%20%20%20%20elif%20n%20%3D%3D%201%3A%0A%20%20%20%20%20%20%20%20return%201%0A%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20return%20virfib%28n-2%29%20%2B%20virfib%28n-1%29%0A%20%20%20%20%20%20%20%20%0Avirfib%285%29&cumulative=false&curInstr=0&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">View in PythonTutor</a><br>
+                        Make sure to select "don't display exited functions".
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Visualization of space consumption</h3>
+                    <style>
+                    .can-be-reclaimed path {
+                        fill: #ffaeae;
+                    }
+                    .in-the-future {
+                        opacity: 0.3;
+                    }
+                    </style>
+
+                    <svg width="644pt" height="491pt"
+                        viewBox="0.00 0.00 644.00 491.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 487)">
+                        <polygon fill="white" stroke="transparent" points="-4,4 -4,-487 640,-487 640,4 -4,4"/>
+                        <!-- 140268980982768 -->
+                        <g id="node1" class="node activated can-be-reclaimed">
+                        <title>140268980982768</title>
+                        <path fill="none" stroke="black" d="M130,-267.5C130,-267.5 166,-267.5 166,-267.5 172,-267.5 178,-273.5 178,-279.5 178,-279.5 178,-292.5 178,-292.5 178,-298.5 172,-304.5 166,-304.5 166,-304.5 130,-304.5 130,-304.5 124,-304.5 118,-298.5 118,-292.5 118,-292.5 118,-279.5 118,-279.5 118,-273.5 124,-267.5 130,-267.5"/>
+                        <text text-anchor="middle" x="148" y="-282.6" font-family="Times,serif" font-size="13.00">virfib(3)</text>
+                        </g>
+                        <!-- 140269249414448 -->
+                        <g id="node2" class="node activated">
+                        <title>140269249414448</title>
+                        <path fill="none" stroke="black" d="M272,-267.5C272,-267.5 308,-267.5 308,-267.5 314,-267.5 320,-273.5 320,-279.5 320,-279.5 320,-292.5 320,-292.5 320,-298.5 314,-304.5 308,-304.5 308,-304.5 272,-304.5 272,-304.5 266,-304.5 260,-298.5 260,-292.5 260,-292.5 260,-279.5 260,-279.5 260,-273.5 266,-267.5 272,-267.5"/>
+                        <text text-anchor="middle" x="290" y="-282.6" font-family="Times,serif" font-size="13.00">virfib(4)</text>
+                        </g>
+                        <!-- 140268980983296 -->
+                        <g id="node3" class="node activated can-be-reclaimed">
+                        <title>140268980983296</title>
+                        <path fill="none" stroke="black" d="M12,-178.5C12,-178.5 48,-178.5 48,-178.5 54,-178.5 60,-184.5 60,-190.5 60,-190.5 60,-203.5 60,-203.5 60,-209.5 54,-215.5 48,-215.5 48,-215.5 12,-215.5 12,-215.5 6,-215.5 0,-209.5 0,-203.5 0,-203.5 0,-190.5 0,-190.5 0,-184.5 6,-178.5 12,-178.5"/>
+                        <text text-anchor="middle" x="30" y="-193.6" font-family="Times,serif" font-size="13.00">virfib(1)</text>
+                        </g>
+                        <!-- 140268980982768&#45;&gt;140268980983296 -->
+                        <g id="edge8" class="edge activated">
+                        <title>140268980982768&#45;&gt;140268980983296</title>
+                        <path fill="none" stroke="black" d="M117.89,-284.76C90.72,-282.76 52.03,-275.1 32,-249 26.99,-242.48 25.35,-233.98 25.3,-225.8"/>
+                        <polygon fill="black" stroke="black" points="28.79,-225.98 25.94,-215.77 21.81,-225.53 28.79,-225.98"/>
+                        <text text-anchor="middle" x="39" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999"></text>
+                        </g>
+                        <!-- 140268980982768&#45;&gt;140268980983296 -->
+                        <g id="edge9" class="edge activated">
+                        <title>140268980982768&#45;&gt;140268980983296:c</title>
+                        <path fill="none" stroke="green" d="M109.09,-264.19C101.24,-259.5 93.2,-254.33 86,-249 72.46,-238.98 58.57,-226.1 48.01,-215.67"/>
+                        <polygon fill="green" stroke="green" points="107.42,-267.26 117.82,-269.26 110.93,-261.21 107.42,-267.26"/>
+                        <text text-anchor="middle" x="103" y="-237.8" font-family="Times,serif" font-size="14.00">1</text>
+                        </g>
+                        <!-- 140268177100928 -->
+                        <g id="node4" class="node activated can-be-reclaimed">
+                        <title>140268177100928</title>
+                        <path fill="none" stroke="black" d="M108,-178.5C108,-178.5 144,-178.5 144,-178.5 150,-178.5 156,-184.5 156,-190.5 156,-190.5 156,-203.5 156,-203.5 156,-209.5 150,-215.5 144,-215.5 144,-215.5 108,-215.5 108,-215.5 102,-215.5 96,-209.5 96,-203.5 96,-203.5 96,-190.5 96,-190.5 96,-184.5 102,-178.5 108,-178.5"/>
+                        <text text-anchor="middle" x="126" y="-193.6" font-family="Times,serif" font-size="13.00">virfib(2)</text>
+                        </g>
+                        <!-- 140268980982768&#45;&gt;140268177100928 -->
+                        <g id="edge10" class="edge activated">
+                        <title>140268980982768&#45;&gt;140268177100928</title>
+                        <path fill="none" stroke="black" d="M134.5,-267.22C131.03,-261.68 127.79,-255.35 126,-249 123.95,-241.7 123.27,-233.58 123.27,-226"/>
+                        <polygon fill="black" stroke="black" points="126.78,-225.92 123.66,-215.79 119.78,-225.65 126.78,-225.92"/>
+                        <text text-anchor="middle" x="133" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999"></text>
+                        </g>
+                        <!-- 140268980982768&#45;&gt;140268177100928 -->
+                        <g id="edge11" class="edge activated">
+                        <title>140268980982768&#45;&gt;140268177100928:c</title>
+                        <path fill="none" stroke="green" d="M144.74,-257.42C143.54,-249.77 141.99,-241.51 140,-234 138.38,-227.89 136.12,-221.4 133.89,-215.58"/>
+                        <polygon fill="green" stroke="green" points="141.27,-257.94 146.14,-267.35 148.2,-256.96 141.27,-257.94"/>
+                        <text text-anchor="middle" x="161" y="-237.8" font-family="Times,serif" font-size="14.00">1</text>
+                        </g>
+                        <!-- 140269251956160 -->
+                        <g id="node7" class="node activated">
+                        <title>140269251956160</title>
+                        <path fill="none" stroke="black" d="M299,-178.5C299,-178.5 335,-178.5 335,-178.5 341,-178.5 347,-184.5 347,-190.5 347,-190.5 347,-203.5 347,-203.5 347,-209.5 341,-215.5 335,-215.5 335,-215.5 299,-215.5 299,-215.5 293,-215.5 287,-209.5 287,-203.5 287,-203.5 287,-190.5 287,-190.5 287,-184.5 293,-178.5 299,-178.5"/>
+                        <text text-anchor="middle" x="317" y="-193.6" font-family="Times,serif" font-size="13.00">virfib(2)</text>
+                        </g>
+                        <!-- 140269249414448&#45;&gt;140269251956160 -->
+                        <g id="edge12" class="edge activated">
+                        <title>140269249414448&#45;&gt;140269251956160</title>
+                        <path fill="none" stroke="black" d="M279.72,-267.04C275.39,-257.04 272.32,-244.52 277,-234 278.75,-230.06 281.17,-226.38 283.96,-222.98"/>
+                        <polygon fill="black" stroke="black" points="286.64,-225.24 291,-215.59 281.57,-220.41 286.64,-225.24"/>
+                        <text text-anchor="middle" x="286" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999"></text>
+                        </g>
+                        <!-- 140269249414448&#45;&gt;140269251956160 -->
+                        <g id="edge13" class="edge activated in-the-future">
+                        <title>140269249414448&#45;&gt;140269251956160:c</title>
+                        <path fill="none" stroke="green" d="M298.47,-257.39C302.64,-243.82 307.55,-227.81 311.26,-215.69"/>
+                        <polygon fill="green" stroke="green" points="295.05,-256.61 295.46,-267.19 301.74,-258.66 295.05,-256.61"/>
+                        <text text-anchor="middle" x="326.5" y="-237.8" font-family="Times,serif" font-size="14.00">1</text>
+                        </g>
+                        <!-- 140269251957216 -->
+                        <g id="node8" class="node activated in-the-future">
+                        <title>140269251957216</title>
+                        <path fill="none" stroke="black" d="M404,-178.5C404,-178.5 440,-178.5 440,-178.5 446,-178.5 452,-184.5 452,-190.5 452,-190.5 452,-203.5 452,-203.5 452,-209.5 446,-215.5 440,-215.5 440,-215.5 404,-215.5 404,-215.5 398,-215.5 392,-209.5 392,-203.5 392,-203.5 392,-190.5 392,-190.5 392,-184.5 398,-178.5 404,-178.5"/>
+                        <text text-anchor="middle" x="422" y="-193.6" font-family="Times,serif" font-size="13.00">virfib(3)</text>
+                        </g>
+                        <!-- 140269249414448&#45;&gt;140269251957216 -->
+                        <g id="edge14" class="edge activated in-the-future">
+                        <title>140269249414448&#45;&gt;140269251957216</title>
+                        <path fill="none" stroke="black" d="M320.11,-267.95C330.06,-262.13 341.11,-255.45 351,-249 364.22,-240.38 378.42,-230.34 390.61,-221.47"/>
+                        <polygon fill="black" stroke="black" points="392.71,-224.27 398.7,-215.54 388.57,-218.63 392.71,-224.27"/>
+                        <text text-anchor="middle" x="381" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999"></text>
+                        </g>
+                        <!-- 140269249414448&#45;&gt;140269251957216 -->
+                        <g id="edge15" class="edge activated in-the-future">
+                        <title>140269249414448&#45;&gt;140269251957216:c</title>
+                        <path fill="none" stroke="green" d="M330.17,-278.37C351.09,-273.24 375.99,-264.32 394,-249 404.31,-240.23 411.43,-226.68 415.91,-215.61"/>
+                        <polygon fill="green" stroke="green" points="329.26,-274.99 320.27,-280.6 330.79,-281.82 329.26,-274.99"/>
+                        <text text-anchor="middle" x="426.5" y="-237.8" font-family="Times,serif" font-size="14.00">2</text>
+                        </g>
+                        <!-- 140268980984160 -->
+                        <g id="node5" class="node activated can-be-reclaimed">
+                        <title>140268980984160</title>
+                        <path fill="none" stroke="black" d="M29,-89.5C29,-89.5 65,-89.5 65,-89.5 71,-89.5 77,-95.5 77,-101.5 77,-101.5 77,-114.5 77,-114.5 77,-120.5 71,-126.5 65,-126.5 65,-126.5 29,-126.5 29,-126.5 23,-126.5 17,-120.5 17,-114.5 17,-114.5 17,-101.5 17,-101.5 17,-95.5 23,-89.5 29,-89.5"/>
+                        <text text-anchor="middle" x="47" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(0)</text>
+                        </g>
+                        <!-- 140268177100928&#45;&gt;140268980984160 -->
+                        <g id="edge16" class="edge activated">
+                        <title>140268177100928&#45;&gt;140268980984160</title>
+                        <path fill="none" stroke="black" d="M95.76,-186.16C66.8,-176.59 27.17,-163.07 25,-160 19.78,-152.59 21.35,-143.75 25.44,-135.52"/>
+                        <polygon fill="black" stroke="black" points="28.46,-137.3 30.67,-126.93 22.48,-133.66 28.46,-137.3"/>
+                        <text text-anchor="middle" x="32" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999"></text>
+                        </g>
+                        <!-- 140268177100928&#45;&gt;140268980984160 -->
+                        <g id="edge17" class="edge activated">
+                        <title>140268177100928&#45;&gt;140268980984160:c</title>
+                        <path fill="none" stroke="green" d="M92.38,-171.92C88,-168.15 83.74,-164.13 80,-160 70.95,-150.02 62.82,-137.26 56.89,-126.89"/>
+                        <polygon fill="green" stroke="green" points="90.35,-174.77 100.31,-178.38 94.77,-169.35 90.35,-174.77"/>
+                        <text text-anchor="middle" x="97" y="-148.8" font-family="Times,serif" font-size="14.00">0</text>
+                        </g>
+                        <!-- 140268980984688 -->
+                        <g id="node6" class="node activated can-be-reclaimed">
+                        <title>140268980984688</title>
+                        <path fill="none" stroke="black" d="M125,-89.5C125,-89.5 161,-89.5 161,-89.5 167,-89.5 173,-95.5 173,-101.5 173,-101.5 173,-114.5 173,-114.5 173,-120.5 167,-126.5 161,-126.5 161,-126.5 125,-126.5 125,-126.5 119,-126.5 113,-120.5 113,-114.5 113,-114.5 113,-101.5 113,-101.5 113,-95.5 119,-89.5 125,-89.5"/>
+                        <text text-anchor="middle" x="143" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(1)</text>
+                        </g>
+                        <!-- 140268177100928&#45;&gt;140268980984688 -->
+                        <g id="edge18" class="edge activated">
+                        <title>140268177100928&#45;&gt;140268980984688</title>
+                        <path fill="none" stroke="black" d="M119.89,-178.24C117.38,-168.3 115.74,-155.78 119,-145 119.98,-141.76 121.36,-138.55 122.96,-135.46"/>
+                        <polygon fill="black" stroke="black" points="126.12,-136.99 128.28,-126.62 120.13,-133.38 126.12,-136.99"/>
+                        <text text-anchor="middle" x="126" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999"></text>
+                        </g>
+                        <!-- 140268177100928&#45;&gt;140268980984688 -->
+                        <g id="edge19" class="edge activated">
+                        <title>140268177100928&#45;&gt;140268980984688:c</title>
+                        <path fill="none" stroke="green" d="M131.38,-168.39C131.92,-165.55 132.47,-162.72 133,-160 135.13,-148.99 137.5,-136.66 139.4,-126.78"/>
+                        <polygon fill="green" stroke="green" points="127.9,-167.94 129.43,-178.42 134.77,-169.27 127.9,-167.94"/>
+                        <text text-anchor="middle" x="153" y="-148.8" font-family="Times,serif" font-size="14.00">1</text>
+                        </g>
+                        <!-- 140268177101456 -->
+                        <g id="node9" class="node activated can-be-reclaimed">
+                        <title>140268177101456</title>
+                        <path fill="none" stroke="black" d="M214,-89.5C214,-89.5 250,-89.5 250,-89.5 256,-89.5 262,-95.5 262,-101.5 262,-101.5 262,-114.5 262,-114.5 262,-120.5 256,-126.5 250,-126.5 250,-126.5 214,-126.5 214,-126.5 208,-126.5 202,-120.5 202,-114.5 202,-114.5 202,-101.5 202,-101.5 202,-95.5 208,-89.5 214,-89.5"/>
+                        <text text-anchor="middle" x="232" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(0)</text>
+                        </g>
+                        <!-- 140269251956160&#45;&gt;140268177101456 -->
+                        <g id="edge20" class="edge activated">
+                        <title>140269251956160&#45;&gt;140268177101456</title>
+                        <path fill="none" stroke="black" d="M286.82,-194.6C262.47,-191.69 229.62,-183.35 213,-160 207.82,-152.73 209.05,-143.88 212.67,-135.61"/>
+                        <polygon fill="black" stroke="black" points="215.85,-137.09 217.54,-126.63 209.7,-133.75 215.85,-137.09"/>
+                        <text text-anchor="middle" x="222" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999"></text>
+                        </g>
+                        <!-- 140269251956160&#45;&gt;140268177101456 -->
+                        <g id="edge21" class="edge activated">
+                        <title>140269251956160&#45;&gt;140268177101456:c</title>
+                        <path fill="none" stroke="green" d="M284.32,-172.18C279.67,-168.3 275.09,-164.18 271,-160 261.05,-149.84 251.45,-137.09 244.26,-126.75"/>
+                        <polygon fill="green" stroke="green" points="282.13,-174.91 292.12,-178.44 286.51,-169.45 282.13,-174.91"/>
+                        <text text-anchor="middle" x="291.5" y="-148.8" font-family="Times,serif" font-size="14.00">0</text>
+                        </g>
+                        <!-- 140269251956688 -->
+                        <g id="node10" class="node activated">
+                        <title>140269251956688</title>
+                        <path fill="none" stroke="black" d="M310,-89.5C310,-89.5 346,-89.5 346,-89.5 352,-89.5 358,-95.5 358,-101.5 358,-101.5 358,-114.5 358,-114.5 358,-120.5 352,-126.5 346,-126.5 346,-126.5 310,-126.5 310,-126.5 304,-126.5 298,-120.5 298,-114.5 298,-114.5 298,-101.5 298,-101.5 298,-95.5 304,-89.5 310,-89.5"/>
+                        <text text-anchor="middle" x="328" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(1)</text>
+                        </g>
+                        <!-- 140269251956160&#45;&gt;140269251956688 -->
+                        <g id="edge22" class="edge activated">
+                        <title>140269251956160&#45;&gt;140269251956688</title>
+                        <path fill="none" stroke="black" d="M316.26,-178.44C316.12,-168.57 316.38,-156.04 318,-145 318.4,-142.27 318.94,-139.45 319.57,-136.64"/>
+                        <polygon fill="black" stroke="black" points="323.01,-137.31 322.12,-126.76 316.23,-135.57 323.01,-137.31"/>
+                        <text text-anchor="middle" x="327" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999"></text>
+                        </g>
+                        <!-- 140269251956160&#45;&gt;140269251956688 -->
+                        <g id="edge23" class="edge activated in-the-future">
+                        <title>140269251956160&#45;&gt;140269251956688:c</title>
+                        <path fill="none" stroke="green" d="M332.92,-169.15C334.17,-166.14 335.24,-163.06 336,-160 338.68,-149.18 336.99,-136.87 334.48,-126.94"/>
+                        <polygon fill="green" stroke="green" points="329.67,-167.85 328.48,-178.38 335.97,-170.89 329.67,-167.85"/>
+                        <text text-anchor="middle" x="357.5" y="-148.8" font-family="Times,serif" font-size="14.00">1</text>
+                        </g>
+                        <!-- 140268177102560 -->
+                        <g id="node11" class="node activated in-the-future">
+                        <title>140268177102560</title>
+                        <path fill="none" stroke="black" d="M429,-89.5C429,-89.5 465,-89.5 465,-89.5 471,-89.5 477,-95.5 477,-101.5 477,-101.5 477,-114.5 477,-114.5 477,-120.5 471,-126.5 465,-126.5 465,-126.5 429,-126.5 429,-126.5 423,-126.5 417,-120.5 417,-114.5 417,-114.5 417,-101.5 417,-101.5 417,-95.5 423,-89.5 429,-89.5"/>
+                        <text text-anchor="middle" x="447" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(1)</text>
+                        </g>
+                        <!-- 140269251957216&#45;&gt;140268177102560 -->
+                        <g id="edge24" class="edge activated in-the-future">
+                        <title>140269251957216&#45;&gt;140268177102560</title>
+                        <path fill="none" stroke="black" d="M419.93,-178.14C419.37,-168.17 419.66,-155.65 423,-145 424.01,-141.77 425.41,-138.57 427.02,-135.48"/>
+                        <polygon fill="black" stroke="black" points="430.19,-137.01 432.36,-126.64 424.2,-133.39 430.19,-137.01"/>
+                        <text text-anchor="middle" x="432" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999"></text>
+                        </g>
+                        <!-- 140269251957216&#45;&gt;140268177102560 -->
+                        <g id="edge25" class="edge activated in-the-future">
+                        <title>140269251957216&#45;&gt;140268177102560:c</title>
+                        <path fill="none" stroke="green" d="M437.57,-169.05C438.89,-166.06 440.07,-163.01 441,-160 444.33,-149.24 445.84,-136.7 446.52,-126.63"/>
+                        <polygon fill="green" stroke="green" points="434.31,-167.74 433.03,-178.25 440.59,-170.83 434.31,-167.74"/>
+                        <text text-anchor="middle" x="464.5" y="-148.8" font-family="Times,serif" font-size="14.00">1</text>
+                        </g>
+                        <!-- 140269251957744 -->
+                        <g id="node12" class="node activated in-the-future">
+                        <title>140269251957744</title>
+                        <path fill="none" stroke="black" d="M525,-89.5C525,-89.5 561,-89.5 561,-89.5 567,-89.5 573,-95.5 573,-101.5 573,-101.5 573,-114.5 573,-114.5 573,-120.5 567,-126.5 561,-126.5 561,-126.5 525,-126.5 525,-126.5 519,-126.5 513,-120.5 513,-114.5 513,-114.5 513,-101.5 513,-101.5 513,-95.5 519,-89.5 525,-89.5"/>
+                        <text text-anchor="middle" x="543" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(2)</text>
+                        </g>
+                        <!-- 140269251957216&#45;&gt;140269251957744 -->
+                        <g id="edge26" class="edge activated in-the-future">
+                        <title>140269251957216&#45;&gt;140269251957744</title>
+                        <path fill="none" stroke="black" d="M452.03,-182.01C463.96,-175.91 477.54,-168.27 489,-160 499.62,-152.34 510.31,-142.73 519.35,-133.92"/>
+                        <polygon fill="black" stroke="black" points="521.91,-136.32 526.51,-126.77 516.96,-131.36 521.91,-136.32"/>
+                        <text text-anchor="middle" x="515" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999"></text>
+                        </g>
+                        <!-- 140269251957216&#45;&gt;140269251957744 -->
+                        <g id="edge27" class="edge activated in-the-future">
+                        <title>140269251957216&#45;&gt;140269251957744:c</title>
+                        <path fill="none" stroke="green" d="M461.94,-191.53C484.18,-187.04 510.78,-178.04 528,-160 536.5,-151.1 540.23,-137.69 541.84,-126.72"/>
+                        <polygon fill="green" stroke="green" points="461.3,-188.09 452.08,-193.29 462.53,-194.98 461.3,-188.09"/>
+                        <text text-anchor="middle" x="557.5" y="-148.8" font-family="Times,serif" font-size="14.00">1</text>
+                        </g>
+                        <!-- 140269251958272 -->
+                        <g id="node13" class="node activated in-the-future">
+                        <title>140269251958272</title>
+                        <path fill="none" stroke="black" d="M477,-0.5C477,-0.5 513,-0.5 513,-0.5 519,-0.5 525,-6.5 525,-12.5 525,-12.5 525,-25.5 525,-25.5 525,-31.5 519,-37.5 513,-37.5 513,-37.5 477,-37.5 477,-37.5 471,-37.5 465,-31.5 465,-25.5 465,-25.5 465,-12.5 465,-12.5 465,-6.5 471,-0.5 477,-0.5"/>
+                        <text text-anchor="middle" x="495" y="-15.6" font-family="Times,serif" font-size="13.00">virfib(0)</text>
+                        </g>
+                        <!-- 140269251957744&#45;&gt;140269251958272 -->
+                        <g id="edge28" class="edge activated in-the-future">
+                        <title>140269251957744&#45;&gt;140269251958272</title>
+                        <path fill="none" stroke="black" d="M512.95,-100.04C497.57,-94.79 480.18,-85.86 471,-71 466.16,-63.18 468.12,-54.22 472.52,-46.02"/>
+                        <polygon fill="black" stroke="black" points="475.54,-47.8 478.06,-37.51 469.67,-43.98 475.54,-47.8"/>
+                        <text text-anchor="middle" x="480" y="-61.6" font-family="Times,serif" font-size="8.00" fill="#999999"></text>
+                        </g>
+                        <!-- 140269251957744&#45;&gt;140269251958272 -->
+                        <g id="edge29" class="edge activated in-the-future">
+                        <title>140269251957744&#45;&gt;140269251958272:c</title>
+                        <path fill="none" stroke="green" d="M518.9,-81.4C516.37,-78.04 513.99,-74.54 512,-71 506.12,-60.58 501.91,-47.82 499.15,-37.54"/>
+                        <polygon fill="green" stroke="green" points="516.37,-83.84 525.4,-89.38 521.79,-79.41 516.37,-83.84"/>
+                        <text text-anchor="middle" x="532.5" y="-59.8" font-family="Times,serif" font-size="14.00">0</text>
+                        </g>
+                        <!-- 140269249414976 -->
+                        <g id="node14" class="node activated in-the-future">
+                        <title>140269249414976</title>
+                        <path fill="none" stroke="black" d="M573,-0.5C573,-0.5 609,-0.5 609,-0.5 615,-0.5 621,-6.5 621,-12.5 621,-12.5 621,-25.5 621,-25.5 621,-31.5 615,-37.5 609,-37.5 609,-37.5 573,-37.5 573,-37.5 567,-37.5 561,-31.5 561,-25.5 561,-25.5 561,-12.5 561,-12.5 561,-6.5 567,-0.5 573,-0.5"/>
+                        <text text-anchor="middle" x="591" y="-15.6" font-family="Times,serif" font-size="13.00">virfib(1)</text>
+                        </g>
+                        <!-- 140269251957744&#45;&gt;140269249414976 -->
+                        <g id="edge30" class="edge activated in-the-future">
+                        <title>140269251957744&#45;&gt;140269249414976</title>
+                        <path fill="none" stroke="black" d="M552.71,-89.39C559.48,-77.13 568.63,-60.55 576.29,-46.67"/>
+                        <polygon fill="black" stroke="black" points="579.53,-48.03 581.3,-37.58 573.41,-44.64 579.53,-48.03"/>
+                        <text text-anchor="middle" x="578" y="-61.6" font-family="Times,serif" font-size="8.00" fill="#999999"></text>
+                        </g>
+                        <!-- 140269251957744&#45;&gt;140269249414976 -->
+                        <g id="edge31" class="edge activated in-the-future">
+                        <title>140269251957744&#45;&gt;140269249414976:c</title>
+                        <path fill="none" stroke="green" d="M580.85,-84.47C584.93,-80.5 588.5,-76.01 591,-71 596.09,-60.83 596.17,-48.07 594.94,-37.74"/>
+                        <polygon fill="green" stroke="green" points="578.45,-81.92 573.09,-91.06 582.98,-87.26 578.45,-81.92"/>
+                        <text text-anchor="middle" x="615.5" y="-59.8" font-family="Times,serif" font-size="14.00">1</text>
+                        </g>
+                        <!-- 140269251955632 -->
+                        <g id="node15" class="node activated">
+                        <title>140269251955632</title>
+                        <path fill="none" stroke="black" d="M199,-356.5C199,-356.5 235,-356.5 235,-356.5 241,-356.5 247,-362.5 247,-368.5 247,-368.5 247,-381.5 247,-381.5 247,-387.5 241,-393.5 235,-393.5 235,-393.5 199,-393.5 199,-393.5 193,-393.5 187,-387.5 187,-381.5 187,-381.5 187,-368.5 187,-368.5 187,-362.5 193,-356.5 199,-356.5"/>
+                        <text text-anchor="middle" x="217" y="-371.6" font-family="Times,serif" font-size="13.00">virfib(5)</text>
+                        </g>
+                        <!-- 140269251955632&#45;&gt;140268980982768 -->
+                        <g id="edge32" class="edge activated">
+                        <title>140269251955632&#45;&gt;140268980982768</title>
+                        <path fill="none" stroke="black" d="M186.93,-365.87C172.87,-360.41 157.4,-351.65 149,-338 144.8,-331.18 143.45,-322.82 143.45,-314.86"/>
+                        <polygon fill="black" stroke="black" points="146.95,-314.98 144.1,-304.78 139.96,-314.53 146.95,-314.98"/>
+                        <text text-anchor="middle" x="156" y="-328.6" font-family="Times,serif" font-size="8.00" fill="#999999"></text>
+                        </g>
+                        <!-- 140269251955632&#45;&gt;140268980982768 -->
+                        <g id="edge33" class="edge activated">
+                        <title>140269251955632&#45;&gt;140268980982768:c</title>
+                        <path fill="none" stroke="green" d="M194.54,-348.42C191.63,-344.96 188.71,-341.42 186,-338 177.38,-327.14 168.19,-314.6 161.01,-304.56"/>
+                        <polygon fill="green" stroke="green" points="192.11,-350.96 201.26,-356.29 197.43,-346.41 192.11,-350.96"/>
+                        <text text-anchor="middle" x="206.5" y="-326.8" font-family="Times,serif" font-size="14.00">2</text>
+                        </g>
+                        <!-- 140269251955632&#45;&gt;140269249414448 -->
+                        <g id="edge34" class="edge activated">
+                        <title>140269251955632&#45;&gt;140269249414448</title>
+                        <path fill="none" stroke="black" d="M226.93,-356.2C232.99,-346.02 241.24,-333.27 250,-323 253.32,-319.1 257.06,-315.22 260.88,-311.53"/>
+                        <polygon fill="black" stroke="black" points="263.28,-314.07 268.24,-304.71 258.52,-308.94 263.28,-314.07"/>
+                        <text text-anchor="middle" x="259" y="-328.6" font-family="Times,serif" font-size="8.00" fill="#999999"></text>
+                        </g>
+                        <!-- 140269251955632&#45;&gt;140269249414448 -->
+                        <g id="edge35" class="edge activated in-the-future">
+                        <title>140269251955632&#45;&gt;140269249414448:c</title>
+                        <path fill="none" stroke="green" d="M255.17,-350.74C259.86,-346.86 264.3,-342.6 268,-338 275.87,-328.23 281.37,-315.23 284.9,-304.67"/>
+                        <polygon fill="green" stroke="green" points="252.96,-348.03 247.13,-356.87 257.2,-353.59 252.96,-348.03"/>
+                        <text text-anchor="middle" x="298.5" y="-326.8" font-family="Times,serif" font-size="14.00">3</text>
+                        </g>
+                        <!-- 99999999 -->
+                        <g id="node16" class="node in-the-future">
+                        <title>99999999</title>
+                        <path fill="none" stroke="black" d="M202,-445.5C202,-445.5 232,-445.5 232,-445.5 238,-445.5 244,-451.5 244,-457.5 244,-457.5 244,-470.5 244,-470.5 244,-476.5 238,-482.5 232,-482.5 232,-482.5 202,-482.5 202,-482.5 196,-482.5 190,-476.5 190,-470.5 190,-470.5 190,-457.5 190,-457.5 190,-451.5 196,-445.5 202,-445.5"/>
+                        <text text-anchor="middle" x="217" y="-460.6" font-family="Times,serif" font-size="13.00">Result</text>
+                        </g>
+                        <!-- 99999999&#45;&gt;140269251955632 -->
+                        <g id="edge36" class="edge activated in-the-future">
+                        <title>99999999&#45;&gt;140269251955632:c</title>
+                        <path fill="none" stroke="green" d="M217,-434.99C217,-421.5 217,-405.69 217,-393.69"/>
+                        <polygon fill="green" stroke="green" points="213.5,-435.19 217,-445.19 220.5,-435.19 213.5,-435.19"/>
+                        <text text-anchor="middle" x="237.5" y="-415.8" font-family="Times,serif" font-size="14.00">5</text>
+                        </g>
+                        </g>
+                        </svg>
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>Memoization</h2>
+                </section>
+
+                <section>
+                    <h3>Memoization</h3>
+
+                    <p><strong>Memoization</strong> is a strategy to
+                        reduce redundant computation by remembering
+                        the results of previous function calls in a "memo".
+                    </p>
+
+                </section>
+
+                <section>
+                    <h3>A memoization HOF</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def memo(f):
+                        cache = {}
+                        def memoized(n):
+                            if n not in cache:
+                                cache[n] = f(n)
+                            return cache[n]
+                        return memoized
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Memoizing Virahanka-Fibonacci</h3>
+
+                    <table><thead><tr><th scope="col"><span style="white-space: nowrap;"><span></span><span><span></span><span aria-hidden="true" style="white-space: nowrap;" aria-describedby="katex-26"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span></span></span></span></span><span style="border: 0px; clip: rect(0px, 0px, 0px, 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px;" id="katex-26">n</span></span><span></span></span></th><th scope="col">Original</th><th scope="col">Memoized</th></tr></thead><tbody><tr><td>5</td><td>15</td><td>9</td></tr><tr><td>6</td><td>25</td><td>11</td></tr><tr><td>7</td><td>41</td><td>13</td></tr><tr><td>8</td><td>67</td><td>15</td></tr><tr><td>9</td><td>109</td><td>17</td></tr><tr><td>10</td><td>177</td><td>19</td></tr></tbody></table>
+
+                    <a target="_blank" href="https://youtu.be/hbveibMDHfg">Video visualization</a>
+                </section>
+
+			</div>
+		</div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-menu@2.1.0/menu.js"></script>
+        <!-- The loading of KaTeX is deferred to speed up page rendering -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.js" integrity="sha384-31El76TwmbHj4rF9DyLsygbq6xoIobG0W+jqXim+a3dU9W53tdH3A/ngRPxOzzaB" crossorigin="anonymous"></script>
+        <!-- To automatically render math in text elements, include the auto-render extension: -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"
+            onload="renderMathInElement(document.body, {fleqn: true});"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight, RevealMenu ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge();
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+        </script>
+    </body>
+</html>

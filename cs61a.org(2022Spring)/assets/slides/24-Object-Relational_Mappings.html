@@ -1,0 +1,609 @@
+<!DOCTYPE html><html lang="POSIX"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0"><meta name="apple-mobile-web-app-capable" content="yes"><meta http-equiv="X-UA-Compatible" content="ie=edge"><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><style>@media screen{body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button{-webkit-tap-highlight-color:transparent;-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:transparent;border:0;color:inherit;cursor:pointer;font-size:inherit;opacity:.8;outline:none;padding:0;transition:opacity .2s linear}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button:disabled,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button:disabled,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button:disabled,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button:disabled{cursor:not-allowed;opacity:.15!important}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button:hover,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button:hover,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button:hover,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button:hover{opacity:1}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button:hover:active,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button:hover:active,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button:hover:active,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button:hover:active{opacity:.6}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button:hover:not(:disabled),body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button:hover:not(:disabled),body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button:hover:not(:disabled),body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button:hover:not(:disabled){transition:none}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=prev],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=prev],body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button.bespoke-marp-presenter-info-page-prev{background:transparent url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSI1IiBkPSJNNjggOTAgMjggNTBsNDAtNDAiLz48L3N2Zz4=") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=next],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=next],body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button.bespoke-marp-presenter-info-page-next{background:transparent url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSI1IiBkPSJtMzIgOTAgNDAtNDAtNDAtNDAiLz48L3N2Zz4=") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=fullscreen],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=fullscreen]{background:transparent url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48ZGVmcz48c3R5bGU+LmF7ZmlsbDpub25lO3N0cm9rZTojZmZmO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2Utd2lkdGg6NXB4fTwvc3R5bGU+PC9kZWZzPjxyZWN0IGNsYXNzPSJhIiB4PSIxMCIgeT0iMjAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI2MCIgcng9IjUuNjciLz48cGF0aCBjbGFzcz0iYSIgZD0iTTQwIDcwSDIwVjUwbTIwIDBMMjAgNzBtNDAtNDBoMjB2MjBtLTIwIDAgMjAtMjAiLz48L3N2Zz4=") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button.exit[data-bespoke-marp-osc=fullscreen],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button.exit[data-bespoke-marp-osc=fullscreen]{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48ZGVmcz48c3R5bGU+LmF7ZmlsbDpub25lO3N0cm9rZTojZmZmO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2Utd2lkdGg6NXB4fTwvc3R5bGU+PC9kZWZzPjxyZWN0IGNsYXNzPSJhIiB4PSIxMCIgeT0iMjAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI2MCIgcng9IjUuNjciLz48cGF0aCBjbGFzcz0iYSIgZD0iTTIwIDUwaDIwdjIwbS0yMCAwIDIwLTIwbTQwIDBINjBWMzBtMjAgMEw2MCA1MCIvPjwvc3ZnPg==")}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=presenter],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=presenter]{background:transparent url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNODcuOCA0Ny41Qzg5IDUwIDg3LjcgNTIgODUgNTJIMzVhOC43IDguNyAwIDAgMS03LjItNC41bC0xNS42LTMxQzExIDE0IDEyLjIgMTIgMTUgMTJoNTBhOC44IDguOCAwIDAgMSA3LjIgNC41ek02MCA1MnYzNm0tMTAgMGgyME00NSA0MmgyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iNSIvPjwvc3ZnPg==") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button.bespoke-marp-presenter-note-bigger{background:transparent url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNMTIgNTBoODBNNTIgOTBWMTAiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjUiLz48L3N2Zz4=") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button.bespoke-marp-presenter-note-smaller{background:transparent url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNMTIgNTBoODAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjUiLz48L3N2Zz4=") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}}.bespoke-marp-note,.bespoke-marp-osc,.bespoke-progress-parent{display:none;transition:none}@media screen{body,html{height:100%;margin:0}body{background:#000;overflow:hidden}svg.bespoke-marp-slide{content-visibility:hidden;opacity:0;pointer-events:none;z-index:-1}svg.bespoke-marp-slide.bespoke-marp-active{content-visibility:visible;opacity:1;pointer-events:auto;z-index:0}svg.bespoke-marp-slide.bespoke-marp-active.bespoke-marp-active-ready *{-webkit-animation-name:__bespoke_marp__!important;animation-name:__bespoke_marp__!important}@supports not (content-visibility:hidden){svg.bespoke-marp-slide[data-bespoke-marp-load=hideable]{display:none}svg.bespoke-marp-slide[data-bespoke-marp-load=hideable].bespoke-marp-active{display:block}}[data-bespoke-marp-fragment=inactive]{visibility:hidden}body[data-bespoke-view=""] .bespoke-marp-parent,body[data-bespoke-view=next] .bespoke-marp-parent{bottom:0;left:0;position:absolute;right:0;top:0}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc{background:rgba(0,0,0,.65);border-radius:7px;bottom:50px;color:#fff;contain:paint;display:block;font-family:Helvetica,Arial,sans-serif;font-size:16px;left:50%;line-height:0;opacity:1;padding:12px;position:absolute;touch-action:manipulation;transform:translateX(-50%);transition:opacity .2s linear;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;white-space:nowrap;will-change:transform;z-index:1}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>*,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>*{margin-left:6px}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>:first-child,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>:first-child{margin-left:0}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>span,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>span{opacity:.8}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>span[data-bespoke-marp-osc=page],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>span[data-bespoke-marp-osc=page]{display:inline-block;min-width:140px;text-align:center}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=fullscreen],body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=next],body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=presenter],body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=prev],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=fullscreen],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=next],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=presenter],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=prev]{height:32px;line-height:32px;width:32px}body[data-bespoke-view=""] .bespoke-marp-parent.bespoke-marp-inactive,body[data-bespoke-view=next] .bespoke-marp-parent.bespoke-marp-inactive{cursor:none}body[data-bespoke-view=""] .bespoke-marp-parent.bespoke-marp-inactive>.bespoke-marp-osc,body[data-bespoke-view=next] .bespoke-marp-parent.bespoke-marp-inactive>.bespoke-marp-osc{opacity:0;pointer-events:none}body[data-bespoke-view=""] svg.bespoke-marp-slide,body[data-bespoke-view=next] svg.bespoke-marp-slide{height:100%;left:0;position:absolute;top:0;width:100%}body[data-bespoke-view=""] .bespoke-progress-parent{background:#222;display:flex;height:5px;width:100%}body[data-bespoke-view=""] .bespoke-progress-parent+.bespoke-marp-parent{top:5px}body[data-bespoke-view=""] .bespoke-progress-parent .bespoke-progress-bar{background:#0288d1;flex:0 0 0;transition:flex-basis .2s cubic-bezier(0,1,1,1)}body[data-bespoke-view=next]{background:transparent}body[data-bespoke-view=presenter]{background:#161616}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container{display:grid;font-family:Helvetica,Arial,sans-serif;grid-template:"current dragbar next" minmax(140px,1fr) "current dragbar note" 2fr "info    dragbar note" 3em;grid-template-columns:minmax(3px,var(--bespoke-marp-presenter-split-ratio,66%)) 0 minmax(3px,1fr);height:100%;left:0;position:absolute;top:0;width:100%}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-parent{grid-area:current;overflow:hidden;position:relative}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-parent svg.bespoke-marp-slide{height:calc(100% - 40px);left:20px;pointer-events:none;position:absolute;top:20px;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;width:calc(100% - 40px)}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-parent svg.bespoke-marp-slide.bespoke-marp-active{filter:drop-shadow(0 3px 10px rgba(0,0,0,.5))}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-dragbar-container{background:#0288d1;cursor:col-resize;grid-area:dragbar;margin-left:-3px;opacity:0;position:relative;transition:opacity .4s linear .1s;width:6px;z-index:10}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-dragbar-container:hover{opacity:1}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-dragbar-container.active{opacity:1;transition-delay:0s}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-next-container{background:#222;cursor:pointer;display:none;grid-area:next;overflow:hidden;position:relative}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-next-container.active{display:block}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-next-container iframe.bespoke-marp-presenter-next{background:transparent;border:0;display:block;filter:drop-shadow(0 3px 10px rgba(0,0,0,.5));height:calc(100% - 40px);left:20px;pointer-events:none;position:absolute;top:20px;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;width:calc(100% - 40px)}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container{background:#222;color:#eee;grid-area:note;position:relative;z-index:1}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button{height:1.5em;line-height:1.5em;width:1.5em}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-presenter-note-wrapper{bottom:0;display:block;left:0;position:absolute;right:0;top:0}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-presenter-note-buttons{background:rgba(0,0,0,.65);border-radius:4px;bottom:0;display:flex;gap:4px;margin:12px;opacity:0;padding:6px;pointer-events:none;position:absolute;right:0;transition:opacity .2s linear}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-presenter-note-buttons:focus-within,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-presenter-note-wrapper:focus-within+.bespoke-marp-presenter-note-buttons,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container:hover .bespoke-marp-presenter-note-buttons{opacity:1;pointer-events:auto}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note{word-wrap:break-word;box-sizing:border-box;font-size:calc(1.1em*var(--bespoke-marp-note-font-scale, 1));height:calc(100% - 40px);margin:20px;overflow:auto;padding-right:3px;scrollbar-color:hsla(0,0%,93%,.5) transparent;scrollbar-width:thin;white-space:pre-wrap;width:calc(100% - 40px)}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note::-webkit-scrollbar{width:6px}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note::-webkit-scrollbar-track{background:transparent}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note::-webkit-scrollbar-thumb{background:hsla(0,0%,93%,.5);border-radius:6px}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note:empty{pointer-events:none}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note.active{display:block}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note p:first-child{margin-top:0}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note p:last-child{margin-bottom:0}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container{align-items:center;box-sizing:border-box;color:#eee;display:flex;flex-wrap:nowrap;grid-area:info;justify-content:center;overflow:hidden;padding:0 10px}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-page,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-time,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-timer{box-sizing:border-box;display:block;padding:0 10px;white-space:nowrap;width:100%}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button{height:1.5em;line-height:1.5em;width:1.5em}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-page{order:2;text-align:center}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-page .bespoke-marp-presenter-info-page-text{display:inline-block;min-width:120px;text-align:center}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-time{color:#999;order:1;text-align:left}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-timer{color:#999;order:3;text-align:right}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-timer:hover{cursor:pointer}}@media print{.bespoke-marp-presenter-info-container,.bespoke-marp-presenter-next-container,.bespoke-marp-presenter-note-container{display:none}}</style><style>@charset "UTF-8";@import url("https://fonts.googleapis.com/css?family=Lato:400,900|Roboto+Mono:400,700&display=swap");@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap");div#p>svg>foreignObject>section{width:1280px;height:720px;box-sizing:border-box;overflow:hidden;position:relative;scroll-snap-align:center center}div#p>svg>foreignObject>section:after{bottom:0;content:attr(data-marpit-pagination);padding:inherit;pointer-events:none;position:absolute;right:0}div#p>svg>foreignObject>section:not([data-marpit-pagination]):after{display:none}/* Normalization */div#p>svg>foreignObject>section h1{font-size:2em;margin:0.67em 0}div#p>svg>foreignObject>section video::-webkit-media-controls{will-change:transform}@page{size:960px 540px;margin:0}@media print{body,html{background-color:#fff;margin:0;page-break-inside:avoid;break-inside:avoid-page}div#p>svg>foreignObject>section{page-break-before:always;break-before:page}div#p>svg>foreignObject>section,div#p>svg>foreignObject>section *{-webkit-print-color-adjust:exact!important;animation-delay:0s!important;animation-duration:0s!important;color-adjust:exact!important;transition:none!important}div#p>svg[data-marpit-svg]{display:block;height:100vh;width:100vw}}div#p>svg>foreignObject>section svg[data-marp-fitting=svg]{display:block;height:auto;width:100%}@supports (-ms-ime-align:auto){div#p>svg>foreignObject>section svg[data-marp-fitting=svg]{position:static}}div#p>svg>foreignObject>section svg[data-marp-fitting=svg].__reflow__{content:""}@supports (-ms-ime-align:auto){div#p>svg>foreignObject>section svg[data-marp-fitting=svg].__reflow__{position:relative}}div#p>svg>foreignObject>section [data-marp-fitting-svg-content]{display:table;white-space:nowrap;width:-webkit-max-content;width:-moz-max-content;width:max-content}div#p>svg>foreignObject>section [data-marp-fitting-svg-content-wrap]{white-space:pre}div#p>svg>foreignObject>section img[data-marp-twemoji]{background:transparent;height:1em;margin:0 .05em 0 .1em;vertical-align:-.1em;width:1em}
+/**
+ * @theme cs61a
+ * @size 1080p 960px 540px
+ */
+/* Tomorrow Night Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Tomorrow Comment */div#p>svg>foreignObject>section .hljs-comment,div#p>svg>foreignObject>section .hljs-quote{color:#969896}
+
+/* Tomorrow Red */div#p>svg>foreignObject>section .hljs-deletion,div#p>svg>foreignObject>section .hljs-name,div#p>svg>foreignObject>section .hljs-regexp,div#p>svg>foreignObject>section .hljs-selector-class,div#p>svg>foreignObject>section .hljs-selector-id,div#p>svg>foreignObject>section .hljs-tag,div#p>svg>foreignObject>section .hljs-template-variable,div#p>svg>foreignObject>section .hljs-variable{color:#cc6666}
+
+/* Tomorrow Orange */div#p>svg>foreignObject>section .hljs-built_in,div#p>svg>foreignObject>section .hljs-builtin-name,div#p>svg>foreignObject>section .hljs-link,div#p>svg>foreignObject>section .hljs-literal,div#p>svg>foreignObject>section .hljs-meta,div#p>svg>foreignObject>section .hljs-number,div#p>svg>foreignObject>section .hljs-params,div#p>svg>foreignObject>section .hljs-type{color:#de935f}
+
+/* Tomorrow Yellow */div#p>svg>foreignObject>section .hljs-attribute{color:#f0c674}
+
+/* Tomorrow Green */div#p>svg>foreignObject>section .hljs-addition,div#p>svg>foreignObject>section .hljs-bullet,div#p>svg>foreignObject>section .hljs-string,div#p>svg>foreignObject>section .hljs-symbol{color:#b5bd68}
+
+/* Tomorrow Blue */div#p>svg>foreignObject>section .hljs-section,div#p>svg>foreignObject>section .hljs-title{color:#81a2be}
+
+/* Tomorrow Purple */div#p>svg>foreignObject>section .hljs-keyword,div#p>svg>foreignObject>section .hljs-selector-tag{color:#b294bb}div#p>svg>foreignObject>section .hljs{display:block;overflow-x:auto;background:#1d1f21;color:#c5c8c6;padding:0.5em}div#p>svg>foreignObject>section .hljs-emphasis{font-style:italic}div#p>svg>foreignObject>section .hljs-strong{font-weight:bold}div#p>svg>foreignObject>section svg[data-marp-fitting=svg]{max-height:580px}div#p>svg>foreignObject>section h1,div#p>svg>foreignObject>section h2,div#p>svg>foreignObject>section h3,div#p>svg>foreignObject>section h4,div#p>svg>foreignObject>section h5,div#p>svg>foreignObject>section h6{margin:0.5em 0 0 0}div#p>svg>foreignObject>section h1 strong,div#p>svg>foreignObject>section h2 strong,div#p>svg>foreignObject>section h3 strong,div#p>svg>foreignObject>section h4 strong,div#p>svg>foreignObject>section h5 strong,div#p>svg>foreignObject>section h6 strong{font-weight:inherit}div#p>svg>foreignObject>section h1{font-size:1.8em}div#p>svg>foreignObject>section h2{font-size:1.5em}div#p>svg>foreignObject>section h3{font-size:1.3em}div#p>svg>foreignObject>section h4{font-size:1.1em}div#p>svg>foreignObject>section h5{font-size:1em}div#p>svg>foreignObject>section h6{font-size:0.9em}div#p>svg>foreignObject>section blockquote,div#p>svg>foreignObject>section p{margin:1em 0 0 0}div#p>svg>foreignObject>section ol>li,div#p>svg>foreignObject>section ul>li{margin:0.3em 0 0 0}div#p>svg>foreignObject>section ol>li>p,div#p>svg>foreignObject>section ul>li>p{margin:0.6em 0 0 0}div#p>svg>foreignObject>section code{display:inline-block;font-family:"Roboto Mono",monospace;font-size:0.8em;letter-spacing:0;margin:-0.1em 0.15em;padding:0.1em 0.2em;vertical-align:baseline}div#p>svg>foreignObject>section pre{display:block;margin:1em 0 0 0;min-height:1em;overflow:visible}div#p>svg>foreignObject>section pre code{box-sizing:border-box;margin:0;min-width:100%;padding:0.5em;font-size:0.7em}div#p>svg>foreignObject>section pre code svg[data-marp-fitting=svg]{max-height:calc(580px - 1em)}div#p>svg>foreignObject>section blockquote{margin:1em 0 0 0;padding:0 1em;position:relative}div#p>svg>foreignObject>section blockquote:after,div#p>svg>foreignObject>section blockquote:before{content:"“";display:block;font-family:"Times New Roman",serif;font-weight:bold;position:absolute}div#p>svg>foreignObject>section blockquote:before{top:0;left:0}div#p>svg>foreignObject>section blockquote:after{right:0;bottom:0;transform:rotate(180deg)}div#p>svg>foreignObject>section blockquote>:first-child{margin-top:0}div#p>svg>foreignObject>section mark{background:transparent}div#p>svg>foreignObject>section table{border-spacing:0;border-collapse:collapse;margin:1em 0 0 0}div#p>svg>foreignObject>section table td,div#p>svg>foreignObject>section table th{padding:0.2em 0.4em;border-width:1px;border-style:solid}div#p>svg>foreignObject>section{background-image:linear-gradient(135deg,rgba(136,136,136,0),rgba(136,136,136,0.02) 50%,rgba(255,255,255,0) 50%,rgba(255,255,255,0.05));font-size:35px;font-family:"Lato","Avenir Next","Avenir","Trebuchet MS","Segoe UI",sans-serif;height:720px;line-height:1.35;letter-spacing:1.25px;padding:70px;width:1280px;word-wrap:break-word;color:#455a64;background-color:#fff8e1}div#p>svg>foreignObject>section{--marpit-root-font-size:35px}div#p>svg>foreignObject>section>:first-child,div#p>svg>foreignObject>section>header:first-child+*{margin-top:0}div#p>svg>foreignObject>section a,div#p>svg>foreignObject>section mark{color:#0288d1}div#p>svg>foreignObject>section code{background:#6a7a7d;color:#fff8e1}div#p>svg>foreignObject>section h1 strong,div#p>svg>foreignObject>section h2 strong,div#p>svg>foreignObject>section h3 strong,div#p>svg>foreignObject>section h4 strong,div#p>svg>foreignObject>section h5 strong,div#p>svg>foreignObject>section h6 strong{color:#0288d1}div#p>svg>foreignObject>section pre>code{background:#455a64}div#p>svg>foreignObject>section blockquote:after,div#p>svg>foreignObject>section blockquote:before,div#p>svg>foreignObject>section footer,div#p>svg>foreignObject>section header,div#p>svg>foreignObject>section section:after{color:#6a7a7d}div#p>svg>foreignObject>section table td,div#p>svg>foreignObject>section table th{border-color:#455a64}div#p>svg>foreignObject>section table thead th{background:#455a64;color:#fff8e1}div#p>svg>foreignObject>section table tbody>tr:nth-child(odd) td,div#p>svg>foreignObject>section table tbody>tr:nth-child(odd) th{background:rgba(69,90,100,0.1)}div#p>svg>foreignObject>section.invert{color:#fff8e1;background-color:#455a64}div#p>svg>foreignObject>section.invert a,div#p>svg>foreignObject>section.invert mark{color:#81d4fa}div#p>svg>foreignObject>section.invert code{background:#dad8c8;color:#455a64}div#p>svg>foreignObject>section.invert h1 strong,div#p>svg>foreignObject>section.invert h2 strong,div#p>svg>foreignObject>section.invert h3 strong,div#p>svg>foreignObject>section.invert h4 strong,div#p>svg>foreignObject>section.invert h5 strong,div#p>svg>foreignObject>section.invert h6 strong{color:#81d4fa}div#p>svg>foreignObject>section.invert pre>code{background:#fff8e1}div#p>svg>foreignObject>section.invert blockquote:after,div#p>svg>foreignObject>section.invert blockquote:before,div#p>svg>foreignObject>section.invert footer,div#p>svg>foreignObject>section.invert header,div#p>svg>foreignObject>section.invert section:after{color:#dad8c8}div#p>svg>foreignObject>section.invert table td,div#p>svg>foreignObject>section.invert table th{border-color:#fff8e1}div#p>svg>foreignObject>section.invert table thead th{background:#fff8e1;color:#455a64}div#p>svg>foreignObject>section.invert table tbody>tr:nth-child(odd) td,div#p>svg>foreignObject>section.invert table tbody>tr:nth-child(odd) th{background:rgba(255,248,225,0.1)}div#p>svg>foreignObject>section.gaia{color:#fff8e1;background-color:#0288d1}div#p>svg>foreignObject>section.gaia a,div#p>svg>foreignObject>section.gaia mark{color:#81d4fa}div#p>svg>foreignObject>section.gaia code{background:#cce2de;color:#0288d1}div#p>svg>foreignObject>section.gaia h1 strong,div#p>svg>foreignObject>section.gaia h2 strong,div#p>svg>foreignObject>section.gaia h3 strong,div#p>svg>foreignObject>section.gaia h4 strong,div#p>svg>foreignObject>section.gaia h5 strong,div#p>svg>foreignObject>section.gaia h6 strong{color:#81d4fa}div#p>svg>foreignObject>section.gaia pre>code{background:#fff8e1}div#p>svg>foreignObject>section.gaia blockquote:after,div#p>svg>foreignObject>section.gaia blockquote:before,div#p>svg>foreignObject>section.gaia footer,div#p>svg>foreignObject>section.gaia header,div#p>svg>foreignObject>section.gaia section:after{color:#cce2de}div#p>svg>foreignObject>section.gaia table td,div#p>svg>foreignObject>section.gaia table th{border-color:#fff8e1}div#p>svg>foreignObject>section.gaia table thead th{background:#fff8e1;color:#0288d1}div#p>svg>foreignObject>section.gaia table tbody>tr:nth-child(odd) td,div#p>svg>foreignObject>section.gaia table tbody>tr:nth-child(odd) th{background:rgba(255,248,225,0.1)}div#p>svg>foreignObject>section.lead{display:flex;flex-direction:column;flex-wrap:nowrap;justify-content:center}div#p>svg>foreignObject>section.lead h1,div#p>svg>foreignObject>section.lead h2,div#p>svg>foreignObject>section.lead h3,div#p>svg>foreignObject>section.lead h4,div#p>svg>foreignObject>section.lead h5,div#p>svg>foreignObject>section.lead h6{text-align:center}div#p>svg>foreignObject>section.lead h1 svg[data-marp-fitting=svg],div#p>svg>foreignObject>section.lead h2 svg[data-marp-fitting=svg],div#p>svg>foreignObject>section.lead h3 svg[data-marp-fitting=svg],div#p>svg>foreignObject>section.lead h4 svg[data-marp-fitting=svg],div#p>svg>foreignObject>section.lead h5 svg[data-marp-fitting=svg],div#p>svg>foreignObject>section.lead h6 svg[data-marp-fitting=svg]{--preserve-aspect-ratio:xMidYMid meet}div#p>svg>foreignObject>section.lead p{text-align:center}div#p>svg>foreignObject>section.lead blockquote>h1,div#p>svg>foreignObject>section.lead blockquote>h2,div#p>svg>foreignObject>section.lead blockquote>h3,div#p>svg>foreignObject>section.lead blockquote>h4,div#p>svg>foreignObject>section.lead blockquote>h5,div#p>svg>foreignObject>section.lead blockquote>h6,div#p>svg>foreignObject>section.lead blockquote>p{text-align:left}div#p>svg>foreignObject>section.lead blockquote svg[data-marp-fitting=svg]:not([data-marp-fitting-math]){--preserve-aspect-ratio:xMinYMin meet}div#p>svg>foreignObject>section.lead ol>li>p,div#p>svg>foreignObject>section.lead ul>li>p{text-align:left}div#p>svg>foreignObject>section.lead table{margin-left:auto;margin-right:auto}div#p>svg>foreignObject>section footer,div#p>svg>foreignObject>section header,div#p>svg>foreignObject>section:after{box-sizing:border-box;font-size:66%;height:70px;line-height:50px;overflow:hidden;padding:10px 25px;position:absolute}div#p>svg>foreignObject>section:after{--marpit-root-font-size:66%}div#p>svg>foreignObject>section header{left:0;right:0;top:0}div#p>svg>foreignObject>section footer{left:0;right:0;bottom:0}div#p>svg>foreignObject>section:after{right:0;bottom:0;font-size:80%}div#p>svg>foreignObject>section:after{--marpit-root-font-size:80%}div#p>svg>foreignObject>section *{font-weight:300}div#p>svg>foreignObject>section{background:#212121;color:white;font-family:"Lato",sans-serif;padding:40px;letter-spacing:normal}div#p>svg>foreignObject>section ol{margin-top:0px;margin-bottom:0px;font-size:25px;color:#adadad}div#p>svg>foreignObject>section ul{margin-top:0px;margin-bottom:0px;font-size:25px;color:#adadad}div#p>svg>foreignObject>section p{font-size:25px;color:#adadad}div#p>svg>foreignObject>section p em{font-weight:400!important}div#p>svg>foreignObject>section a{color:white;text-decoration:none}div#p>svg>foreignObject>section img[alt~=center]{display:block;margin:0 auto}div#p>svg>foreignObject>section pre{margin-top:0px}div#p>svg>foreignObject>section pre code{font-size:20px!important}div#p>svg>foreignObject>section.vcenter{display:flex;flex-direction:column;flex-wrap:nowrap;justify-content:center}div#p>svg>foreignObject>section.vcenter h2{color:#adadad;font-size:33px;margin-bottom:0}div#p>svg>foreignObject>section.vcenter h1{color:white;font-size:52px;margin-top:0}div#p>svg>foreignObject>section.vcentertext{display:flex;flex-direction:column;flex-wrap:nowrap;justify-content:center}div#p>svg>foreignObject>section.vcentertext h2{color:#adadad;font-size:33px;margin-bottom:0}div#p>svg>foreignObject>section.vcentertext h1,div#p>svg>foreignObject>section.vcentertext h2{text-align:center;padding:0;margin:0}div#p>svg>foreignObject>section.vcentertext h1{font-size:40px!important}div#p>svg>foreignObject>section footer{left:0;margin-left:0;padding-left:40px}div#p>svg>foreignObject>section:after{right:0;padding-right:40px}div#p>svg>foreignObject>section footer,div#p>svg>foreignObject>section:after{color:#adadad;font-family:"Lato",sans-serif;font-size:12px}div#p>svg>foreignObject>section:after{--marpit-root-font-size:12px}div#p>svg>foreignObject>section h1{color:white;font-size:35px;margin-top:0}div#p>svg>foreignObject>section .right{text-align:end;float:right}div#p>svg>foreignObject>section .right h1{color:#adadad;font-size:30px;margin:0}div#p>svg>foreignObject>section .right h2{color:white;font-size:20px;margin:0}div#p>svg>foreignObject>section table{font-size:20px}
+
+/* @theme 87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp */div#p>svg>foreignObject>section{width:960px;height:540px}div#p>svg>foreignObject>section[data-marpit-advanced-background=background]{columns:initial!important;display:block!important;padding:0!important}div#p>svg>foreignObject>section[data-marpit-advanced-background=background]:after,div#p>svg>foreignObject>section[data-marpit-advanced-background=background]:before,div#p>svg>foreignObject>section[data-marpit-advanced-background=content]:after,div#p>svg>foreignObject>section[data-marpit-advanced-background=content]:before{display:none!important}div#p>svg>foreignObject>section[data-marpit-advanced-background=background]>div[data-marpit-advanced-background-container]{all:initial;display:flex;flex-direction:row;height:100%;overflow:hidden;width:100%}div#p>svg>foreignObject>section[data-marpit-advanced-background=background]>div[data-marpit-advanced-background-container][data-marpit-advanced-background-direction=vertical]{flex-direction:column}div#p>svg>foreignObject>section[data-marpit-advanced-background=background][data-marpit-advanced-background-split]>div[data-marpit-advanced-background-container]{width:var(--marpit-advanced-background-split,50%)}div#p>svg>foreignObject>section[data-marpit-advanced-background=background][data-marpit-advanced-background-split=right]>div[data-marpit-advanced-background-container]{margin-left:calc(100% - var(--marpit-advanced-background-split, 50%))}div#p>svg>foreignObject>section[data-marpit-advanced-background=background]>div[data-marpit-advanced-background-container]>figure{all:initial;background-position:center;background-repeat:no-repeat;background-size:cover;flex:auto;margin:0}div#p>svg>foreignObject>section[data-marpit-advanced-background=content],div#p>svg>foreignObject>section[data-marpit-advanced-background=pseudo]{background:transparent!important}div#p>svg>foreignObject>section[data-marpit-advanced-background=pseudo],div#p>svg[data-marpit-svg]>foreignObject[data-marpit-advanced-background=pseudo]{pointer-events:none!important}div#p>svg>foreignObject>section[data-marpit-advanced-background-split]{width:100%;height:100%}</style></head><body><div class="bespoke-marp-osc"><button data-bespoke-marp-osc="prev" tabindex="-1" title="Previous slide">Previous slide</button><span data-bespoke-marp-osc="page"></span><button data-bespoke-marp-osc="next" tabindex="-1" title="Next slide">Next slide</button><button data-bespoke-marp-osc="fullscreen" tabindex="-1" title="Toggle fullscreen (f)">Toggle fullscreen</button><button data-bespoke-marp-osc="presenter" tabindex="-1" title="Open presenter view (p)">Open presenter view</button></div><div id="p"><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="1" data-footer="vanshaj [at] berkeley [dot] edu" data-class="vcenter" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" class="vcenter" style="--footer:vanshaj [at] berkeley [dot] edu;--class:vcenter;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h2>Working with Persistent, Related Objects</h2>
+<h1>Object-Relational Mappings (ORMs)</h1>
+<span class="right">
+    <h1>CS61A Spring 2022</h1>
+    <h2>MWF 2:00-3:00pm</h2>
+    <h2>cs61a.org</h2>
+</span>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="2" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="2" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Recall: Data</h1>
+<p>So far, we've learned how to represent data in our programs as variables:</p>
+<br />
+<pre><code class="language-py">name = <span class="hljs-string">&quot;fido&quot;</span>
+age = <span class="hljs-number">2</span>
+fav_food = <span class="hljs-string">&quot;homework&quot;</span>
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="3" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="3" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Recall: Objects</h1>
+<p>We've also learned how to wrap this data in meaningful structures, like classes:</p>
+<br />
+<pre><code class="language-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Animal</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span>(<span class="hljs-params">self, name, age, fav_food</span>):</span>
+        self.name = name
+        self.age = age
+        self.fav_food = fav_food
+        self.shelter = <span class="hljs-literal">None</span> <span class="hljs-comment"># we&#x27;ll come back to this on the next slide</span>
+
+fido = Animal(<span class="hljs-string">&quot;fido&quot;</span>, <span class="hljs-number">2</span>, <span class="hljs-string">&quot;homework&quot;</span>)
+luna = Animal(<span class="hljs-string">&quot;luna&quot;</span>, <span class="hljs-number">4</span>, <span class="hljs-string">&quot;yarn&quot;</span>)
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="4" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="4" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Recall: Composition</h1>
+<p>We've even learned how to make objects interact with each other:</p>
+<br />
+<pre><code class="language-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Shelter</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span>(<span class="hljs-params">self, name, address, animals</span>):</span>
+        self.name = name
+        self.address = address
+        self.animals = animals
+        <span class="hljs-keyword">for</span> animal <span class="hljs-keyword">in</span> animals:
+            animal.shelter = self
+
+berkeley = Shelter(<span class="hljs-string">&quot;Berkeley Shelter&quot;</span>, <span class="hljs-string">&quot;UC Berkeley&quot;</span>, [fido])
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="5" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="5" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>What are we trying to represent?</h1>
+<p>Relational data, where each animal is associated with a shelter (and each shelter is associated with some number of animals). We store such data in tables (like you would on paper), and these tables together form a <em>database</em>.</p>
+<p>A database is a collection of related data, usually organized in tables, that can be accessed in various ways. The database is generally stored on a computer as a (set of) file(s).</p>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="6" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="6" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Tables</h1>
+<p>Animals:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Age</th>
+<th>Favorite Food</th>
+<th>Shelter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fido</td>
+<td>2</td>
+<td>Homework</td>
+<td>Berkeley Shelter</td>
+</tr>
+<tr>
+<td>Luna</td>
+<td>4</td>
+<td>Yarn</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>A table is a set of data organized into vertical columns (identifiable by name). Each table is usually accompanied by metadata that imposes constraints and relationships on the columns in that table.</p>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="7" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="7" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Databases</h1>
+<p>Animals:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Age</th>
+<th>Favorite Food</th>
+<th>Shelter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fido</td>
+<td>2</td>
+<td>Homework</td>
+<td>Berkeley Shelter</td>
+</tr>
+<tr>
+<td>Luna</td>
+<td>4</td>
+<td>Yarn</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Shelters:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Address</th>
+<th>Animals</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Berkeley Shelter</td>
+<td>UC Berkeley</td>
+<td>[Fido]</td>
+</tr>
+</tbody>
+</table>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="8" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="8" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Notable Properties</h1>
+<ul>
+<li>An <code>Animal</code> may or may not be living in a <code>Shelter</code>, stored in <code>animal.shelter</code>.</li>
+<li>A <code>Shelter</code> may have any number of <code>Animal</code>s, stored in <code>shelter.animals</code>.</li>
+<li>Whenever we change the <code>shelter</code> of an <code>animal</code>, we need to remove it from the old <code>shelter.animals</code> and add it to the new <code>shelter.animals</code>.</li>
+<li>Whenever we remove an animal from a <code>shelter</code>'s <code>animals</code> list, we need to clear the animal's <code>shelter</code> attribute.</li>
+</ul>
+<p>Broadly: these tables are <em>related</em>, and many actions need to occur simultaneously to keep them in sync.</p>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="9" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="9" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Many-to-One Relationships</h1>
+<p>What we've just described is a &quot;many-to-one&quot; relationship: many animals can correspond to one shelter. The converse of this is a &quot;one-to-many&quot; relationship: one shelter can correspond to many animals.</p>
+<p>How do we decide which one this is? Well, it's a matter of perspective: Does a shelter have animals? Or do animals each have a shelter?</p>
+<p>In our case, it should really be that each animal has a shelter (i.e. lives in a shelter), so we go with many-to-one.</p>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="10" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="10" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Recall: <code>Animal</code>s and <code>Shelter</code>s</h1>
+<br />
+<pre><code class="language-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Animal</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span>(<span class="hljs-params">self, name, age, fav_food</span>):</span>
+        ...
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Shelter</span>:</span>
+    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">__init__</span>(<span class="hljs-params">self, name, address, animals</span>):</span>
+        ...
+
+fido = Animal(<span class="hljs-string">&quot;fido&quot;</span>, <span class="hljs-number">2</span>, <span class="hljs-string">&quot;homework&quot;</span>)
+luna = Animal(<span class="hljs-string">&quot;luna&quot;</span>, <span class="hljs-number">4</span>, <span class="hljs-string">&quot;yarn&quot;</span>)
+berkeley = Shelter(<span class="hljs-string">&quot;Berkeley Shelter&quot;</span>, <span class="hljs-string">&quot;UC Berkeley&quot;</span>, [fido])
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="11" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="11" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Drawbacks of our Model</h1>
+<p>How do we maintain a many-to-one relationship? How do we store this across sessions? How do we filter all of our data?</p>
+<ul>
+<li>We have to write our own system for saving this information and restoring it if we want it to persist across sessions.</li>
+<li>We have to write our own syncing system to keep these objects in sync.</li>
+<li>We have to write list comprehensions ourselves if we want to filter/query this data.</li>
+</ul>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="12" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="12" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Storage</h1>
+<p>So far, all the programs we've created have saved state on <em>memory</em>, meaning that our data only lasts until we exit the interpreter. Take your Cats high scores, for example -- those don't persist locally, because once you exit the program, your computer gets rid of the information.</p>
+<p>To store things long-term, you need to put them in files, such as databases. To share things, you need to put them in some central file that multiple people can access, which is also something that databases allow us to do.</p>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="13" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="13" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Alternative: ORMs</h1>
+<p>ORMs (object-relational mappings) wrap databases in a structure that's relevant to the programming language you're working in (for us, that's Python). They let you represent data as related classes, and they handle all the dirty work for you!</p>
+<p>In Python, the <code>sqlalchemy</code> library provides a set of utilities for working with ORMs.</p>
+<br />
+<pre><code class="language-py">$ pip3 install sqlalchemy
+$ python3
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">import</span> sqlalchemy
+<span class="hljs-meta">&gt;&gt;&gt; </span>sqlalchemy.__version__
+<span class="hljs-string">&#x27;1.4.31&#x27;</span>
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="14" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="14" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>SQLAlchemy: The <code>Animal</code> Model</h1>
+<p><code>shelter_system.py</code></p>
+<pre><code class="language-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Animal</span>(<span class="hljs-params">Base</span>):</span>
+    __tablename__ = <span class="hljs-string">&quot;animals&quot;</span>
+
+    name = Column(String, primary_key=<span class="hljs-literal">True</span>)
+    age = Column(Integer)
+    fav_food = Column(String)
+
+    shelter_name = Column(String, ForeignKey(<span class="hljs-string">&quot;shelters.name&quot;</span>))
+    shelter = relationship(<span class="hljs-string">&quot;Shelter&quot;</span>, back_populates=<span class="hljs-string">&quot;animals&quot;</span>)
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="15" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="15" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>SQLAlchemy: The <code>Shelter</code> Model</h1>
+<p><code>shelter_system.py</code></p>
+<pre><code class="language-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Shelter</span>(<span class="hljs-params">Base</span>):</span>
+    __tablename__ = <span class="hljs-string">&quot;shelters&quot;</span>
+
+    name = Column(String, primary_key=<span class="hljs-literal">True</span>)
+    address = Column(String)
+
+
+    animals = relationship(<span class="hljs-string">&quot;Animal&quot;</span>, back_populates=<span class="hljs-string">&quot;shelter&quot;</span>)
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="16" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="16" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>SQLAlchemy Round 1</h1>
+<p>The following slides will all occur in the same Python interpreter session. This means that, once defined, a variable will continue to exist until we exit the interpreter.</p>
+<p>To launch this interpreter with the relevant file loaded in:</p>
+<pre><code class="language-shell"><span class="hljs-meta">$</span><span class="bash"> python3 -i shelter_system.py</span>
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="17" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="17" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>SQLAlchemy 1: Creating Instances</h1>
+<br />
+<pre><code class="language-py"><span class="hljs-meta">&gt;&gt;&gt; </span>fido = Animal(name=<span class="hljs-string">&quot;fido&quot;</span>, age=<span class="hljs-number">2</span>, fav_food=<span class="hljs-string">&quot;homework&quot;</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>luna = Animal(name=<span class="hljs-string">&quot;luna&quot;</span>, age=<span class="hljs-number">4</span>, fav_food=<span class="hljs-string">&quot;yarn&quot;</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>fido
+Animal(name=<span class="hljs-string">&#x27;fido&#x27;</span>, age=<span class="hljs-number">2</span>, fav_food=<span class="hljs-string">&#x27;homework&#x27;</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>luna
+Animal(name=<span class="hljs-string">&#x27;luna&#x27;</span>, age=<span class="hljs-number">4</span>, fav_food=<span class="hljs-string">&#x27;yarn&#x27;</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>fido.shelter
+<span class="hljs-meta">&gt;&gt;&gt; </span>berkeley = Shelter(name=<span class="hljs-string">&quot;Berkeley Shelter&quot;</span>, address=<span class="hljs-string">&quot;UC Berkeley&quot;</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>berkeley
+Shelter(name=<span class="hljs-string">&#x27;Berkeley Shelter&#x27;</span>, address=<span class="hljs-string">&#x27;UC Berkeley&#x27;</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>berkeley.animals
+[]
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="18" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="18" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>SQLAlchemy 1: Making our Instances Interact</h1>
+<br />
+<pre><code class="language-py"><span class="hljs-meta">&gt;&gt;&gt; </span>berkeley.animals.append(fido)
+<span class="hljs-meta">&gt;&gt;&gt; </span>berkeley.animals
+[Animal(name=<span class="hljs-string">&#x27;fido&#x27;</span>, age=<span class="hljs-number">2</span>, fav_food=<span class="hljs-string">&#x27;homework&#x27;</span>)]
+<span class="hljs-meta">&gt;&gt;&gt; </span>fido.shelter
+Shelter(name=<span class="hljs-string">&#x27;Berkeley Shelter&#x27;</span>, address=<span class="hljs-string">&#x27;UC Berkeley&#x27;</span>)
+</code></pre>
+<h2></h2>
+<pre><code class="language-py"><span class="hljs-meta">&gt;&gt;&gt; </span>luna.shelter = berkeley
+<span class="hljs-meta">&gt;&gt;&gt; </span>berkeley.animals
+[Animal(name=<span class="hljs-string">&#x27;fido&#x27;</span>, age=<span class="hljs-number">2</span>, fav_food=<span class="hljs-string">&#x27;homework&#x27;</span>),
+ Animal(name=<span class="hljs-string">&#x27;luna&#x27;</span>, age=<span class="hljs-number">4</span>, fav_food=<span class="hljs-string">&#x27;yarn&#x27;</span>)]
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="19" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="19" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>SQLAlchemy 1: Tracking our Objects</h1>
+<br />
+<pre><code class="language-py"><span class="hljs-meta">&gt;&gt;&gt; </span>session.add_all([fido, luna, berkeley])
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="20" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="20" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>SQLAlchemy 1: Querying our Data</h1>
+<br />
+<pre><code class="language-py"><span class="hljs-meta">&gt;&gt;&gt; </span>session.query(Animal).<span class="hljs-built_in">filter</span>(Animal.shelter == berkeley).<span class="hljs-built_in">all</span>()
+[Animal(name=<span class="hljs-string">&#x27;fido&#x27;</span>, age=<span class="hljs-number">2</span>, fav_food=<span class="hljs-string">&#x27;homework&#x27;</span>),
+ Animal(name=<span class="hljs-string">&#x27;luna&#x27;</span>, age=<span class="hljs-number">4</span>, fav_food=<span class="hljs-string">&#x27;yarn&#x27;</span>)]
+<span class="hljs-meta">&gt;&gt;&gt; </span>session.query(Animal).<span class="hljs-built_in">filter</span>(Animal.shelter == berkeley,
+<span class="hljs-meta">... </span>                             Animal.age &gt; <span class="hljs-number">3</span>).<span class="hljs-built_in">all</span>()
+[Animal(name=<span class="hljs-string">&#x27;luna&#x27;</span>, age=<span class="hljs-number">4</span>, fav_food=<span class="hljs-string">&#x27;yarn&#x27;</span>)]
+<span class="hljs-meta">&gt;&gt;&gt; </span>fido.shelter = <span class="hljs-literal">None</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>session.query(Animal).<span class="hljs-built_in">filter</span>(Animal.shelter == berkeley).<span class="hljs-built_in">all</span>()
+[Animal(name=<span class="hljs-string">&#x27;luna&#x27;</span>, age=<span class="hljs-number">4</span>, fav_food=<span class="hljs-string">&#x27;yarn&#x27;</span>)]
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="21" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="21" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>SQLAlchemy 1: Saving our Data</h1>
+<br />
+<pre><code class="language-py"><span class="hljs-meta">&gt;&gt;&gt; </span>berkeley
+Shelter(name=<span class="hljs-string">&#x27;Berkeley Shelter&#x27;</span>, address=<span class="hljs-string">&#x27;UC Berkeley&#x27;</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>fido
+Animal(name=<span class="hljs-string">&#x27;fido&#x27;</span>, age=<span class="hljs-number">2</span>, fav_food=<span class="hljs-string">&#x27;homework&#x27;</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>luna
+Animal(name=<span class="hljs-string">&#x27;luna&#x27;</span>, age=<span class="hljs-number">4</span>, fav_food=<span class="hljs-string">&#x27;yarn&#x27;</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>session.commit()
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="22" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="22" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>SQLAlchemy Round 2</h1>
+<p>The following slides will all occur in the same Python interpreter session. This means that, once defined, a variable will continue to exist until we exit the interpreter.</p>
+<p>To launch this interpreter with the relevant file loaded in:</p>
+<pre><code class="language-shell"><span class="hljs-meta">$</span><span class="bash"> python3 -i shelter_system.py</span>
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="23" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="23" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>SQLAlchemy 2: Loading our Data</h1>
+<br />
+<pre><code class="language-py"><span class="hljs-meta">&gt;&gt;&gt; </span>berkeley = session.query(Shelter).one()
+<span class="hljs-meta">&gt;&gt;&gt; </span>berkeley
+Shelter(name=<span class="hljs-string">&#x27;Berkeley Shelter&#x27;</span>, address=<span class="hljs-string">&#x27;UC Berkeley&#x27;</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>berkeley.animals
+[Animal(name=<span class="hljs-string">&#x27;luna&#x27;</span>, age=<span class="hljs-number">4</span>, fav_food=<span class="hljs-string">&#x27;yarn&#x27;</span>)]
+<span class="hljs-meta">&gt;&gt;&gt; </span>luna = berkeley.animals[<span class="hljs-number">0</span>]
+<span class="hljs-meta">&gt;&gt;&gt; </span>luna
+Animal(name=<span class="hljs-string">&#x27;luna&#x27;</span>, age=<span class="hljs-number">4</span>, fav_food=<span class="hljs-string">&#x27;yarn&#x27;</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>fido = session.query(Animal).<span class="hljs-built_in">filter</span>(Animal.shelter == <span class="hljs-literal">None</span>).one()
+<span class="hljs-meta">&gt;&gt;&gt; </span>fido
+Animal(name=<span class="hljs-string">&#x27;fido&#x27;</span>, age=<span class="hljs-number">2</span>, fav_food=<span class="hljs-string">&#x27;homework&#x27;</span>)
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="24" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="24" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>SQLAlchemy 2: Modifying and Saving our Data</h1>
+<br />
+<pre><code class="language-py"><span class="hljs-meta">&gt;&gt;&gt; </span>fido.shelter = berkeley
+<span class="hljs-meta">&gt;&gt;&gt; </span>session.dirty
+IdentitySet([
+    Animal(name=<span class="hljs-string">&#x27;fido&#x27;</span>, age=<span class="hljs-number">2</span>, fav_food=<span class="hljs-string">&#x27;homework&#x27;</span>),
+    Shelter(name=<span class="hljs-string">&#x27;Berkeley Shelter&#x27;</span>, address=<span class="hljs-string">&#x27;UC Berkeley&#x27;</span>)
+])
+<span class="hljs-meta">&gt;&gt;&gt; </span>session.commit()
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="25" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="25" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>SQLAlchemy Round 3</h1>
+<p>The following slides will all occur in the same Python interpreter session. This means that, once defined, a variable will continue to exist until we exit the interpreter.</p>
+<p>To launch this interpreter with the relevant file loaded in:</p>
+<pre><code class="language-shell"><span class="hljs-meta">$</span><span class="bash"> python3 -i shelter_system.py</span>
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="26" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="26" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>SQLAlchemy 3: Loading our Data</h1>
+<br />
+<pre><code class="language-py"><span class="hljs-meta">&gt;&gt;&gt; </span>session.query(Shelter).one().animals
+[Animal(name=<span class="hljs-string">&#x27;fido&#x27;</span>, age=<span class="hljs-number">2</span>, fav_food=<span class="hljs-string">&#x27;homework&#x27;</span>),
+ Animal(name=<span class="hljs-string">&#x27;luna&#x27;</span>, age=<span class="hljs-number">4</span>, fav_food=<span class="hljs-string">&#x27;yarn&#x27;</span>)]
+</code></pre>
+<p>All of our data persists! And we didn't have to write a syncing mechanism, <em>or</em> a save/load system, <em>or</em> a filtering system. SQLAlchemy takes care of all of this for us, which saves us a ton of time when our models get more complicated, connected, involved, and numerous.</p>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="27" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="27" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Examples of Real-World Use: OH Queue</h1>
+<h2></h2>
+<pre><code class="language-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">User</span>(<span class="hljs-params">db.Model, UserMixin</span>):</span>
+    __tablename__ = <span class="hljs-string">&quot;user&quot;</span>
+    <span class="hljs-built_in">id</span> = db.Column(db.Integer, primary_key=<span class="hljs-literal">True</span>)
+    created = db.Column(db.DateTime, default=db.func.now())
+    email = db.Column(db.String(<span class="hljs-number">255</span>), nullable=<span class="hljs-literal">False</span>, index=<span class="hljs-literal">True</span>)
+    name = db.Column(db.String(<span class="hljs-number">255</span>), nullable=<span class="hljs-literal">False</span>)
+    is_staff = db.Column(db.Boolean, default=<span class="hljs-literal">False</span>)
+
+    course = db.Column(db.String(<span class="hljs-number">255</span>), nullable=<span class="hljs-literal">False</span>, index=<span class="hljs-literal">True</span>)
+
+    call_url = db.Column(db.String(<span class="hljs-number">255</span>))
+    doc_url = db.Column(db.String(<span class="hljs-number">255</span>))
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="28" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="28" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Examples of Real-World Use: OH Queue</h1>
+<h2></h2>
+<pre><code class="language-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Ticket</span>(<span class="hljs-params">db.Model</span>):</span>
+    __tablename__ = <span class="hljs-string">&quot;ticket&quot;</span>
+    <span class="hljs-built_in">id</span> = db.Column(db.Integer, primary_key=<span class="hljs-literal">True</span>)
+    created = db.Column(db.DateTime, default=db.func.now(), index=<span class="hljs-literal">True</span>)
+    updated = db.Column(db.DateTime, onupdate=db.func.now())
+    status = db.Column(EnumType(TicketStatus), index=<span class="hljs-literal">True</span>)
+
+    sort_key = db.Column(db.DateTime, default=db.func.now(), index=<span class="hljs-literal">True</span>)
+
+    user_id = db.Column(db.ForeignKey(<span class="hljs-string">&quot;user.id&quot;</span>), index=<span class="hljs-literal">True</span>)
+    helper_id = db.Column(db.ForeignKey(<span class="hljs-string">&quot;user.id&quot;</span>), index=<span class="hljs-literal">True</span>)
+    assign_id = db.Column(db.ForeignKey(<span class="hljs-string">&quot;assignment.id&quot;</span>), index=<span class="hljs-literal">True</span>)
+    ...
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="29" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="29" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Examples of Real-World Use: OH Queue</h1>
+<h2></h2>
+<pre><code class="language-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Ticket</span>(<span class="hljs-params">db.Model</span>):</span>
+    ...
+    location_id = db.Column(db.ForeignKey(<span class="hljs-string">&quot;location.id&quot;</span>), index=<span class="hljs-literal">True</span>)
+    question = db.Column(db.String(<span class="hljs-number">255</span>))
+    description = db.Column(db.Text)
+
+    user = db.relationship(User, foreign_keys=[user_id])
+    helper = db.relationship(User, foreign_keys=[helper_id])
+    assignment = db.relationship(Assignment, foreign_keys=[assign_id])
+    location = db.relationship(Location, foreign_keys=[location_id])
+
+    course = db.Column(db.String(<span class="hljs-number">255</span>))
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="30" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="30" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Examples of Real-World Use: OH Queue</h1>
+<h2></h2>
+<pre><code class="language-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TicketEvent</span>(<span class="hljs-params">db.Model</span>):</span>
+    __tablename__ = <span class="hljs-string">&quot;ticket_event&quot;</span>
+    <span class="hljs-built_in">id</span> = db.Column(db.Integer, primary_key=<span class="hljs-literal">True</span>)
+    time = db.Column(db.DateTime, default=db.func.now())
+    event_type = db.Column(EnumType(TicketEventType), nullable=<span class="hljs-literal">False</span>)
+    ticket_id = db.Column(db.ForeignKey(<span class="hljs-string">&quot;ticket.id&quot;</span>), nullable=<span class="hljs-literal">False</span>)
+    user_id = db.Column(db.ForeignKey(<span class="hljs-string">&quot;user.id&quot;</span>), nullable=<span class="hljs-literal">False</span>)
+
+    course = db.Column(db.String(<span class="hljs-number">255</span>), nullable=<span class="hljs-literal">False</span>, index=<span class="hljs-literal">True</span>)
+
+    ticket = db.relationship(Ticket)
+    user = db.relationship(User)
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="31" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="31" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Examples of Real-World Use: OH Queue</h1>
+<p>Example of some data you might get out of the OH Queue:</p>
+<pre><code class="language-py"><span class="hljs-meta">&gt;&gt;&gt; </span>session.query(Ticket).<span class="hljs-built_in">filter</span>(Ticket.course == <span class="hljs-string">&quot;cs61b&quot;</span>)
+</code></pre>
+<p><img src="images/orms_lecture_datagrip.png" alt="" style="width:500px;" /></p>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="32" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="32" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Examples of Real-World Use: Sections Tool</h1>
+<h2></h2>
+<pre><code class="language-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Section</span>(<span class="hljs-params">db.Model</span>):</span>
+    <span class="hljs-built_in">id</span>: <span class="hljs-built_in">int</span> = db.Column(db.Integer, primary_key=<span class="hljs-literal">True</span>)
+    course: <span class="hljs-built_in">str</span> = db.Column(db.String(<span class="hljs-number">255</span>), index=<span class="hljs-literal">True</span>)
+    description: <span class="hljs-built_in">str</span> = db.Column(db.String(<span class="hljs-number">255</span>))
+    capacity: <span class="hljs-built_in">int</span> = db.Column(db.Integer)
+    can_self_enroll: <span class="hljs-built_in">bool</span> = db.Column(db.Boolean)
+    enrollment_code: <span class="hljs-built_in">str</span> = db.Column(db.String(<span class="hljs-number">255</span>), nullable=<span class="hljs-literal">True</span>)
+    staff_id: <span class="hljs-built_in">int</span> = db.Column(db.Integer, db.ForeignKey(<span class="hljs-string">&quot;user.id&quot;</span>))
+    staff: <span class="hljs-string">&quot;User&quot;</span> = db.relationship(
+        <span class="hljs-string">&quot;User&quot;</span>,
+        backref=db.backref(<span class="hljs-string">&quot;sections_taught&quot;</span>, lazy=<span class="hljs-string">&quot;joined&quot;</span>),
+        foreign_keys=[staff_id],
+    )
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="33" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="33" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Examples of Real-World Use: Sections Tool</h1>
+<h2></h2>
+<pre><code class="language-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Slot</span>(<span class="hljs-params">db.Model</span>):</span>
+    <span class="hljs-built_in">id</span>: <span class="hljs-built_in">int</span> = db.Column(db.Integer, primary_key=<span class="hljs-literal">True</span>)
+    course: <span class="hljs-built_in">str</span> = db.Column(db.String(<span class="hljs-number">255</span>), index=<span class="hljs-literal">True</span>)
+    name: <span class="hljs-built_in">str</span> = db.Column(db.String(<span class="hljs-number">255</span>))
+    start_time: <span class="hljs-built_in">int</span> = db.Column(db.Integer)
+    end_time: <span class="hljs-built_in">int</span> = db.Column(db.Integer)
+    location: <span class="hljs-built_in">str</span> = db.Column(db.String(<span class="hljs-number">255</span>), nullable=<span class="hljs-literal">False</span>)
+    call_link: <span class="hljs-built_in">str</span> = db.Column(db.String(<span class="hljs-number">255</span>), nullable=<span class="hljs-literal">True</span>)
+    section_id: <span class="hljs-built_in">int</span> = db.Column(db.Integer, db.ForeignKey(<span class="hljs-string">&quot;section.id&quot;</span>))
+    section: Section = db.relationship(
+        <span class="hljs-string">&quot;Section&quot;</span>, backref=db.backref(<span class="hljs-string">&quot;slots&quot;</span>)
+    )
+    sessions: <span class="hljs-type">List</span>[<span class="hljs-string">&quot;Session&quot;</span>]
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="34" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="34" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Examples of Real-World Use: Sections Tool</h1>
+<h2></h2>
+<pre><code class="language-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Session</span>(<span class="hljs-params">db.Model</span>):</span>
+    <span class="hljs-built_in">id</span>: <span class="hljs-built_in">int</span> = db.Column(db.Integer, primary_key=<span class="hljs-literal">True</span>)
+    course: <span class="hljs-built_in">str</span> = db.Column(db.String(<span class="hljs-number">255</span>), index=<span class="hljs-literal">True</span>)
+    start_time: <span class="hljs-built_in">int</span> = db.Column(db.Integer)
+    slot_id: <span class="hljs-built_in">int</span> = db.Column(db.Integer, db.ForeignKey(<span class="hljs-string">&quot;slot.id&quot;</span>)))
+    attendances: <span class="hljs-type">List</span>[<span class="hljs-string">&quot;Attendance&quot;</span>]
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AttendanceStatus</span>(<span class="hljs-params">Enum</span>):</span>
+    present = <span class="hljs-number">1</span>
+    excused = <span class="hljs-number">2</span>
+    absent = <span class="hljs-number">3</span>
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="35" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="35" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>Examples of Real-World Use: Sections Tool</h1>
+<h2></h2>
+<pre><code class="language-py"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Attendance</span>(<span class="hljs-params">db.Model</span>):</span>
+    <span class="hljs-built_in">id</span>: <span class="hljs-built_in">int</span> = db.Column(db.Integer, primary_key=<span class="hljs-literal">True</span>)
+    course: <span class="hljs-built_in">str</span> = db.Column(db.String(<span class="hljs-number">255</span>), index=<span class="hljs-literal">True</span>)
+    status: AttendanceStatus = db.Column(db.Enum(AttendanceStatus))
+    session_id: <span class="hljs-built_in">int</span> = db.Column(db.Integer, db.ForeignKey(<span class="hljs-string">&quot;session.id&quot;</span>))
+    session: Session = db.relationship(
+        <span class="hljs-string">&quot;Session&quot;</span>, backref=db.backref(<span class="hljs-string">&quot;attendances&quot;</span>, lazy=<span class="hljs-string">&quot;joined&quot;</span>),
+        innerjoin=<span class="hljs-literal">True</span>,
+    )
+    student_id: <span class="hljs-built_in">int</span> = db.Column(db.Integer, db.ForeignKey(<span class="hljs-string">&quot;user.id&quot;</span>))
+    student: <span class="hljs-string">&quot;User&quot;</span> = db.relationship(
+        <span class="hljs-string">&quot;User&quot;</span>, backref=db.backref(<span class="hljs-string">&quot;attendances&quot;</span>), innerjoin=<span class="hljs-literal">True</span>
+    )
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="36" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="36" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>(Appendix) Another Possible Solution: SQL</h1>
+<p>SQL (Structured Query Language) is a declarative language (more on these after Spring Break) that is designed to help manage large amounts of (often related) data. We used to teach this in 61A after Scheme, but in a way that was pretty detached from the rest of the course.</p>
+<p>Biggest drawback: learning a new language with wildly different syntax.</p>
+<br />
+<pre><code class="language-sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> animals <span class="hljs-keyword">WHERE</span> age <span class="hljs-operator">&gt;</span> <span class="hljs-number">3</span> <span class="hljs-keyword">AND</span> shelter <span class="hljs-operator">=</span> &quot;Berkeley Shelter&quot;
+    <span class="hljs-keyword">AND</span> fav_food <span class="hljs-operator">=</span> &quot;yarn&quot;;
+<span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> shelters <span class="hljs-keyword">WHERE</span> name <span class="hljs-operator">=</span> &quot;Berkeley Shelter&quot;
+    <span class="hljs-keyword">AND</span> address <span class="hljs-operator">=</span> &quot;UC Berkeley&quot;;
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="37" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="37" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>(Appendix) Problems with SQL: Security</h1>
+<p><img src="https://imgs.xkcd.com/comics/exploits_of_a_mom.png" alt="https://imgs.xkcd.com/comics/exploits_of_a_mom.png" /></p>
+<p>The exploit above is known as SQL injection, and you can learn more about it by taking CS 161 or CS 169A.</p>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="38" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="38" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>(Appendix) Problems with SQL: Unwieldy</h1>
+<h2></h2>
+<pre><code class="language-sql"><span class="hljs-keyword">select</span> student.section_id <span class="hljs-keyword">as</span> section_id,
+       student.email      <span class="hljs-keyword">as</span> student_email,
+       student.name       <span class="hljs-keyword">as</span> student_name,
+       slot.name          <span class="hljs-keyword">as</span> section_type,
+       slot.location      <span class="hljs-keyword">as</span> section_location,
+       staff.email        <span class="hljs-keyword">as</span> staff_email,
+       staff.name         <span class="hljs-keyword">as</span> staff_name
+<span class="hljs-keyword">from</span> <span class="hljs-keyword">user</span> <span class="hljs-keyword">as</span> student, slot, <span class="hljs-keyword">user</span> <span class="hljs-keyword">as</span> staff, section
+<span class="hljs-keyword">where</span> student.course <span class="hljs-operator">=</span> &quot;cs61a&quot;
+  <span class="hljs-keyword">and</span> student.is_staff <span class="hljs-operator">=</span> <span class="hljs-number">0</span>
+  <span class="hljs-keyword">and</span> student.section_id <span class="hljs-operator">=</span> slot.section_id
+  <span class="hljs-keyword">and</span> student.section_id <span class="hljs-operator">=</span> section.id
+  <span class="hljs-keyword">and</span> section.staff_id <span class="hljs-operator">=</span> staff.id
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="39" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="39" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>(Appendix) SQLAlchemy: Setting Up</h1>
+<p>To start using SQLAlchemy, we need to install and import it, then set up a <code>Base</code> class that our models will inherit from. You don't really need to understand this code, beyond its purpose (hooking into a local database at <code>shelters.db</code>).</p>
+<p><code>shelter_system.py</code></p>
+<pre><code class="language-py"><span class="hljs-keyword">from</span> sqlalchemy <span class="hljs-keyword">import</span> create_engine
+<span class="hljs-keyword">from</span> sqlalchemy <span class="hljs-keyword">import</span> Column, String, Integer, ForeignKey
+<span class="hljs-keyword">from</span> sqlalchemy.orm <span class="hljs-keyword">import</span> declarative_base, sessionmaker, relationship
+
+engine = create_engine(<span class="hljs-string">&quot;sqlite:///shelters.db&quot;</span>, echo=<span class="hljs-literal">False</span>)
+Base = declarative_base()
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="40" data-paginate="true" data-footer="vanshaj [at] berkeley [dot] edu" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" data-marpit-pagination="40" data-marpit-pagination-total="41" style="--paginate:true;--footer:vanshaj [at] berkeley [dot] edu;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h1>(Appendix) SQLAlchemy: Declaring the Models</h1>
+<p>Once we've created all of the subclasses of <code>Base</code> that we wanted, it's time to declare them in our database and create a <code>session</code> that we can use to read from/write to our database.</p>
+<br />
+<p><code>shelter_system.py</code></p>
+<pre><code class="language-py">Base.metadata.create_all(engine)
+
+Session = sessionmaker(bind=engine)
+session = Session()
+</code></pre>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 960 540"><foreignObject width="960" height="540"><section id="41" data-footer="vanshaj [at] berkeley [dot] edu" data-class="vcenter" data-theme="87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp" class="vcenter" style="--footer:vanshaj [at] berkeley [dot] edu;--class:vcenter;--theme:87czt878lsih9hfnxc6t5pt1v3oh9axse2yvl5gpgrgp;" data-size="1080p">
+<h2>Submit anonymous feedback at <a href="http://imvs.me/t/anon">imvs.me/t/anon</a></h2>
+<h1>Thanks for stopping by :)</h1>
+<footer>vanshaj [at] berkeley [dot] edu</footer>
+</section>
+<script>!function(){"use strict";const t="marpitSVGPolyfill:setZoomFactor,",e=Symbol();let r,o;function n(n){const i="object"==typeof n&&n.target||document,a="object"==typeof n?n.zoom:n;window[e]||(Object.defineProperty(window,e,{configurable:!0,value:!0}),window.addEventListener("message",(({data:e,origin:r})=>{if(r===window.origin)try{if(e&&"string"==typeof e&&e.startsWith(t)){const[,t]=e.split(","),r=Number.parseFloat(t);Number.isNaN(r)||(o=r)}}catch(t){console.error(t)}})));let l=!1;Array.from(i.querySelectorAll("svg[data-marpit-svg]"),(t=>{var e,n,i,s;t.style.transform||(t.style.transform="translateZ(0)");const c=a||o||t.currentScale||1;r!==c&&(r=c,l=c);const d=t.getBoundingClientRect(),{length:u}=t.children;for(let r=0;r<u;r+=1){const o=t.children[r],a=o.getScreenCTM();if(a){const t=null!==(n=null===(e=o.x)||void 0===e?void 0:e.baseVal.value)&&void 0!==n?n:0,r=null!==(s=null===(i=o.y)||void 0===i?void 0:i.baseVal.value)&&void 0!==s?s:0,l=o.firstElementChild,{style:u}=l;u.transformOrigin||(u.transformOrigin=`${-t}px ${-r}px`),u.transform=`scale(${c}) matrix(${a.a}, ${a.b}, ${a.c}, ${a.d}, ${a.e-d.left}, ${a.f-d.top}) translateZ(0.0001px)`}}})),!1!==l&&Array.from(i.querySelectorAll("iframe"),(({contentWindow:e})=>{null==e||e.postMessage(`${t}${l}`,"null"===window.origin?"*":window.origin)}))}r=1,o=void 0;const i=(t,e,r)=>{if(t.getAttribute(e)!==r)return t.setAttribute(e,r),!0};function a({once:t=!1,target:e=document}={}){const r="Apple Computer, Inc."===navigator.vendor?[n]:[];let o=!t;const a=()=>{for(const t of r)t({target:e});!function(t=document){Array.from(t.querySelectorAll('svg[data-marp-fitting="svg"]'),(t=>{var e;const r=t.firstChild,o=r.firstChild,{scrollWidth:n,scrollHeight:a}=o;let l,s=1;if(t.hasAttribute("data-marp-fitting-code")&&(l=null===(e=t.parentElement)||void 0===e?void 0:e.parentElement),t.hasAttribute("data-marp-fitting-math")&&(l=t.parentElement),l){const t=getComputedStyle(l),e=Math.ceil(l.clientWidth-parseFloat(t.paddingLeft||"0")-parseFloat(t.paddingRight||"0"));e&&(s=e)}const c=Math.max(n,s),d=Math.max(a,1),u=`0 0 ${c} ${d}`;i(r,"width",`${c}`),i(r,"height",`${d}`),i(t,"preserveAspectRatio",getComputedStyle(t).getPropertyValue("--preserve-aspect-ratio")||"xMinYMin meet"),i(t,"viewBox",u)&&t.classList.toggle("__reflow__")}))}(e),o&&window.requestAnimationFrame(a)};return a(),()=>{o=!1}}const l=Symbol(),s=document.currentScript;((t=document)=>{if("undefined"==typeof window)throw new Error("Marp Core's browser script is valid only in browser context.");if(t[l])return t[l];const e=a({target:t}),r=()=>{e(),delete t[l]};Object.defineProperty(t,l,{configurable:!0,value:r})})(s?s.getRootNode():document)}();
+</script></foreignObject></svg></div><script>/*!! License: https://unpkg.com/@marp-team/marp-cli@1.7.0/lib/bespoke.js.LICENSE.txt */
+!function(){"use strict";const e=document.body,t=(...e)=>history.replaceState(...e),n="presenter",r="next",o=["",n,r],a="data-bespoke-marp-",i=(e,{protocol:t,host:n,pathname:r,hash:o}=location)=>{const a=e.toString();return`${t}//${n}${r}${a?"?":""}${a}${o}`},s=()=>e.dataset.bespokeView,l=e=>new URLSearchParams(location.search).get(e),d=(e,n={})=>{var r;const o={location,setter:t,...n},a=new URLSearchParams(o.location.search);for(const t of Object.keys(e)){const n=e[t];"string"==typeof n?a.set(t,n):a.delete(t)}try{o.setter({...null!==(r=window.history.state)&&void 0!==r?r:{}},"",i(a,o.location))}catch(e){console.error(e)}},c=(()=>{const e="bespoke-marp";try{return localStorage.setItem(e,e),localStorage.removeItem(e),!0}catch(e){return!1}})(),u=e=>{try{return localStorage.getItem(e)}catch(e){return null}},f=(e,t)=>{try{return localStorage.setItem(e,t),!0}catch(e){return!1}},m=e=>{try{return localStorage.removeItem(e),!0}catch(e){return!1}},g=(e,t)=>{const n="aria-hidden";t?e.setAttribute(n,"true"):e.removeAttribute(n)},p=e=>{e.parent.classList.add("bespoke-marp-parent"),e.slides.forEach((e=>e.classList.add("bespoke-marp-slide"))),e.on("activate",(t=>{const n="bespoke-marp-active",r=t.slide,o=r.classList,a=!o.contains(n);if(e.slides.forEach((e=>{e.classList.remove(n),g(e,!0)})),o.add(n),g(r,!1),a){const e=`${n}-ready`;o.add(e),document.body.clientHeight,o.remove(e)}}))},v=e=>{let t=0,n=0;Object.defineProperty(e,"fragments",{enumerable:!0,value:e.slides.map((e=>[null,...e.querySelectorAll("[data-marpit-fragment]")]))});const r=r=>void 0!==e.fragments[t][n+r],o=(r,o)=>{t=r,n=o,e.fragments.forEach(((e,t)=>{e.forEach(((e,n)=>{if(null==e)return;const i=t<r||t===r&&n<=o;e.setAttribute(`${a}fragment`,(i?"":"in")+"active");const s=`${a}current-fragment`;t===r&&n===o?e.setAttribute(s,"current"):e.removeAttribute(s)}))})),e.fragmentIndex=o;const i={slide:e.slides[r],index:r,fragments:e.fragments[r],fragmentIndex:o};e.fire("fragment",i)};e.on("next",(({fragment:a=!0})=>{if(a){if(r(1))return o(t,n+1),!1;const a=t+1;e.fragments[a]&&o(a,0)}else{const r=e.fragments[t].length;if(n+1<r)return o(t,r-1),!1;const a=e.fragments[t+1];a&&o(t+1,a.length-1)}})),e.on("prev",(({fragment:a=!0})=>{if(r(-1)&&a)return o(t,n-1),!1;const i=t-1;e.fragments[i]&&o(i,e.fragments[i].length-1)})),e.on("slide",(({index:t,fragment:n})=>{let r=0;if(void 0!==n){const o=e.fragments[t];if(o){const{length:e}=o;r=-1===n?e-1:Math.min(Math.max(n,0),e-1)}}o(t,r)})),o(0,0)},h=document,y=()=>!(!h.fullscreenEnabled&&!h.webkitFullscreenEnabled),b=()=>!(!h.fullscreenElement&&!h.webkitFullscreenElement),x=e=>{e.fullscreen=()=>{y()&&(async()=>{return b()?null===(e=h.exitFullscreen||h.webkitExitFullscreen)||void 0===e?void 0:e.call(h):((e=h.body)=>{var t;return null===(t=e.requestFullscreen||e.webkitRequestFullscreen)||void 0===t?void 0:t.call(e)})();var e})()},document.addEventListener("keydown",(t=>{"f"!==t.key&&"F11"!==t.key||t.altKey||t.ctrlKey||t.metaKey||!y()||(e.fullscreen(),t.preventDefault())}))},w="bespoke-marp-inactive",k=(e=2e3)=>({parent:t,fire:n})=>{const r=t.classList,o=e=>n(`marp-${e?"":"in"}active`);let a;const i=()=>{a&&clearTimeout(a),a=setTimeout((()=>{r.add(w),o()}),e),r.contains(w)&&(r.remove(w),o(!0))};for(const e of["mousedown","mousemove","touchend"])document.addEventListener(e,i);setTimeout(i,0)},E=["AUDIO","BUTTON","INPUT","SELECT","TEXTAREA","VIDEO"],L=e=>{e.parent.addEventListener("keydown",(e=>{if(!e.target)return;const t=e.target;(E.includes(t.nodeName)||"true"===t.contentEditable)&&e.stopPropagation()}))},$=e=>{window.addEventListener("load",(()=>{for(const t of e.slides){const e=t.querySelector("[data-marp-fitting]")?"":"hideable";t.setAttribute(`${a}load`,e)}}))},S=({interval:e=250}={})=>t=>{document.addEventListener("keydown",(e=>{if(" "===e.key&&e.shiftKey)t.prev();else if("ArrowLeft"===e.key||"ArrowUp"===e.key||"PageUp"===e.key)t.prev({fragment:!e.shiftKey});else if(" "!==e.key||e.shiftKey)if("ArrowRight"===e.key||"ArrowDown"===e.key||"PageDown"===e.key)t.next({fragment:!e.shiftKey});else if("End"===e.key)t.slide(t.slides.length-1,{fragment:-1});else{if("Home"!==e.key)return;t.slide(0)}else t.next();e.preventDefault()}));let n,r,o=0;t.parent.addEventListener("wheel",(a=>{let i=!1;const s=(e,t)=>{e&&(i=i||((e,t)=>((e,t)=>{const n="X"===t?"Width":"Height";return e[`client${n}`]<e[`scroll${n}`]})(e,t)&&((e,t)=>{const{overflow:n}=e,r=e[`overflow${t}`];return"auto"===n||"scroll"===n||"auto"===r||"scroll"===r})(getComputedStyle(e),t))(e,t)),(null==e?void 0:e.parentElement)&&s(e.parentElement,t)};if(0!==a.deltaX&&s(a.target,"X"),0!==a.deltaY&&s(a.target,"Y"),i)return;a.preventDefault();const l=Math.sqrt(a.deltaX**2+a.deltaY**2);if(void 0!==a.wheelDelta){if(void 0===a.webkitForce&&Math.abs(a.wheelDelta)<40)return;if(a.deltaMode===a.DOM_DELTA_PIXEL&&l<4)return}else if(a.deltaMode===a.DOM_DELTA_PIXEL&&l<12)return;r&&clearTimeout(r),r=setTimeout((()=>{n=0}),e);const d=Date.now()-o<e,c=l<=n;if(n=l,d||c)return;let u;(a.deltaX>0||a.deltaY>0)&&(u="next"),(a.deltaX<0||a.deltaY<0)&&(u="prev"),u&&(t[u](),o=Date.now())}))},P=(e=".bespoke-marp-osc")=>{const t=document.querySelector(e);if(!t)return()=>{};const n=(e,n)=>{t.querySelectorAll(`[${a}osc=${JSON.stringify(e)}]`).forEach(n)};return y()||n("fullscreen",(e=>e.style.display="none")),c||n("presenter",(e=>{e.disabled=!0,e.title="Presenter view is disabled due to restricted localStorage."})),e=>{t.addEventListener("click",(t=>{if(t.target instanceof HTMLElement){const{bespokeMarpOsc:n}=t.target.dataset;n&&t.target.blur();const r={fragment:!t.shiftKey};"next"===n?e.next(r):"prev"===n?e.prev(r):"fullscreen"===n?null==e||e.fullscreen():"presenter"===n&&e.openPresenterView()}})),e.parent.appendChild(t),e.on("activate",(({index:t})=>{n("page",(n=>n.textContent=`Page ${t+1} of ${e.slides.length}`))})),e.on("fragment",(({index:t,fragments:r,fragmentIndex:o})=>{n("prev",(e=>e.disabled=0===t&&0===o)),n("next",(n=>n.disabled=t===e.slides.length-1&&o===r.length-1))})),e.on("marp-active",(()=>g(t,!1))),e.on("marp-inactive",(()=>g(t,!0))),y()&&(e=>{for(const t of["","webkit"])h.addEventListener(t+"fullscreenchange",e)})((()=>n("fullscreen",(e=>e.classList.toggle("exit",y()&&b())))))}},T=e=>{window.addEventListener("message",(t=>{if(t.origin!==window.origin)return;const[n,r]=t.data.split(":");if("navigate"===n){const[t,n]=r.split(",");let o=Number.parseInt(t,10),a=Number.parseInt(n,10)+1;a>=e.fragments[o].length&&(o+=1,a=0),e.slide(o,{fragment:a})}}))};var I=["area","base","br","col","command","embed","hr","img","input","keygen","link","meta","param","source","track","wbr"];let N=e=>String(e).replace(/[&<>"']/g,(e=>`&${C[e]};`)),C={"&":"amp","<":"lt",">":"gt",'"':"quot","'":"apos"},A="dangerouslySetInnerHTML",D={className:"class",htmlFor:"for"},M={};function B(e,t){let n=[],r="";t=t||{};for(let e=arguments.length;e-- >2;)n.push(arguments[e]);if("function"==typeof e)return t.children=n.reverse(),e(t);if(e){if(r+="<"+e,t)for(let e in t)!1!==t[e]&&null!=t[e]&&e!==A&&(r+=` ${D[e]?D[e]:N(e)}="${N(t[e])}"`);r+=">"}if(-1===I.indexOf(e)){if(t[A])r+=t[A].__html;else for(;n.length;){let e=n.pop();if(e)if(e.pop)for(let t=e.length;t--;)n.push(e[t]);else r+=!0===M[e]?e:N(e)}r+=e?`</${e}>`:""}return M[r]=!0,r}const K=({children:e})=>B(null,null,...e),O="bespoke-marp-presenter-",q={container:`${O}container`,dragbar:`${O}dragbar-container`,next:`${O}next`,nextContainer:`${O}next-container`,noteContainer:`${O}note-container`,noteWrapper:`${O}note-wrapper`,noteButtons:`${O}note-buttons`,infoContainer:`${O}info-container`,infoPage:`${O}info-page`,infoPageText:`${O}info-page-text`,infoPagePrev:`${O}info-page-prev`,infoPageNext:`${O}info-page-next`,noteButtonsBigger:`${O}note-bigger`,noteButtonsSmaller:`${O}note-smaller`,infoTime:`${O}info-time`,infoTimer:`${O}info-timer`},_=e=>{const{title:t}=document;document.title="[Presenter view]"+(t?` - ${t}`:"");const n={},r=e=>(n[e]=n[e]||document.querySelector(`.${e}`),n[e]);document.body.appendChild((e=>{const t=document.createElement("div");return t.className=q.container,t.appendChild(e),t.insertAdjacentHTML("beforeend",B(K,null,B("div",{class:q.nextContainer},B("iframe",{class:q.next,src:"?view=next"})),B("div",{class:q.dragbar}),B("div",{class:q.noteContainer},B("div",{class:q.noteWrapper}),B("div",{class:q.noteButtons},B("button",{class:q.noteButtonsSmaller,tabindex:"-1",title:"Smaller notes font size"},"Smaller notes font size"),B("button",{class:q.noteButtonsBigger,tabindex:"-1",title:"Bigger notes font size"},"Bigger notes font size"))),B("div",{class:q.infoContainer},B("div",{class:q.infoPage},B("button",{class:q.infoPagePrev,tabindex:"-1",title:"Previous"},"Previous"),B("span",{class:q.infoPageText}),B("button",{class:q.infoPageNext,tabindex:"-1",title:"Next"},"Next")),B("time",{class:q.infoTime,title:"Current time"}),B("time",{class:q.infoTimer,title:"Timer"})))),t})(e.parent)),(e=>{let t=!1;r(q.dragbar).addEventListener("mousedown",(()=>{t=!0,r(q.dragbar).classList.add("active")})),window.addEventListener("mouseup",(()=>{t=!1,r(q.dragbar).classList.remove("active")})),window.addEventListener("mousemove",(e=>{if(!t)return;const n=e.clientX/document.documentElement.clientWidth*100;r(q.container).style.setProperty("--bespoke-marp-presenter-split-ratio",`${Math.max(0,Math.min(100,n))}%`)})),r(q.nextContainer).addEventListener("click",(()=>e.next()));const n=r(q.next),o=(a=n,(e,t)=>{var n;return null===(n=a.contentWindow)||void 0===n?void 0:n.postMessage(`navigate:${e},${t}`,"null"===window.origin?"*":window.origin)});var a;n.addEventListener("load",(()=>{r(q.nextContainer).classList.add("active"),o(e.slide(),e.fragmentIndex),e.on("fragment",(({index:e,fragmentIndex:t})=>o(e,t)))}));const i=document.querySelectorAll(".bespoke-marp-note");i.forEach((e=>{e.addEventListener("keydown",(e=>e.stopPropagation())),r(q.noteWrapper).appendChild(e)})),e.on("activate",(()=>i.forEach((t=>t.classList.toggle("active",t.dataset.index==e.slide())))));let s=0;const l=e=>{s=Math.max(-5,s+e),r(q.noteContainer).style.setProperty("--bespoke-marp-note-font-scale",(1.2**s).toFixed(4))},d=()=>l(1),c=()=>l(-1),u=r(q.noteButtonsBigger),f=r(q.noteButtonsSmaller);u.addEventListener("click",(()=>{u.blur(),d()})),f.addEventListener("click",(()=>{f.blur(),c()})),document.addEventListener("keydown",(e=>{"+"===e.key&&d(),"-"===e.key&&c()}),!0),e.on("activate",(({index:t})=>{r(q.infoPageText).textContent=`${t+1} / ${e.slides.length}`}));const m=r(q.infoPagePrev),g=r(q.infoPageNext);m.addEventListener("click",(t=>{m.blur(),e.prev({fragment:!t.shiftKey})})),g.addEventListener("click",(t=>{g.blur(),e.next({fragment:!t.shiftKey})})),e.on("fragment",(({index:t,fragments:n,fragmentIndex:r})=>{m.disabled=0===t&&0===r,g.disabled=t===e.slides.length-1&&r===n.length-1}));let p=new Date;const v=()=>{const e=new Date,t=e=>`${Math.floor(e)}`.padStart(2,"0"),n=e.getTime()-p.getTime(),o=t(n/1e3%60),a=t(n/1e3/60%60),i=t(n/36e5%24);r(q.infoTime).textContent=e.toLocaleTimeString(),r(q.infoTimer).textContent=`${i}:${a}:${o}`};v(),setInterval(v,250),r(q.infoTimer).addEventListener("click",(()=>{p=new Date}))})(e)},X=e=>{if(!(e=>e.syncKey&&"string"==typeof e.syncKey)(e))throw new Error("The current instance of Bespoke.js is invalid for Marp bespoke presenter plugin.");Object.defineProperties(e,{openPresenterView:{enumerable:!0,value:F},presenterUrl:{enumerable:!0,get:U}}),c&&document.addEventListener("keydown",(t=>{"p"!==t.key||t.altKey||t.ctrlKey||t.metaKey||(t.preventDefault(),e.openPresenterView())}))};function F(){const{max:e,floor:t}=Math,n=e(t(.85*window.innerWidth),640),r=e(t(.85*window.innerHeight),360);return window.open(this.presenterUrl,O+this.syncKey,`width=${n},height=${r},menubar=no,toolbar=no`)}function U(){const e=new URLSearchParams(location.search);return e.set("view","presenter"),e.set("sync",this.syncKey),i(e)}const V=e=>{const t=s();return t===r&&e.appendChild(document.createElement("span")),{"":X,[n]:_,[r]:T}[t]},R=e=>{e.on("activate",(t=>{document.querySelectorAll(".bespoke-progress-parent > .bespoke-progress-bar").forEach((n=>{n.style.flexBasis=100*t.index/(e.slides.length-1)+"%"}))}))},j=e=>{const t=Number.parseInt(e,10);return Number.isNaN(t)?null:t},H=(e={})=>{const t={history:!0,...e};return e=>{let n=!0;const r=e=>{const t=n;try{return n=!0,e()}finally{n=t}},o=(t={fragment:!0})=>{((t,n)=>{const{min:r,max:o}=Math,{fragments:a,slides:i}=e,s=o(0,r(t,i.length-1)),l=o(0,r(n||0,a[s].length-1));s===e.slide()&&l===e.fragmentIndex||e.slide(s,{fragment:l})})((j(location.hash.slice(1))||1)-1,t.fragment?j(l("f")||""):null)};e.on("fragment",(({index:e,fragmentIndex:r})=>{n||d({f:0===r||r.toString()},{location:{...location,hash:`#${e+1}`},setter:(...e)=>t.history?history.pushState(...e):history.replaceState(...e)})})),setTimeout((()=>{o(),window.addEventListener("hashchange",(()=>r((()=>{o({fragment:!1}),d({f:void 0})})))),window.addEventListener("popstate",(()=>{n||r((()=>o()))})),n=!1}),0)}},W=(e={})=>{var n;const r=e.key||(null===(n=window.history.state)||void 0===n?void 0:n.marpBespokeSyncKey)||Math.random().toString(36).slice(2),o=`bespoke-marp-sync-${r}`;var a;a={marpBespokeSyncKey:r},d({},{setter:(e,...n)=>t({...e,...a},...n)});const i=()=>{const e=u(o);return e?JSON.parse(e):Object.create(null)},s=e=>{const t=i(),n={...t,...e(t)};return f(o,JSON.stringify(n)),n},l=()=>{window.removeEventListener("pageshow",l),s((e=>({reference:(e.reference||0)+1})))};return e=>{l(),Object.defineProperty(e,"syncKey",{value:r,enumerable:!0});let t=!0;setTimeout((()=>{e.on("fragment",(e=>{t&&s((()=>({index:e.index,fragmentIndex:e.fragmentIndex})))}))}),0),window.addEventListener("storage",(n=>{if(n.key===o&&n.oldValue&&n.newValue){const r=JSON.parse(n.oldValue),o=JSON.parse(n.newValue);if(r.index!==o.index||r.fragmentIndex!==o.fragmentIndex)try{t=!1,e.slide(o.index,{fragment:o.fragmentIndex})}finally{t=!0}}}));const n=()=>{const{reference:e}=i();void 0===e||e<=1?m(o):s((()=>({reference:e-1})))};window.addEventListener("pagehide",(e=>{e.persisted&&window.addEventListener("pageshow",l),n()})),e.on("destroy",n)}},{PI:Y,abs:J,sqrt:z,atan2:G}=Math,Q={passive:!0},Z=({slope:e=-.7,swipeThreshold:t=30}={})=>n=>{let r;const o=n.parent,a=e=>{const t=o.getBoundingClientRect();return{x:e.pageX-(t.left+t.right)/2,y:e.pageY-(t.top+t.bottom)/2}};o.addEventListener("touchstart",(({touches:e})=>{r=1===e.length?a(e[0]):void 0}),Q),o.addEventListener("touchmove",(e=>{if(r)if(1===e.touches.length){e.preventDefault();const t=a(e.touches[0]),n=t.x-r.x,o=t.y-r.y;r.delta=z(J(n)**2+J(o)**2),r.radian=G(n,o)}else r=void 0})),o.addEventListener("touchend",(o=>{if(r){if(r.delta&&r.delta>=t&&r.radian){const t=(r.radian-e+Y)%(2*Y)-Y;n[t<0?"next":"prev"](),o.stopPropagation()}r=void 0}}),Q)},ee="_tA",te=e=>{const t=document.documentTransition;if(!t)return;let n;e._tP=!1;const r=(n,{back:r,cond:o})=>a=>{var i,s;const l=e.slides[e.slide()].querySelector("section[data-transition]");if(!l)return!0;const d=document.querySelector(".bespoke-marp-osc"),c=d?[d]:void 0;if(e._tP){if(a._tA){e._tP=!1;try{t.start({sharedElements:c}).catch((()=>{}))}catch(e){}return!0}}else{if(!o(a))return!0;const d="transition"+(a.back||r?"Back":""),u=Number.parseInt(null!==(i=l.dataset[`${d}Duration`])&&void 0!==i?i:"",10),f=Number.parseInt(null!==(s=l.dataset[`${d}Delay`])&&void 0!==s?s:"",10),m={};Number.isNaN(u)||(m.duration=u.toString()),Number.isNaN(f)||(m.delay=f.toString()),e._tP=t.prepare({rootTransition:l.dataset[d],rootConfig:m,sharedElements:c}).then((()=>n(a))).catch((()=>n(a)))}return!1};e.on("prev",r((t=>e.prev({...t,[ee]:!0})),{back:!0,cond:e=>{var t;return e.index>0&&!((null===(t=e.fragment)||void 0===t||t)&&n.fragmentIndex>0)}})),e.on("next",r((t=>e.next({...t,[ee]:!0})),{cond:t=>t.index+1<e.slides.length&&!(n.fragmentIndex+1<n.fragments.length)})),setTimeout((()=>{e.on("slide",r((t=>e.slide(t.index,{...t,[ee]:!0})),{cond:t=>{const n=e.slide();return t.index!==n&&(t.back=t.index<n,!0)}}))}),0),e.on("fragment",(e=>{n=e}))};let ne;const re=()=>(void 0===ne&&(ne="wakeLock"in navigator&&navigator.wakeLock),ne),oe=async()=>{const e=re();if(e)try{return await e.request("screen")}catch(e){console.warn(e)}return null},ae=async()=>{if(!re())return;let e;const t=()=>{e&&"visible"===document.visibilityState&&oe()};for(const e of["visibilitychange","fullscreenchange"])document.addEventListener(e,t);return e=await oe(),e};((t=document.getElementById("p"))=>{(()=>{const t=l("view");e.dataset.bespokeView=t===r||t===n?t:""})();const a=(e=>{const t=l(e);return d({[e]:void 0}),t})("sync")||void 0;var i,c,u,f,m,g,h,y,b,w,E,T;i=t,c=((...e)=>{const t=o.findIndex((e=>s()===e));return e.map((([e,n])=>e[t]&&n)).filter((e=>e))})([[1,1,0],W({key:a})],[[1,1,1],V(t)],[[1,1,0],L],[[1,1,1],p],[[1,0,0],k()],[[1,1,1],$],[[1,1,1],H({history:!1})],[[1,1,0],S()],[[1,1,0],x],[[1,0,0],R],[[1,1,0],Z()],[[1,0,0],P()],[[1,0,0],te],[[1,1,1],v],[[1,1,0],ae]),f=1===(i.parent||i).nodeType?i.parent||i:document.querySelector(i.parent||i),m=[].filter.call("string"==typeof i.slides?f.querySelectorAll(i.slides):i.slides||f.children,(function(e){return"SCRIPT"!==e.nodeName})),g={},h=function(e,t){return(t=t||{}).index=m.indexOf(e),t.slide=e,t},w=function(e,t){m[e]&&(u&&b("deactivate",h(u,t)),u=m[e],b("activate",h(u,t)))},E=function(e,t){var n=m.indexOf(u)+e;b(e>0?"next":"prev",h(u,t))&&w(n,t)},T={off:y=function(e,t){g[e]=(g[e]||[]).filter((function(e){return e!==t}))},on:function(e,t){return(g[e]||(g[e]=[])).push(t),y.bind(null,e,t)},fire:b=function(e,t){return(g[e]||[]).reduce((function(e,n){return e&&!1!==n(t)}),!0)},slide:function(e,t){if(!arguments.length)return m.indexOf(u);b("slide",h(m[e],t))&&w(e,t)},next:E.bind(null,1),prev:E.bind(null,-1),parent:f,slides:m,destroy:function(e){b("destroy",h(u,e)),g={}}},(c||[]).forEach((function(e){e(T)})),u||w(0)})()}();</script></body></html>

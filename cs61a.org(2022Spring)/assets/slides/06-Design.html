@@ -1,0 +1,1005 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Design</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+        <link rel="stylesheet" href="https://unpkg.com/balloon-css/balloon.min.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 12px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                border: none;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+            </style>
+            <style>
+                .circle-marker {
+                    position: absolute;
+                    background: blue;
+                    color: white;
+                    font-size: 20px;
+                    border-radius: 30px;
+                    width: 30px;
+                    height: 30px;
+                    text-align: center;
+                }
+                .circle-marker-arc {
+                    position: absolute;
+                    width: 60px;
+                    height: 90px;
+                    background: transparent;
+                    border-radius: 100px;
+                    border-left: 1px solid blue;
+                }
+            </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Design</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="06-Design.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Functional abstractions</li>
+                        <li>What's in a name?</li>
+                        <li>f-strings</li>
+                        <li>Debugging & errors</li>
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Functional abstractions</h2>
+                </section>
+
+                <section>
+                    <h3>Abstraction</h3>
+
+                    <p>In CS, we often "abstract away the details":<br>
+                        We intentionally ignore some details
+                        in order to provide a consistent interface.</p>
+                    
+                    <a title="ComradeUranium, CC BY 4.0 &lt;https://creativecommons.org/licenses/by/4.0&gt;, via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Opel_Corsa_Automatic.png"><img width="256" alt="Opel Corsa Automatic" src="https://upload.wikimedia.org/wikipedia/commons/7/77/Opel_Corsa_Automatic.png"></a>
+                    
+                </section>
+
+
+                <section>
+                    <h3>Abstraction by parameterization</h3>
+
+                    <p>In a world before functions...</p>
+                    <pre style="font-size:1.0em;"><code data-trim data-noescape class="python">
+                    interest =  1 + 0.6 * 2
+                    interest2 =  1 + 0.9 * 4
+                    interest3 =  1 + 2.1 * 3
+                    </code></pre>
+
+                    <p>Parameterized!</p>
+                    <pre style="font-size:1.0em;"><code data-trim data-noescape class="python">
+                    def interest(rate, years):
+                        return 1 + rate * years
+                    </code></pre>
+
+                    <p>A <strong>parameterized function</strong> performs a computation that works for all acceptable 
+                        values of the parameters. 
+                    </p>
+                    <p>
+                        ✂️ Removed detail: the values themselves!
+                    </p>
+                    
+
+                </section>
+
+                <section>
+                    <h3>Abstraction by specification</h3>
+
+                    <p>A specification for the built-in <a target="_blank" href="https://docs.python.org/3/library/functions.html#round"><code>round</code></a> function:</p>
+
+                    <div style="border:1px dashed blue; padding: 10px;">
+                    <code>round(number[, ndigits])</code>: Return number rounded to <code>n</code> digits precision after the decimal point.
+                        If <code>n</code> digits is omitted or is <code>None</code>, it returns the nearest integer to its input.
+                        <br>
+                        <a target="_blank" href="https://docs.python.org/3/library/functions.html#round">See full documentation</a>.
+                    </p>
+                    </div>
+
+                    <p>A well-designed <strong>function specification</strong> (function signature + docstring) serves as a contract between the implementer and the user.
+                    </p>
+                    <p>
+                        ✂️ Removed detail: the implementation!
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Using an abstraction</h3>
+
+                    <p>Based on this specification..</p>
+                    <div style="border:1px dashed blue; padding: 10px;">
+                        <p><code>square(n)</code>: Returns the square of the number <code>n</code>.
+                        </p>
+                    </div>
+
+                    <p>This should work!</p>
+                    <pre style="font-size:1.0em;"><code data-trim data-noescape class="python">
+                    def sum_squares(x, y):
+                        """
+                        >>> sum_squares(3, 9)
+                        90
+                        """
+                        return square(x) + square(y)
+                    </code></pre>
+                </section>
+
+                <!--TODO:Docstrings-->
+                <section>
+                    <h3>Implementing the abstraction</h3>
+
+                    <p>Many possible implementations can be used:</p>
+
+                    <div class="fragment">
+
+                        <pre style="font-size:0.8em;"><code data-trim data-noescape class="python">
+                        def square(x): 
+                            return pow(x, 2)
+                        </code></pre>
+
+                        <pre style="font-size:0.8em;"><code data-trim data-noescape class="python">
+                        def square(x): 
+                            return x ** 2
+                        </code></pre>
+
+                        <pre style="font-size:0.8em;"><code data-trim data-noescape class="python">
+                        from operator import mul
+
+                        def square(x): 
+                            return mul(x, x)
+                        </code></pre>
+
+                        <pre style="font-size:0.8em;"><code data-trim data-noescape class="python">
+                        square = lambda x: x * x
+                        </code></pre>
+
+                        <p class="smaller">It could even be built-in to Python, in theory!</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Not all implementations are equal</h3>
+
+                    <p>An implementation may have practical consequences:
+                    </p>
+                    <ul>
+                        <li>Affecting the size of the program</li>
+                        <li>Affecting the speed of the program's execution</li>
+                    </ul>
+
+                    <p>Not the ideal implementation:</p>
+                    <pre style="font-size:1.0em;"><code data-trim data-noescape class="python">
+                    from operator import mul
+
+                    def square(x): 
+                        return mul(x, x-1) + x
+                    </code></pre>
+
+                    <p>But you can cross that bridge 🌁 when you come to it.</p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>What's in a name?</h2>
+
+                    <blockquote>There are only two hard things in Computer Science: cache invalidation and naming things. --Phil Karlton</blockquote>
+                </section>
+
+                <section>
+                    <h3>Choosing names</h3>
+                    
+                    <p>Names typically don't matter for correctness <br>
+                        but they matter a lot for readability.
+                    </p>
+
+                    <table style="float:left; width: 60%; height: 500px; margin-right: 20px;">
+                        <thead>
+                            <tr>
+                                <th>From 😟</th>
+                                <th>To 🤩</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>true_false</code></td>
+                                <td><code>rolled_one</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>d</code></td>
+                                <td><code>dice</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>helper</code></td>
+                                <td><code>take_turn</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>my_int</code></td>
+                                <td><code>num_rolls</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p style="font-size:0.9em; margin-top: 80px;">Names should convey the meaning or purpose 
+                        of the values to which they are bound.</p>
+
+                    <p style="font-size:0.9em">Function names typically convey their effect 
+                        (<code>print</code>), their behavior (<code>triple</code>), or the 
+                        value returned (<code>abs</code>).</p>
+                </section>
+
+
+                <section>
+                    <h3>Parameter names</h3>
+
+                    <p>The type of value bound to a parameter name is best 
+                    documented in a function's docstring. </p>
+                    
+                    <pre style="font-size:0.8em;"><code data-trim data-noescape class="python">
+                        def summation(n, f):
+                            """Sums the result of applying the function F
+                            to each term in the sequence from 1 to N.
+                            N can be any integer > 1, F must take a single
+                            integer argument and return a number.
+                            """
+                            total = 0
+                            k = 1
+                            while k &lt;= n:
+                                total = total + f(k)
+                                k = k + 1
+                            return total
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Which values deserve a name?</h3>
+
+                    <p>Repeated compound expressions:</p>
+
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    if sqrt(square(a) + square(b)) > 1: 
+                        x = x + sqrt(square(a) + square(b)) 
+                    </code></pre>
+                    ⟱
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    hypotenuse = sqrt(square(a) + square(b)) 
+                    if hypotenuse > 1: 
+                        x = x + hypotenuse
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p style="margin-top:40px;">Meaningful parts of complex expressions:</p>
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    x1 = (-b + sqrt(square(b) - 4 * a * c)) / (2 * a)
+                    </code></pre>
+                    ⟱
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    discriminant = square(b) - 4 * a * c 
+                    x1 = (-b + sqrt(discriminant)) / (2 * a)
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>More naming tips</h3>
+                    
+                    <p class="padded">Names can be short if they represent generic quantities: counts, arbitrary functions, arguments to mathematical operations, etc. </p>
+                    <ul>
+                        <li><code>n</code>, <code>k</code>, <code>i</code> - Usually integers </li>
+                        <li><code>x</code>, <code>y</code>, <code>z</code> - Usually real numbers or coordinates</li>
+                        <li><code>f</code>, <code>g</code>, <code>h</code> - Usually functions</li>
+                    </ul>
+                    
+
+                    <div class="fragment">
+
+                    <p class="padded">Names can be long if they help document your code:</p>
+
+                    <pre style="font-size:0.8em;"><code data-trim data-noescape class="python">
+                    average_age = average(age, students)  
+                    </code></pre>
+
+                    <p>is preferable to...</p>
+                    
+                    <pre style="font-size:0.8em;"><code data-trim data-noescape class="python">
+                    # Compute average age of students 
+                    aa = avg(a, st)
+                    </code></pre>
+                    </div>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>String formatting</h2>
+                </section>
+
+                <section>
+                    <h3>String concatenation</h3>
+
+                    <p>So far, we've been using the + operator for combining string literals
+                        with the results of expressions.</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    artist = "Lil Nas X"
+                    song = "Industry Baby"
+                    place = 2
+                    
+                    print("Debuting at #" + str(place) + ": '" + song + "' by " + artist)
+                    </code></pre>
+
+                    <p>But that's not ideal:</p>
+                    <ul>
+                        <li>Easy to bungle up the + signs
+                        <li>Hard to grok what the final string will be
+                        <li>Requires explicitly <code>str()</code>ing non-strings
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>String interpolation</h3>
+
+                    <p><strong>String interpolation</strong> is the process of combining string literals
+                        with the results of expressions.</p>
+
+                    <p>Available since Python 3.5, <strong>f strings</strong> (formatted string literals)
+                    are the best way to do string interpolation.</p>
+
+                    <p>Just put an <code>f</code> in front of the quotes and then
+                    put any valid Python expression in curly brackets inside:</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    artist = "Lil Nas X"
+                    song = "Industry Baby"
+                    place = 2
+                    
+                    print(f"Debuting at #{place}: '{song}' by {artist}")
+                    </code></pre>
+
+                    <p>😍😍😍😍😍😍</p>
+                </section>
+
+                <section>
+                    <h3>Expressions in f strings</h3>
+
+                    <p>Any valid Python expression can go inside the parentheses, and will
+                        be executed in the current environment.
+                    </p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    greeting = 'Ahoy'
+                    noun = 'Boat'
+
+                    print(f"{greeting.lower()}, {noun.upper()}yMc{noun}Face")
+
+                    print(f"{greeting*3}, {noun[0:3]}yMc{noun[-1]}Face")
+                    </code></pre>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Errors</h2>
+                </section>
+
+                <section>
+                    <h3>Types of errors</h3>
+
+                    <p>These are common to all programming languages:</p>
+                    <ul>
+                        <li>Logic errors</li>
+                        <li>Syntax errors</li>
+                        <li>Runtime errors</li>
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Logic errors</h2>
+                </section>
+
+                <section>
+                    <h3>Logic errors</h3>
+
+                    <p>A program has a logic error if it does not behave as expected.
+                        Typically discovered via failing tests or bug reports from users.
+                    </p>
+
+                    <p>Spot the logic error:</p>
+                    <pre style="font-size:0.9em; margin-bottom: 40px;"><code data-trim data-noescape class="python">
+                    # Sum up the numbers from 1 to 10
+                    sum = 0
+                    x = 1
+                    while x < 10:
+                        sum += x
+                        x += 1
+                    </code></pre>
+
+                    <p>To avoid the wrath of angry users, write tests.</p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Syntax errors</h2>
+                </section>
+
+                <section>
+                    <h3>Syntax errors</h3>
+
+                    <p>Each programming language has syntactic rules.
+                        If the rules aren't followed, the program cannot be parsed
+                        and will not be executed at all.</p>
+
+                    <p>Spot the syntax errors:</p>
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    if x > 5 <span class="fragment"># Missing colon</span>
+                       x += 1
+                    </code></pre>
+
+                    <pre style="font-size:0.7em; margin-bottom: 40px;"><code data-trim data-noescape class="python">
+                    sum = 0
+                    x = 0
+                    while x < 10:
+                       sum + = x <span class="fragment"># No space needed between + and =</span>
+                       x + = 1
+                    </code></pre>
+
+                    <p>To fix a syntax error, read the message carefully and go through your code with a critical eye. 👁 </p>
+                </section>
+
+                <section>
+                    <h3><code>SyntaxError</code></h3>
+
+                    <p class="smaller"><em>What it technically means:</em>
+                        <br>
+                        The file you ran isn’t valid python syntax
+                    </p>
+
+                    <p class="smaller"><em>What it practically means:</em>
+                        <br>
+                        You made a typo
+                    </p>
+
+                    <p class="smaller"><em>What you should look for:</em>
+                            <ul class="smaller">
+                                <li>Extra or missing parenthesis
+                                <li>Missing colon at the end of an if, while, def statements, etc.
+                                <li>You started writing a statement but forgot to put any clauses inside
+                            </ul>
+                    </p>
+
+                    <p class="smaller"><em>Examples:</em></p>
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    print("just testing here"))
+                    </code></pre>
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    title = 'Hello, ' + name ', how are you?'
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3><code>IndentationError</code>/<code>TabError</code></h3>
+
+                    <p class="smaller"><em>What it technically means:</em>
+                        <br>
+                        The file you ran isn't valid Python syntax, due to indentation inconsistency.
+                    </p>
+
+                    <p class="smaller"><em>What it sometimes means:</em>
+                        <br>
+                        You used the wrong text editor (or one with different settings)
+                    </p>
+
+                    <p class="smaller"><em>What you should look for:</em>
+                        <ul class="smaller">
+                            <li>A typo or misaligned block of statements
+                            <li>A mix of tabs and spaces
+                                <ul>
+                                    <li>Open your file in an editor that shows them
+                                    <li><code>cat -A filename.py</code> will show them
+                                </ul>
+                        </ul>
+                    </p>
+
+                    <p class="smaller"><em>Example:</em></p>
+
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    def sum(a, b):
+                        total = a + b
+                    	return total
+                    </code></pre>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Runtime errors</h2>
+                </section>
+
+                <section>
+                    <h3>Runtime errors</h3>
+
+                    <p>A runtime error happens <em>while</em> a program is running,
+                        often halting the execution of the program.
+                     Each programming language defines its own runtime errors.
+                    </p>
+
+                    <p>Spot the runtime error:</p>
+                    <pre style="font-size:0.7em; margin-bottom: 40px;"><code data-trim data-noescape class="python">
+                    def div_numbers(dividend, divisor):
+                        return dividend/divisor
+
+                    quot1 = div_numbers(10, 2)
+                    quot2 = div_numbers(10, 1)
+                    quot3 = div_numbers(10, 0)  <span class="fragment"># Cannot divide by 0!</span>
+                    quot4 = div_numbers(10, -1)
+                    </code></pre>
+
+                    <p>To prevent runtime errors, code defensively and write tests for all edge cases.</p>
+                </section>
+
+
+
+                <section>
+                    <h3 style="font-size:1.4em;"><code>TypeError:'X' object is not callable</code></h3>
+
+                    <p class="smaller"><em>What it technically means:</em>
+                        <br>
+                        Objects of type X cannot be treated as functions
+                    </p>
+
+                    <p class="smaller"><em>What it practically means:</em>
+                        <br>
+                        You accidentally called a non-function as if it were a function
+                    </p>
+
+                    <p class="smaller"><em>What you should look for:</em>
+                        <ul class="smaller">
+                            <li>Parentheses after variables that aren't functions
+                            <!--
+                            <li>Variables that should be functions being assigned to non-functions
+                            <li>Local variables that do not contain functions having the same name
+                            as functions in the global frame
+                            -->
+                        </ul>
+                    </p>
+
+                    <p class="smaller"><em>Example:</em></p>
+
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    sum = 2 + 2
+                    sum(3, 5)
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <h3><code>...NoneType...</code></h3>
+
+                    <p class="smaller"><em>What it technically means:</em>
+                        <br>
+                        You used None in some operation it wasn't meant for
+                    </p>
+
+                    <p class="smaller"><em>What it practically means:</em>
+                        <br>
+                        You forgot a return statement in a function
+                    </p>
+
+                    <p class="smaller"><em>What you should look for:</em>
+                        <ul class="smaller">
+                            <li>Functions missing return statements
+                            <li>Printing instead of returning a value
+                        </ul>
+                    </p>
+
+                    <p class="smaller"><em>Example:</em></p>
+
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    def sum(a, b):
+                        print(a + b)
+
+                    total = sum( sum(30, 45), sum(10, 15) )
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3><code>NameError</code></h3>
+
+                    <p class="smaller"><em>What it technically means:</em>
+                        <br>
+                        Python looked up a name but couldn't find it
+                    </p>
+
+                    <p class="smaller"><em>What it practically means:</em>
+                        <ul class="smaller">
+                            <li>You made a typo
+                            <li>You are trying to access variables from the wrong frame
+                        </ul>
+                    </p>
+
+                    <p class="smaller"><em>What you should look for:</em>
+                        <ul class="smaller">
+                            <li>A typo in the name
+                            <li>The variable being defined in a different frame than expected
+                        </ul>
+                    </p>
+
+                    <p class="smaller"><em>Example:</em></p>
+
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    fav_nut = 'pistachio'
+                    best_chip = 'chocolate'
+                    trail_mix = Fav_Nut + best__chip
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3><code>UnboundLocalError</code></h3>
+
+                    <p class="smaller"><em>What it technically means:</em>
+                        <br>
+                        A variable that's local to a frame was used before it was assigned
+                    </p>
+
+                    <p class="smaller"><em>What it practically means:</em>
+                        <br>
+                        You are trying to both use a variable from a parent frame,
+                        and have the same variable be a local variable in the current frame
+                    </p>
+
+                    <p class="smaller"><em>What you should look for:</em>
+                        <br>
+                        Assignments statements after the variable name
+                    </p>
+
+                    <p class="smaller"><em>Example:</em></p>
+
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    sum = 0
+
+                    def sum_nums(x, y):
+                        sum += x + y
+                        return sum
+                        
+                    sum_nums(4, 5)
+                    </code></pre>
+
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>TraceBacks</h2>
+                </section>
+
+                <section>
+                    <h3>What's a traceback?</h3>
+
+                    <p>When there's a runtime error in your code,
+                        you'll see a <strong>traceback</strong> in the console.</p>
+
+                    <pre style="font-size:0.7em; margin-bottom: 40px;"><code data-trim data-noescape class="python">
+                        def div_numbers(dividend, divisor):
+                            return dividend/divisor
+
+                        quot1 = div_numbers(10, 2)
+                        quot2 = div_numbers(10, 1)
+                        quot3 = div_numbers(10, 0)
+                        quot4 = div_numbers(10, -1)
+                    </code></pre>
+
+                    <pre style="font-size:0.7em; margin-bottom: 40px;"><code data-trim data-noescape class="no-highlight" style="color:black;">
+                    Traceback (most recent call last):
+                        File "main.py", line 14, in &lt;module&gt;
+                            quot3 = div_numbers(10, 0)
+                        File "main.py", line 10, in div_numbers
+                            return dividend/divisor
+                    ZeroDivisionError: division by zero
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Parts of a Traceback</h3>
+
+                    <ul>
+                        <li><span style="color:red">The error message itself</span>
+                        <li><span style="color:green">Lines #s on the way to the error</span>
+                        <li><span style="color:blue">What’s on those lines</span>
+                    </ul>
+
+                    <p>The most recent line of code is always last (right before the error message).</p>
+
+                    <pre style="font-size:0.7em; margin-bottom: 40px;"><code data-trim data-noescape class="no-highlight" style="color:black;">
+                    Traceback (most recent call last):
+                        File "main.py", <span style="color:green">line 14</span>, in &lt;module&gt;
+                            <span style="color:blue">quot3 = div_numbers(10, 0)</span>
+                        File "main.py", <span style="color:green">line 10</span>, in div_numbers
+                            <span style="color:blue">return dividend/divisor</span>
+                    <span style="color:red">ZeroDivisionError: division by zero</span>
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <h3>Reading a Traceback</h3>
+
+                    <ol>
+                        <li>Read the error message (remember what common error messages mean!)
+                        <li>Look at <span style="color:blue">each line</span>, bottom to top,
+                            and see if you can find the error.
+                    </ol>
+
+                    <pre style="font-size:0.7em; margin-bottom: 40px;"><code data-trim data-noescape class="no-highlight" style="color:black;">
+                    Traceback (most recent call last):
+                        File "main.py", <span style="color:green">line 14</span>, in &lt;module&gt;
+                            <span style="color:blue">quot3 = div_numbers(10, 0)</span>
+                        File "main.py", <span style="color:green">line 10</span>, in div_numbers
+                            <span style="color:blue">return dividend/divisor</span>
+                    <span style="color:red">ZeroDivisionError: division by zero</span>
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Fix this code!</h3>
+
+                    <pre style="font-size:0.9em; margin-bottom: 40px;"><code data-trim data-noescape class="python">
+                    def f(x):
+                        return g(x - 1)
+                        
+                    def g(y):
+                        return abs(h(y) - h(1 /& y)
+                        
+                    def h(z):
+                        z * z
+                        
+                    print(f(12))
+                    </code></pre>
+
+                </section>
+
+
+            </div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+		<script>
+			const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+			Reveal.initialize({
+				hash: true,
+				center: false,
+				slideNumber: true,
+				showNotes: false,
+				margin: 0.1,
+				preloadIframes: true,
+				plugins: [ RevealHighlight ],
+				pdfSeparateFragments: true
+			});
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge(options);
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+            
+		</script>
+	</body>
+</html>

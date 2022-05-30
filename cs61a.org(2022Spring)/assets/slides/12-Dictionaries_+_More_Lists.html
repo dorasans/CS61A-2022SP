@@ -1,0 +1,1032 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Dictionaries, More Lists</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+        <link rel="stylesheet" href="https://unpkg.com/balloon-css/balloon.min.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+		</style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+        <style>
+            .graph .node, .graph .edge, .graph .node text {
+                visibility: hidden;
+            }
+            .graph .node.activated text:first-of-type {
+                visibility: visible;
+            }
+            .graph .node.activated path {
+                visibility: visible;
+            }
+            .graph .node text.activated {
+                visibility: visible;
+            }
+            .graph .edge.activated {
+                visibility: visible;
+            }
+            .svg-controls {
+                width: 600px;
+                display: grid;
+                grid-template-rows: 1fr;
+                grid-template-columns: 100px 1fr 100px;
+                grid-gap: 8px;
+                position: fixed;
+                right: 0;
+                top: 0;
+                background: #80808070;
+            }
+            .svg-controls button:first-of-type {
+                grid-row: 1;
+                grid-column: 1;
+            }
+            .svg-controls input {
+                grid-row: 1;
+                grid-column: 2;
+            }
+            .svg-controls button:last-of-type {
+                grid-row: 1;
+                grid-column: 3;
+            }
+            </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+                <section class="heading-only" style="padding-top:5%">
+                    <h1>Dictionaries + More Lists</h1>
+
+                    <div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+                        Tips for navigating the slides:
+                        <ul>
+                            <li>Press O or Escape for overview mode.</li>
+                            <li>Visit <a href="12-Dictionaries_+_More_Lists.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+                            <li>Press the copy icon on the upper right of code blocks to copy the code</li>
+                        </ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+                </section>
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Dictionaries
+                        <li>List diagrams
+                        <li>Slicing
+                        <li>Built-ins for iterables
+                        <li>Recursive exercises
+                    </ul>
+                </section>
+
+
+
+                <section class="heading-only">
+                    <h2>Dictionaries</h2>
+                </section>
+
+
+				<section>
+					<h3>Dictionaries</h3>
+					<p>A <code>dict</code> is a mapping of key-value pairs</p>
+					<pre><code data-trim data-noescape class="python">
+					states = {
+						"CA": "California",
+						"DE": "Delaware",
+						"NY": "New York",
+						"TX": "Texas",
+						"WY": "Wyoming"
+					}
+					</code></pre>
+					<p>Dictionaries support similar operations as lists/strings:</p>
+					<pre><code data-trim data-noescape class="python">
+					>>> len(states)
+					<span class="fragment">5</span>
+					</code></pre>
+					<pre><code data-trim data-noescape class="python">
+					>>> "CA" in states
+					<span class="fragment">True</span>
+					</code></pre>
+					<pre><code data-trim data-noescape class="python">
+					>>> "ZZ" in states
+					<span class="fragment">False</span>
+					</code></pre>
+					<aside class="notes">
+					How many keys do you count?
+					How many values?
+					</aside>
+				</section>
+				<section>
+					<h3>Dictionary access</h3>
+					<pre><code data-trim data-noescape class="python">
+					words = {
+						"más": "more",
+						"otro": "other",
+						"agua": "water"
+					}
+					</code></pre>
+					<p>Ways to access a value by key:</p>
+					<pre><code data-trim data-noescape class="python">
+					>>> words["otro"]
+					<span class="fragment">'other'</span>
+					</code></pre>
+					<pre><code data-trim data-noescape class="python">
+					>>> first_word = "agua"
+					>>> words[first_word]
+					<span class="fragment">'water'</span>
+					</code></pre>
+					<pre><code data-trim data-noescape class="python">
+					>>> words["pavo"]
+					<span class="fragment">KeyError: pavo</span>
+					</code></pre>
+					<pre><code data-trim data-noescape class="python">
+					>>> words.get("pavo", "🤔")
+					<span class="fragment">'🤔'</span>
+					</code></pre>
+				</section>
+
+				<section>
+					<h3>Dictionary rules</h3>
+					<ul>
+						<li>All keys in a dictionary are distinct (there can only be one value per key)</li>
+                        <li>A key <strong>cannot</strong> be a list or dictionary (or any other mutable type)</li>
+						<li>The values can be any type, however!</li>
+					</ul>
+					<pre><code data-trim data-noescape class="python">
+					spiders = {
+					  "smeringopus": {
+						  "name": "Pale Daddy Long-leg",
+						  "length": 7
+					  },
+					  "holocnemus pluchei": {
+						  "name": "Marbled cellar spider",
+						  "length": (5, 7)
+					  }
+					}
+					</code></pre>
+					<aside class="notes">
+						Show what happens if a dictionary has two keys that are the same
+
+						Access way inside the dictionary!
+						Its all mutable, so we can mutate all of it!
+					</aside>
+				</section>
+				<section>
+					<h3>Dictionary iteration</h3>
+
+					<pre style="font-size:0.9em;"><code data-trim data-noescape class="python">
+					insects = {"spiders": 8, "centipedes": 100, "bees": 6}
+					for name in insects:
+					    print(insects[name])
+					</code></pre>
+                    
+					<p style="font-size:smaller;">What will be the order of items?</p>
+					<pre class="fragment" data-fragment-index="1"><code data-trim data-noescape>
+					8 100 6
+					</code></pre>
+					<p class="fragment" data-fragment-index="1"  style="font-size:smaller;">Keys are iterated over in the order they are first added.</p>
+					
+                    <aside class="notes">
+						<ul>
+						<li>Python 2: The iteration could go in any order. Dictionaries were unordered.</li>
+						<li>Python 3.0: The iteration would go in order of key insertion, but that is not to be relied upon.</li>
+						<li>Python 3.7+: The insertion sort order is considered a part of the language, so dictionaries are ordered.</li>
+						</ul>
+						<p>Show example like:
+						d[3] = 3; d[1] = 2; print(d); d[3] = 4; print(d)
+					</p>
+					</aside>
+				</section>
+
+
+                <section>
+                    <h3>Dictionary comprehensions</h3>
+
+                    <p>General syntax:</p>
+
+                    <pre style="font-size:1.0em" class="padded"><code data-trim data-noescape class="python">
+                    {key: value for &lt;name&gt; in &lt;iter exp&gt;}
+                    </code></pre>
+
+                    <p>Example:</p>
+                    <pre style="font-size:1.0em" class="padded"><code data-trim data-noescape class="python">
+                    {x: x*x for x in range(3,6)}
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise: Prune</h3>
+
+                    <pre style="font-size:0.7em" class="padded"><code data-trim data-noescape class="python">
+                    def prune(d, keys):
+                        """Return a copy of D which only contains key/value pairs
+                        whose keys are also in KEYS.
+                        >>> prune({"a": 1, "b": 2, "c": 3, "d": 4}, ["a", "b", "c"])
+                        {'a': 1, 'b': 2, 'c': 3}
+                        """
+
+
+                    </code></pre>
+                </section>
+                
+                <section>
+                    <h3>Exercise: Prune (Solution)</h3>
+
+                    <pre style="font-size:0.7em" class="padded"><code data-trim data-noescape class="python">
+                    def prune(d, keys):
+                        """Return a copy of D which only contains key/value pairs
+                        whose keys are also in KEYS.
+                        >>> prune({"a": 1, "b": 2, "c": 3, "d": 4}, ["a", "b", "c"])
+                        {'a': 1, 'b': 2, 'c': 3}
+                        """
+                        return {k: d[k] for k in keys}
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise: Index</h3>
+
+                    <pre style="font-size:0.7em" class="padded"><code data-trim data-noescape class="python">
+                    def index(keys, values, match):
+                        """Return a dictionary from keys k to a list of values v for which 
+                        match(k, v) is a true value.
+                        
+                        >>> index([7, 9, 11], range(30, 50), lambda k, v: v % k == 0)
+                        {7: [35, 42, 49], 9: [36, 45], 11: [33, 44]}
+                        """
+
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise: Index (solution)</h3>
+
+                    <pre style="font-size:0.7em" class="padded"><code data-trim data-noescape class="python">
+                    def index(keys, values, match):
+                        """Return a dictionary from keys k to a list of values v for which 
+                        match(k, v) is a true value.
+                        
+                        >>> index([7, 9, 11], range(30, 50), lambda k, v: v % k == 0)
+                        {7: [35, 42, 49], 9: [36, 45], 11: [33, 44]}
+                        """
+                        return {k: [v for v in values if match(k, v)] for k in keys}
+                    </code></pre>
+                </section>
+
+				<section>
+					<h3>Nested data</h3>
+                    
+                    <p>Many useful way to combine lists and dicts:</p>
+
+					<table style="font-size:smaller;">
+						<tr>
+							<td style="font-weight:bold;">Lists of lists</td>
+							<td><code>[ [1, 2], [3, 4] ]</code></td>
+						</tr>
+                        <tr>
+							<td style="font-weight:bold;">Dicts of dicts</td>
+							<td><code>{"name": "Brazilian Breads", "location": {"lat": 37.8, "lng": -122}}</code></td>
+						</tr>
+						<tr>
+							<td style="font-weight:bold;">Dicts of lists</td>
+							<td><code>{"heights": [89, 97], "ages": [6, 8]}</code></td>
+						</tr>
+                        <tr>
+							<td style="font-weight:bold;">Lists of dicts</td>
+							<td><code>[{"title": "Ponyo", "year": 2009}, {"title": "Totoro", "year": 1993}]</code></td>
+						</tr>
+					</table>
+				</section>
+
+                <section class="heading-only">
+                    <h2>Slicing</h2>
+                </section>
+
+
+                <section>
+                    <h3>Slicing syntax</h3>
+
+                    <p>Slicing a list creates a new list with a subsequence of the original list.</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    letters = ["A", "B", "C", "D", "E", "F"]
+                            #   0    1    2    3    4    5
+
+                    sublist1 = letters[1:]    <span class="fragment"># ['B', 'C', 'D', 'E', 'F']</span>
+                    sublist2 = letters[1:4]   <span class="fragment"># ['B', 'C', 'D']</span>
+                    </code></pre>
+
+                    <p>Slicing also works for strings.</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    compound_word = "cortaúñas"
+
+                    word1 = compound_word[:5]    <span class="fragment"># "corta"</span>
+                    word2 = compound_word[5:]   <span class="fragment"># "úñas"</span>
+                    </code></pre>
+
+                    <p>Negatives indices and steps can also be specified.</p>
+                </section>
+
+                <section>
+					<h3>Copying whole lists</h3>
+
+					<p>Slicing a whole list copies a list:</p>
+
+					<pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+					listA = [2, 3]
+					listB = listA
+
+					listC = listA[:]
+					listA[0] = 4
+					listB[1] = 5
+					</code></pre>
+
+					<p class="padded"><code>list()</code> creates a new list containing existing elements from any iterable:</p>
+
+					<pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+					listA = [2, 3]
+					listB = listA
+
+					listC = list(listA)
+					listA[0] = 4
+					listB[1] = 5
+					</code></pre>
+
+					<p>
+						<a class="python-tutor-link" target="_blank" href="http://pythontutor.com/composingprograms.html#code=listA%20%3D%20%5B2,%203%5D%0AlistB%20%3D%20listA%0A%0A%23listC%20%3D%20list%28listA%29%0AlistC%20%3D%20listA%5B%3A%5D%0AlistA%5B0%5D%20%3D%204%0AlistB%5B1%5D%20%3D%205&cumulative=true&curInstr=0&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">
+						Try both in PythonTutor.
+						</a>
+					</p>
+
+					<p style="font-size:smaller;">Python3 provides more ways in the <a target="_blank" href="https://docs.python.org/3/library/copy.html">copy module</a>.</p>
+
+				</section>
+
+
+                <section class="heading-only">
+                    <h2>Built-in functions for iterables</h2>
+                </section>
+                
+                <section>
+                    <h3>Functions that process iterables</h3>
+
+                    <p>The following built-in functions work for lists, strings, dicts,
+                        and any other <strong>iterable</strong> data type.</p>
+
+                    <table style="font-size:0.7em;">
+                        <thead>
+                            <th>Function</th>
+                            <th>Description</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>sum(iterable, start)</code></td>
+                                <td style="padding-bottom:24px;">Returns the sum of values in <code>iterable</code>, initializing sum to <code>start</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" href="https://docs.python.org/3/library/functions.html#all"><code>all(iterable)</code></a></td>
+                                <td style="padding-bottom:24px;">Return <code>True</code> if all elements of <code>iterable</code> are true (or if <code>iterable</code> is empty)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" href="https://docs.python.org/3/library/functions.html#any"><code>any(iterable)</code></a></td>
+                                <td style="padding-bottom:24px;">Return <code>True</code> if any element of <code>iterable</code> is true. Return <code>False</code> if <code>iterable</code> is empty.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><code>max(iterable, key=None)</code></td>
+                                <td style="padding-bottom:24px;">Return the max value in <code>iterable</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><code>min(iterable, key=None)</code></td>
+                                <td style="padding-bottom:24px;">Return the min value in <code>iterable</code>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </section>
+
+                
+                <section>
+                    <h3>Examples with sum/any/all</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    sum([73, 89, 74, 95], 0)  # 331
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    all([True, True, True, True])     <span class="fragment"># True</span>
+                    any([False, False, False, True])  <span class="fragment"># True</span>
+
+                    all([x < 5 for x in range(5)])    <span class="fragment"># True</span>
+
+                    perfect_square = lambda x: x == round(x ** 0.5) ** 2
+                    any([perfect_square(x) for x in range(50, 60)]) <span class="fragment"># False</span>
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Examples with max/min</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    max([73, 89, 74, 95])         # 95
+                    max(["C+", "B+", "C", "A"])   <span class="fragment"># C+</span>
+                    max(range(10))                <span class="fragment"># 9</span>
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p>A key function can decide how to compare each value:</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    coords = [ [37, -144], [-22, -115], [56, -163] ]
+                    max(coords, key=lambda coord: coord[0])  <span class="fragment"># [56, -163]</span>
+                    min(coords, key=lambda coord: coord[0])  <span class="fragment">#  [-22, -115]</span>
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    gymnasts = [ ["Brittany", 9.15, 9.4, 9.3, 9.2],
+                        ["Lea", 9, 8.8, 9.1, 9.5],
+                        ["Maya", 9.2, 8.7, 9.2, 8.8] ]
+                    min(gymnasts, key=lambda scores: min(scores[1:]))    <span class="fragment"># ["Maya", ...]</span>
+                    max(gymnasts, key=lambda scores: sum(scores[1:], 0)) <span class="fragment"># ["Brittany", ...]</span>
+                    </code></pre>
+                    </div>
+
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>Recursion exercises</h2>
+                </section>
+
+
+                <section>
+                    <h3>Helper functions</h3>
+
+                    <p>If a recursive function needs to keep track 
+                        of more state than the arguments of the original function,
+                        you may need a helper function.
+                    </p>
+
+                    <pre style="font-size:0.55em; margin-bottom:48px;"><code data-trim data-noescape class="python">
+                    def fUnKyCaSe(text):
+                        """
+                        >>> fUnKyCaSe("wats up")
+                        'wAtS Up'
+                        """
+                      
+                        def toggle_case(letter, should_up_case):
+                          return letter.upper() if should_up_case else letter.lower()
+                          
+                        def up_down(text, should_up_case):
+                          if len(text) == 1:
+                            return toggle_case(text, should_up_case)
+                          else:
+                            return toggle_case(text[0], should_up_case) + \
+                                   up_down(text[1:], not should_up_case)
+                          
+                        return up_down(text, False)
+                        </span>
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Recursively sum a list</h3>
+
+                    <p>Let's code this up recursively:</p>
+
+                    <pre style="font-size:0.8em; margin-bottom:48px;"><code data-trim data-noescape class="python">
+                    def sum_nums(nums):
+                        """Returns the sum of the numbers in NUMS.
+                        >>> sum_nums([6, 24, 1984])
+                        2014
+                        >>> sum_nums([-32, 0, 32])
+                        0
+                        """ 
+                        
+                    </code></pre>
+
+                    <p>Docstrings typically would <em>not</em> specify whether an approach was recursive or iterative,
+                                since that is an implementation detail.</p>
+                    <p>However, we'll make it clear in assignments and exam questions.</p>
+                </section>
+
+                <section>
+                    <h3>Recursively sum a list (solution)</h3>
+                    
+                    <pre style="font-size:0.8em; margin-bottom:48px;"><code data-trim data-noescape class="python">
+                        def sum_nums(nums):
+                            """Returns the sum of the numbers in NUMS.
+                            >>> sum_nums([6, 24, 1984])
+                            2014
+                            >>> sum_nums([-32, 0, 32])
+                            0
+                            """ 
+                            if nums == []:
+                                return 0
+                            else:
+                                return nums[0] + sum_nums( nums[1:] )
+                    </code></pre>
+
+                    <p>When recursively processing lists, the base case is often the empty list
+                        and the recursive case is often all-but-the-first items.</p>
+                </section>
+
+                <!--<section>
+                    <h3>Iteratively sum a range</h3>
+
+                    <p>Let's code this up iteratively:</p>
+
+                    <pre style="font-size:0.8em; margin-bottom:48px;"><code data-trim data-noescape class="python">
+                    def sum_up_to(n):
+                        """Returns the sum of positive numbers from 1 up to N (inclusive).
+                        >>> sum_up_to(5)
+                        15
+                        """ 
+                        
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Iteratively sum a range (solution)</h3>
+
+                    <p>Using the <code>range</code> type:</p>
+
+                    <pre style="font-size:0.8em; margin-bottom:48px;"><code data-trim data-noescape class="python">
+                    def sum_up_to(n):
+                        """Returns the sum of positive numbers from 1 up to N (inclusive).
+                        >>> sum_up_to(5)
+                        15
+                        """ 
+                        sum = 0
+                        for n in range(0, n+1):
+                            sum += n
+                        return sum
+                    </code></pre>
+
+                    <p>Remember that <code>range(start, end)</code> always ends right before <code>end</code>.</p>
+                </section>
+
+                <section>
+                    <h3>Recursively sum a range</h3>
+
+                    <p>Now try it recursively:</p>
+
+                    <pre style="font-size:0.8em; margin-bottom:48px;"><code data-trim data-noescape class="python">
+                    def sum_up_to(n):
+                        """Returns the sum of positive numbers from 1 up to N (inclusive).
+                        >>> sum_up_to(5)
+                        15
+                        """ 
+                        
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Recursively sum a range (solution)</h3>
+
+                    <p>Now try it recursively:</p>
+
+                    <pre style="font-size:0.8em; margin-bottom:48px;"><code data-trim data-noescape class="python">
+                    def sum_up_to(n):
+                        """Returns the sum of positive numbers from 1 up to N (inclusive).
+                        >>> sum_up_to(5)
+                        15
+                        """
+                        if n == 1:
+                            return 1
+                        else:
+                            return n + sum_up_to(n-1)
+                    </code></pre>
+                </section>-->
+
+                <section>
+                    <h3>Recursively reversing a string</h3>
+
+                    <pre style="font-size:0.8em; margin-bottom:48px;"><code data-trim data-noescape class="python">
+                    def reverse(s):
+                        """Returns a string with the letters of S
+                        in the inverse order.
+                        >>> reverse('ward')
+                        'draw'
+                        """
+                    </code></pre>
+
+                    <p>Breaking it down into subproblems:</p>
+
+                    <pre style="font-size:0.8em; margin-bottom:48px;"><code data-trim data-noescape class="python">
+                    reverse("ward") = <span class="fragment" data-fragment-index="1">reverse("ard") + "w"</span>
+                    reverse("ard") = <span class="fragment" data-fragment-index="1">reverse("rd") + "a"</span>
+                    reverse("rd") = <span class="fragment" data-fragment-index="1">reverse("d") + "r"</span>
+                    reverse("d") = <span class="fragment" data-fragment-index="2">"d"</span>
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Recursively reversing a string (solution)</h3>
+
+                    <pre style="font-size:0.8em; margin-bottom:48px;"><code data-trim data-noescape class="python">
+                    def reverse(s):
+                        """Returns a string with the letters of S
+                        in the inverse order.
+                        >>> reverse('ward')
+                        'draw'
+                        """
+                        if len(s) == 1:
+                            return s
+                        else:
+                            return reverse(s[1:]) + s[0]
+                    </code></pre>
+
+                    <p>When recursively processing strings, the base case is typically
+                        an empty string or single-character string,
+                        and the recursive case is often all-but-the-first characters.</p>
+                </section>
+
+                <section>
+                    <h3>Recursively reversing a string (visual)</h3>
+                    <style>
+                        #reversestring-svg {
+                            margin-top: -40px;
+                        }
+                        #reversestring-svg + .svg-controls {
+                            margin-top: 80px;
+                            left: 0px;
+                        }
+                    </style>
+                    <svg id="reversestring-svg" width="110pt" height="404pt" viewBox="0.00 0.00 109.67 404.20" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 400.2)">
+                        <title>rc-graph</title>
+                        <polygon fill="white" stroke="transparent" points="-4,4 -4,-400.2 105.67,-400.2 105.67,4 -4,4"></polygon>
+                        <!-- 19188680 -->
+                        <g id="node1" class="node activated">
+                        <title>19188680</title>
+                        <path fill="none" stroke="black" d="M12,-269.9C12,-269.9 81.72,-269.9 81.72,-269.9 87.72,-269.9 93.72,-275.9 93.72,-281.9 93.72,-281.9 93.72,-293.9 93.72,-293.9 93.72,-299.9 87.72,-305.9 81.72,-305.9 81.72,-305.9 12,-305.9 12,-305.9 6,-305.9 0,-299.9 0,-293.9 0,-293.9 0,-281.9 0,-281.9 0,-275.9 6,-269.9 12,-269.9"></path>
+                        <text text-anchor="middle" x="46.86" y="-283.8" font-family="Times,serif" font-size="14.00">reverse(ward)</text>
+                        </g>
+                        <!-- 18292208 -->
+                        <g id="node2" class="node activated">
+                        <title>18292208</title>
+                        <path fill="none" stroke="black" d="M17.06,-180.1C17.06,-180.1 76.67,-180.1 76.67,-180.1 82.67,-180.1 88.67,-186.1 88.67,-192.1 88.67,-192.1 88.67,-204.1 88.67,-204.1 88.67,-210.1 82.67,-216.1 76.67,-216.1 76.67,-216.1 17.06,-216.1 17.06,-216.1 11.06,-216.1 5.06,-210.1 5.06,-204.1 5.06,-204.1 5.06,-192.1 5.06,-192.1 5.06,-186.1 11.06,-180.1 17.06,-180.1"></path>
+                        <text text-anchor="middle" x="46.86" y="-194" font-family="Times,serif" font-size="14.00">reverse(ard)</text>
+                        </g>
+                        <!-- 19188680&#45;&gt;18292208 -->
+                        <g id="edge1" class="edge activated">
+                        <title>19188680-&gt;18292208</title>
+                        <path fill="none" stroke="black" d="M33.4,-269.78C29.8,-264.23 26.39,-257.84 24.54,-251.4 22.47,-244.23 22.47,-241.77 24.54,-234.6 25.47,-231.38 26.78,-228.17 28.31,-225.08"></path>
+                        <polygon fill="black" stroke="black" points="31.46,-226.63 33.4,-216.22 25.39,-223.15 31.46,-226.63"></polygon>
+                        <text text-anchor="middle" x="36.52" y="-238.8" font-family="Times,serif" font-size="14.00"></text>
+                        </g>
+                        <!-- 19188680&#45;&gt;18292208 -->
+                        <g id="edge4" class="edge activated">
+                        <title>19188680-&gt;18292208:c</title>
+                        <path fill="none" stroke="green" d="M47.71,-259.38C47.77,-256.68 47.83,-253.99 47.86,-251.4 48.03,-239.74 47.79,-226.65 47.5,-216.35"></path>
+                        <polygon fill="green" stroke="green" points="44.21,-259.48 47.45,-269.57 51.21,-259.66 44.21,-259.48"></polygon>
+                        <text text-anchor="middle" x="70.21" y="-238.8" font-family="Times,serif" font-size="14.00">dra </text>
+                        </g>
+                        <!-- 15103200 -->
+                        <g id="node3" class="node activated">
+                        <title>15103200</title>
+                        <path fill="none" stroke="black" d="M20.16,-90.3C20.16,-90.3 73.56,-90.3 73.56,-90.3 79.56,-90.3 85.56,-96.3 85.56,-102.3 85.56,-102.3 85.56,-114.3 85.56,-114.3 85.56,-120.3 79.56,-126.3 73.56,-126.3 73.56,-126.3 20.16,-126.3 20.16,-126.3 14.16,-126.3 8.16,-120.3 8.16,-114.3 8.16,-114.3 8.16,-102.3 8.16,-102.3 8.16,-96.3 14.16,-90.3 20.16,-90.3"></path>
+                        <text text-anchor="middle" x="46.86" y="-104.2" font-family="Times,serif" font-size="14.00">reverse(rd)</text>
+                        </g>
+                        <!-- 18292208&#45;&gt;15103200 -->
+                        <g id="edge2" class="edge activated">
+                        <title>18292208-&gt;15103200</title>
+                        <path fill="none" stroke="black" d="M33.4,-179.98C29.8,-174.43 26.39,-168.04 24.54,-161.6 22.47,-154.43 22.47,-151.97 24.54,-144.8 25.47,-141.58 26.78,-138.37 28.31,-135.28"></path>
+                        <polygon fill="black" stroke="black" points="31.46,-136.83 33.4,-126.42 25.39,-133.35 31.46,-136.83"></polygon>
+                        <text text-anchor="middle" x="36.52" y="-149" font-family="Times,serif" font-size="14.00"></text>
+                        </g>
+                        <!-- 18292208&#45;&gt;15103200 -->
+                        <g id="edge6" class="edge activated">
+                        <title>18292208-&gt;15103200:c</title>
+                        <path fill="none" stroke="green" d="M47.71,-169.58C47.77,-166.88 47.83,-164.19 47.86,-161.6 48.03,-149.94 47.79,-136.85 47.5,-126.55"></path>
+                        <polygon fill="green" stroke="green" points="44.21,-169.68 47.45,-179.77 51.21,-169.86 44.21,-169.68"></polygon>
+                        <text text-anchor="middle" x="67.11" y="-149" font-family="Times,serif" font-size="14.00">dr </text>
+                        </g>
+                        <!-- 15040624 -->
+                        <g id="node4" class="node activated">
+                        <title>15040624</title>
+                        <path fill="none" stroke="black" d="M22.49,-0.5C22.49,-0.5 71.23,-0.5 71.23,-0.5 77.23,-0.5 83.23,-6.5 83.23,-12.5 83.23,-12.5 83.23,-24.5 83.23,-24.5 83.23,-30.5 77.23,-36.5 71.23,-36.5 71.23,-36.5 22.49,-36.5 22.49,-36.5 16.49,-36.5 10.49,-30.5 10.49,-24.5 10.49,-24.5 10.49,-12.5 10.49,-12.5 10.49,-6.5 16.49,-0.5 22.49,-0.5"></path>
+                        <text text-anchor="middle" x="46.86" y="-14.4" font-family="Times,serif" font-size="14.00">reverse(d)</text>
+                        </g>
+                        <!-- 15103200&#45;&gt;15040624 -->
+                        <g id="edge3" class="edge activated">
+                        <title>15103200-&gt;15040624</title>
+                        <path fill="none" stroke="black" d="M33.4,-90.18C29.8,-84.63 26.39,-78.24 24.54,-71.8 22.47,-64.63 22.47,-62.17 24.54,-55 25.47,-51.78 26.78,-48.57 28.31,-45.48"></path>
+                        <polygon fill="black" stroke="black" points="31.46,-47.03 33.4,-36.62 25.39,-43.55 31.46,-47.03"></polygon>
+                        <text text-anchor="middle" x="36.52" y="-59.2" font-family="Times,serif" font-size="14.00"></text>
+                        </g>
+                        <!-- 15103200&#45;&gt;15040624 -->
+                        <g id="edge7" class="edge activated">
+                        <title>15103200-&gt;15040624:c</title>
+                        <path fill="none" stroke="green" d="M47.71,-79.78C47.77,-77.08 47.83,-74.39 47.86,-71.8 48.03,-60.14 47.79,-47.05 47.5,-36.75"></path>
+                        <polygon fill="green" stroke="green" points="44.21,-79.88 47.45,-89.97 51.21,-80.06 44.21,-79.88"></polygon>
+                        <text text-anchor="middle" x="64.77" y="-59.2" font-family="Times,serif" font-size="14.00">d </text>
+                        </g>
+                        <!-- 99999999 -->
+                        <g id="node5" class="node">
+                        <title>99999999</title>
+                        <path fill="none" stroke="black" d="M31.86,-359.7C31.86,-359.7 61.86,-359.7 61.86,-359.7 67.86,-359.7 73.86,-365.7 73.86,-371.7 73.86,-371.7 73.86,-383.7 73.86,-383.7 73.86,-389.7 67.86,-395.7 61.86,-395.7 61.86,-395.7 31.86,-395.7 31.86,-395.7 25.86,-395.7 19.86,-389.7 19.86,-383.7 19.86,-383.7 19.86,-371.7 19.86,-371.7 19.86,-365.7 25.86,-359.7 31.86,-359.7"></path>
+                        <text text-anchor="middle" x="46.75" y="-373.5" font-family="Times,serif" font-size="14.00">Result</text>
+                        </g>
+                        <!-- 99999999&#45;&gt;19188680 -->
+                        <g id="edge5" class="edge activated">
+                        <title>99999999-&gt;19188680:c</title>
+                        <path fill="none" stroke="Green" d="M46.86,-349.48C46.86,-335.44 46.86,-318.68 46.86,-306.19"></path>
+                        <polygon fill="Green" stroke="Green" points="43.36,-349.58 46.86,-359.58 50.36,-349.58 43.36,-349.58"></polygon>
+                        <text text-anchor="middle" x="74.27" y="-328.6" font-family="Times,serif" font-size="14.00">draw </text>
+                        </g>
+                        </g>
+                        </svg>
+
+                </section>
+
+                <section>
+                    <h3>Exercise: Reversing a number</h3>
+
+                    <pre style="font-size:0.8em; margin-bottom:48px;"><code data-trim data-noescape class="python">
+                    def reverse(n):
+                        """Returns N with the digits reversed.
+                        >>> reverse_digits(123)
+                        321
+                        """
+                    </code></pre>
+
+                    <p><a target="_blank" href="https://www.youtube.com/watch?v=-dJI4SkW3Ag">See walkthrough video here</a></p>
+                </section>
+
+
+                <section>
+                    <h3>Recursion on different data types</h3>
+
+                    <table class="smaller">
+                        <thead>
+                            <tr><th>Data type
+                                <th>Base case condition
+                                <th>Current item
+                                <th>Recursive case argument
+                        <tbody>
+                            <tr><td>Numbers
+                                <td><code>== 0</code> <br>
+                                    <code>== 1</code>
+                                <td><code>n</code>
+                                <td><code>n - 1</code>
+                            <tr><td>Numbers (Digits)
+                                <td><code>== 0</code>
+                                    <code>&lt; 10</code>
+                                <td><code>n % 10</code>
+                                <td><code>n // 10</code>
+                            <tr><td>Lists
+                                <td><code>== []</code><br>
+                                    <code>len(L) == 0</code>
+                                <td><code>L[0]</code><br>
+                                    <code>L[-1]</code>
+                                
+                                <td><code>L[1:]</code> <br> <code>L[:-1]</code>
+                            <tr>
+                                <td>Strings
+                                <td><code>== ''</code> <br> <code>len(S) == 1</code>
+                                <td><code>S[0]</code>
+                                <td><code>S[1:]</code> <br> <code>S[:-1]</code>
+                    </table>
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>List diagrams</h2>
+                </section>
+
+                <section>
+                    <h3>Lists in environment diagrams</h3>
+                    <p>Lists are represented as a row of index-labeled adjacent boxes, one per element.</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    pair = [1, 2]
+                    </code></pre>
+                    <img src="images/boxandpointer_pair.png" alt="PythonTutor for a single two-element list"/>
+
+					<p>
+						<a class="python-tutor-link" target="_blank" href="http://pythontutor.com/composingprograms.html#code=pair%20%3D%20%5B1,%202%5D%0A%0A%23matrix%20%3D%20%5B%20%5B1,2,0,4%5D,%20%5B0,1,3,-1%5D,%20%5B0,0,1,8%5D%20%5D%0A%0A%23worst_list%20%3D%20%5B%20%5B1,%202%5D,%0A%23%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%5B%5D,%0A%23%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%5B%20%5B3,%20False,%20None%5D,%0A%23%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%5B4,%20lambda%3A%205%5D%5D%5D&cumulative=true&curInstr=0&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">
+						Try in PythonTutor.
+						</a>
+					</p>
+                </section>
+
+                
+				<section>
+					<h3>Nested lists in environment diagrams</h3>
+
+                    <p>Each box either contains a primitive value or points to a compound value.</p>
+
+					<pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+					matrix = [ [1, 2, 0, 4], [0, 1, 3, -1], [0, 0, 1, 8] ]
+					</code></pre>
+					<img src="images/boxandpointer_nestedlist.png" style="max-height:300px;" alt="Screenshot of PythonTutor of nested list">
+
+                    <p class="python-tutor-link">
+                        <a target="_blank" href="https://pythontutor.com/composingprograms.html#code=matrix%20%3D%20%5B%20%5B1,%202,%200,%204%5D,%20%5B0,%201,%203,%20-1%5D,%20%5B0,%200,%201,%208%5D%20%5D&cumulative=true&curInstr=1&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">
+                            View in PythonTutor
+                        </a>
+                    </p>
+
+				</section>
+
+
+                <section>
+					<h3>Nested lists in environment diagrams</h3>
+
+					<p>A <em>very</em> nested list:</p>
+					<pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+					worst_list = [ [1, 2],
+					               [],
+					               [ [3, False, None], [4, lambda: 5]]]
+					</code></pre>
+                    <img src="images/boxandpointer_verynestedlist.png" style="max-height:300px;" alt="PythonTutor for a single two-element list"/>
+
+                    <p class="python-tutor-link">
+                        <a target="_blank" href="https://pythontutor.com/composingprograms.html#code=pair%20%3D%20%5B1,%202%5D%0A%0Anested_list%20%3D%20%5B%0A%20%20%20%20%5B1,%202%5D,%20%5B%5D,%0A%20%20%20%20%5B%20%5B3,%20False,%20None%5D,%0A%20%20%20%20%20%20%5B4,%20lambda%3A%205%5D%20%20%20%20%0A%20%20%20%20%5D%0A%5D&cumulative=true&curInstr=4&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">
+                            View in PythonTutor
+                        </a>
+                    </p>
+				</section>
+
+
+
+                <section class="heading-only">
+                    <h2>Python Project of The Day!</h2>
+                </section>
+
+                <section>
+                    <h3>Sea Level Rise</h3>
+
+                    <p><a target="_blank" href="https://douwe.com/projects/sealevel">Sea Level Rise</a>, by Douwe Osinga: Visualize sea levels and population density on interactive maps.</p>
+                    <img src="images/pythonproject_sealevelrise.png" alt="Screenshot of map with sea levels risen 200m" height="300">
+                    <p class="smaller">Technologies used: Python (notebook) with PIL/numpy/Rasterio, HTML/CSS/JS with PanZoom
+                        <br>
+                     (<a target="_blank" href="https://github.com/DOsinga/sealevel">Github repository</a>)
+                    </p>
+                </section>
+
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-menu@2.1.0/menu.js"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight, RevealMenu ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge();
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+
+        </script>
+    </body>
+</html>

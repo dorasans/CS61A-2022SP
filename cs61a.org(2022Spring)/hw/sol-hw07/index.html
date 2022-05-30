@@ -1,0 +1,645 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS" />
+    <meta name="author" content ="Pamela Fox" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="../../assets/css/hw.css">
+
+
+    <title>
+Homework 7 Solutions | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="../../assets/images/logo.png"/>
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../../weekly">Weekly Schedule</a></li>
+                <li><a href="../../office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../../instructor">Instructors</a></li>
+                <li><a href="../../TAs">TAs</a></li>
+                <li><a href="../../tutors">Tutors</a></li>
+                <li><a href="../../academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../../resources/index.html">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="../../articles/campus-res/index.html">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="../../articles/about">Syllabus</a></li>
+            <li><a href="../../contact/index.html">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>
+        
+Homework 7 Solutions
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="hw07.zip" class="label label-outline">hw07.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+<h2>Solution Files</h2>
+<p>You can find the solutions in <a href="hw07.scm">hw07.scm</a>.</p>
+
+    
+<p>Scheme is a famous functional programming language from the 1970s.  It is a
+dialect of Lisp (which stands for LISt Processing).  The first observation most
+people make is the unique syntax, which uses a prefix notation and (often many)
+nested parentheses (see <a href="http://xkcd.com/297/">http://xkcd.com/297/</a>).  Scheme
+features first-class functions and optimized tail-recursion, which were
+relatively new features at the time.</p>
+
+<p>You may find it useful to try <a href="https://code.cs61a.org/scheme">code.cs61a.org/scheme</a> when
+working through problems, as it can draw environment and box-and-pointer
+diagrams and it lets you walk your code step-by-step (similar to Python Tutor).
+Don't forget to submit your code through Ok though!</p>
+
+
+<h3 id="scheme-editor">Scheme Editor</h3>
+
+
+<p>As you're writing your code, you can debug using the Scheme Editor. In your <code>scheme</code> folder you will find a new editor. To run this editor, run <code>python3 editor</code>. This should pop up a window in your browser; if it does not, please navigate to <a href="localhost:31415">localhost:31415</a> and you should see it.</p>
+
+<p>Make sure to run <code>python3 ok</code> in a separate tab or window so that the editor keeps running.</p>
+
+<p>If you find that your code works in the online editor but not in your own interpreter, it's possible you have a bug in code from an earlier part that you'll have to track down. Every once in a while there's a bug that our tests don't catch, and if you find one you should let us know!</p>
+
+
+<h2 id="required-questions">Required Questions</h2>
+
+
+<br />
+
+        <button id='toggle-1' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Getting Started Videos<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+
+<h2 id="getting-started-videos">Getting Started Videos</h2>
+
+
+<p>These videos may provide some helpful direction for tackling the coding
+problems on this assignment.</p>
+
+<blockquote><p>To see these videos, you should be logged into your berkeley.edu email.</p></blockquote>
+
+
+            <iframe width="560" height="315" src="https://youtube.com/embed/watch?v=6jM18JXj-Q4&list=PLx38hZJ5RLZea1rWe3s2JtuCIku_blUu_"
+                frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe><p><a href='https://youtu.be/watch?v=6jM18JXj-Q4&list=PLx38hZJ5RLZea1rWe3s2JtuCIku_blUu_'> YouTube link </a></p>
+</div>
+
+
+<h2 id="keyword-lists">Keyword Lists</h2>
+
+
+<p>In the following problems, you will explore creating two separate implementations for the same
+abstraction.</p>
+
+<p>A <em>keyword list</em> is the Scheme analogue of a <code>dict</code> in Python, with a few key
+differences:</p>
+
+<ul>
+  <li>It allows for repeating keys</li>
+  <li>It functions as a list as well, which allows for ordering.</li>
+</ul>
+
+<p>The <code>kwlist</code> abstraction keeps a mapping of <code>keys</code> and <code>values</code>. To create a <code>kwlist</code>,
+call the constructor <code>(make&#x2d;kwlist keys values)</code> where <code>keys</code> is a
+Scheme list of symbols and <code>values</code> is a Scheme list of any type. This returns
+some abstracted item <code>lst</code> that we can call the following methods to either
+retrieve or add items:</p>
+
+<pre><code class="scheme">scm&gt; (define lst (make&#x2d;kwlist &#x27;(x y z) &#x27;(7 8 9)) ; create the keyword list
+lst
+scm&gt; (get&#x2d;first&#x2d;from&#x2d;kwlist lst &#x27;x) ; get an item
+7
+scm&gt; (define lst (add&#x2d;to&#x2d;kwlist lst &#x27;a 10)) ; add a new item
+lst
+scm&gt; (get&#x2d;first&#x2d;from&#x2d;kwlist lst &#x27;a) ; get the new item.
+10</code></pre>
+
+
+
+
+<h3 id="q1-keyword-list-construct">Q1: Keyword List: Construct</h3>
+
+
+<p>First, implement abstractions for <code>kwlist</code> in two ways, with the following example:
+<code>(kwlist &#x27;(x y z) &#x27;(7 8 9))</code></p>
+
+<ol>
+  <li><code>kwlist1</code>, which stores a keyword list in the following manner: <code>((key1 key2
+  key3 ...) (value1 value2 value3 ...)</code>. With the example above, this should
+  look like <code>((x y z) (7 8 9))</code>.</li>
+  <li><code>kwlist2</code>, which stores a keyword list in the following manner: <code>((key1
+  value1) (key2 value2) ...)</code>. With the example above, this should look like
+  <code>((x 7) (y 8) (z 9))</code>.</li>
+</ol>
+
+<p>Specifically, implement constructors and selectors for <code>kwlist1</code> and <code>kwlist2</code>.</p>
+
+<ul>
+  <li>The constructors, <code>make&#x2d;kwlist1</code> and <code>make&#x2d;kwlist2</code>, should take in Scheme lists for both <code>keys</code> and <code>values</code>,
+  and construct the abstraction as above.</li>
+  <li>The selectors, <code>get&#x2d;keys&#x2d;kwlist1</code>, <code>get&#x2d;keys&#x2d;kwlist2</code>, <code>get&#x2d;values&#x2d;kwlist1</code>, and <code>get&#x2d;values&#x2d;kwlist1</code>, should take in a <code>kwlist1</code> or
+  <code>kwlist2</code> and return their keys and values respectively. Note that because you are currently creating the implementation,
+  you are "under the abstraction barrier;" feel free to refer to specific details of the structure of <code>kwlist1</code> and <code>kwlist2</code>.</li>
+</ul>
+
+<blockquote><p><strong>Hint</strong>: The <code>map</code> function may prove to be useful, but is not required. You may also
+use the <code>cadr</code> function, which is defined for you in the file.</p></blockquote>
+
+<pre><code class="scheme">scm&gt; (define ex&#x2d;lst1 (make&#x2d;kwlist1 &#x27;(a b c) &#x27;(1 2 3)))
+ex&#x2d;list
+scm&gt; (get&#x2d;keys&#x2d;kwlist1 ex&#x2d;lst1)
+(a b c)
+scm&gt; (get&#x2d;values&#x2d;kwlist1 ex&#x2d;lst1)
+(1 2 3)
+scm&gt; (define ex&#x2d;lst2 (make&#x2d;kwlist2 &#x27;(a b c) &#x27;(1 2 3)))
+ex&#x2d;list
+scm&gt; (get&#x2d;keys&#x2d;kwlist2 ex&#x2d;lst)
+(a b c)
+scm&gt; (get&#x2d;values&#x2d;kwlist2 ex&#x2d;lst)
+(1 2 3)</code></pre>
+
+
+
+<solution>
+
+<pre><code>(define (make&#x2d;kwlist1 keys values)
+<div class="sol-highlight">  (list keys values)</div>)
+
+(define (get&#x2d;keys&#x2d;kwlist1 kwlist)
+<div class="sol-highlight">  (car kwlist)</div>)
+
+(define (get&#x2d;values&#x2d;kwlist1 kwlist)
+<div class="sol-highlight">  (cadr kwlist)</div>)
+(define (make&#x2d;kwlist2 keys values)
+<div class="sol-highlight">  (if (null? keys) nil
+    (cons (list (car keys) (car values))
+          (make&#x2d;kwlist2 (cdr keys) (cdr values))))</div>)
+
+(define (get&#x2d;keys&#x2d;kwlist2 kwlist)
+<div class="sol-highlight">  (map (lambda (x) (car x)) kwlist)</div>)
+
+(define (get&#x2d;values&#x2d;kwlist2 kwlist)
+<div class="sol-highlight">  (map (lambda (x) (cadr x)) kwlist)</div>)</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q kwlist_construct<button id="copy-code-python3ok-qkwlist_construct" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qkwlist_construct").onclick = () => copyCode('python3 ok -q kwlist_construct', "copy-code-python3ok-qkwlist_construct");
+        </script>
+        <br/>
+
+<blockquote><p><strong>Important</strong>: For the following questions, your implementations should be invariant with respect to the abstraction used; that is,
+it should work regardless of whether <code>kwlist1</code> or <code>kwlist2</code> is used. Specifically, in the tests, we will define the abstraction <code>kwlist</code> as
+either <code>kwlist1</code> or <code>kwlist2</code>:</p>
+
+<pre><code class="scheme">scm&gt; (define make&#x2d;kwlist make&#x2d;kwlist1)
+scm&gt; (define get&#x2d;keys&#x2d;kwlist get&#x2d;keys&#x2d;kwlist1)
+scm&gt; (define get&#x2d;values&#x2d;kwlist get&#x2d;values&#x2d;kwlist1)
+; tests here...
+scm&gt; (define make&#x2d;kwlist make&#x2d;kwlist2)
+scm&gt; (define get&#x2d;keys&#x2d;kwlist get&#x2d;keys&#x2d;kwlist2)
+scm&gt; (define get&#x2d;values&#x2d;kwlist get&#x2d;values&#x2d;kwlist2)
+; tests here...</code></pre>
+
+
+<p><strong>You should refer to the above <code>kwlist</code> procedures, not <code>kwlist1</code> or <code>kwlist2</code>'s procedures in your implementation.</strong></p></blockquote>
+
+
+<h3 id="q2-keyword-list-add">Q2: Keyword List: Add</h3>
+
+
+<p>Now, implement <code>add&#x2d;to&#x2d;kwlist</code>, which implements support for adding a new (<code>key</code>, <code>value</code>) pair to <em>any</em> implementation
+of a <code>kwlist</code>. Specifically, <code>add&#x2d;to&#x2d;kwlist</code> takes in a <code>kwlist</code>, a <code>key</code>, and a <code>value</code> as input, and returns a <em>new</em>
+<code>kwlist</code> with updated keys and values. Note that <code>kwlist</code>s are ordered; that is, a pair <code>p1</code> that was added to a <code>kwlist</code>
+before a different pair <code>p2</code> should appear earlier in the <code>kwlist</code>.</p>
+
+<blockquote><p><strong>Hint</strong>: The <code>append</code> method may be useful here. To make your implementation work with both abstractions,
+<em>be sure to use methods ending in <code>kwlist</code>, not <code>kwlist1</code> or <code>kwlist2</code></em>.</p></blockquote>
+
+<pre><code class="scheme">scm&gt; (define ex&#x2d;lst (make&#x2d;kwlist &#x27;(a b c) &#x27;(1 2 3)))
+ex&#x2d;lst
+scm&gt; (get&#x2d;keys&#x2d;kwlist ex&#x2d;lst)
+(a b c)
+scm&gt; (get&#x2d;values&#x2d;kwlist ex&#x2d;lst)
+(1 2 3)
+scm&gt; (define ex&#x2d;lst (add&#x2d;to&#x2d;kwlist ex&#x2d;lst &#x27;d &#x27;4))
+ex&#x2d;lst
+scm&gt; (get&#x2d;keys&#x2d;kwlist ex&#x2d;lst) ; note that new items are at the end of the list!
+(a b c d)
+scm&gt; (get&#x2d;values&#x2d;kwlist ex&#x2d;lst) ; here too!
+(1 2 3 4)</code></pre>
+
+
+
+<solution>
+
+<pre><code>(define (add&#x2d;to&#x2d;kwlist kwlist key value)
+<div class="sol-highlight">  (make&#x2d;kwlist (append (get&#x2d;keys&#x2d;kwlist kwlist) (list key)) (append (get&#x2d;values&#x2d;kwlist kwlist) (list value)))</div>)</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q kwlist_add<button id="copy-code-python3ok-qkwlist_add" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qkwlist_add").onclick = () => copyCode('python3 ok -q kwlist_add', "copy-code-python3ok-qkwlist_add");
+        </script>
+        <br/>
+
+
+<h3 id="q3-optional-keyword-list-get">Q3: (Optional) Keyword List: Get</h3>
+
+
+<p>Now, implement <code>get&#x2d;first&#x2d;from&#x2d;kwlist</code>, which implements support for getting the <em>first</em> value bound to a <code>key</code> in <code>kwlist</code>. If <code>key</code> is not present in the list, the function should return <code>nil</code> to indicate
+that there were no valid keys found.</p>
+
+<blockquote><p><strong>Hint</strong>: Consider using <code>let</code> to temporarily bind names to values. To make your implementation work with both abstractions,
+<em>be sure to use methods ending in <code>kwlist</code>, not <code>kwlist1</code> or <code>kwlist2</code></em>.</p></blockquote>
+
+<pre><code class="scheme">scm&gt; (define ex&#x2d;lst (make&#x2d;kwlist &#x27;(a b c) &#x27;(1 2 3)))
+ex&#x2d;lst
+scm&gt; (get&#x2d;first&#x2d;from&#x2d;kwlist ex&#x2d;lst &#x27;b)
+2
+scm&gt; (get&#x2d;first&#x2d;from&#x2d;kwlist ex&#x2d;lst &#x27;d) ; if not found, return nil
+()
+scm&gt; (define ex&#x2d;lst (add&#x2d;to&#x2d;kwlist ex&#x2d;lst &#x27;d &#x27;4))
+ex&#x2d;lst
+scm&gt; (get&#x2d;first&#x2d;from&#x2d;kwlist ex&#x2d;lst &#x27;b)
+2
+scm&gt; (get&#x2d;first&#x2d;from&#x2d;kwlist ex&#x2d;lst &#x27;d)
+4
+scm&gt; (define ex&#x2d;lst (add&#x2d;to&#x2d;kwlist ex&#x2d;lst &#x27;d &#x27;5))
+ex&#x2d;lst
+scm&gt; (get&#x2d;first&#x2d;from&#x2d;kwlist ex&#x2d;lst &#x27;b)
+2
+scm&gt; (get&#x2d;first&#x2d;from&#x2d;kwlist ex&#x2d;lst &#x27;d) ; return the *first* occurrence
+4</code></pre>
+
+
+
+<solution>
+
+<pre><code>(define (get&#x2d;first&#x2d;from&#x2d;kwlist kwlist key)
+<div class="sol-highlight">  (if (null? (get&#x2d;keys&#x2d;kwlist kwlist))
+    nil
+    (let ((values (get&#x2d;values&#x2d;kwlist kwlist))
+          (keys (get&#x2d;keys&#x2d;kwlist kwlist)))
+      (cond
+        ((equal? (car keys) key) (car values))
+        (else (get&#x2d;first&#x2d;from&#x2d;kwlist (make&#x2d;kwlist (cdr keys) (cdr values)) key))
+      )
+    )
+  )</div>)</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q kwlist_get<button id="copy-code-python3ok-qkwlist_get" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qkwlist_get").onclick = () => copyCode('python3 ok -q kwlist_get', "copy-code-python3ok-qkwlist_get");
+        </script>
+        <br/>
+
+
+<h2 id="programs-as-data">Programs as Data</h2>
+
+
+<blockquote><p><strong>Note that</strong> the following question is separate from the previous questions.</p></blockquote>
+
+
+<h3 id="q4-prune">Q4: Prune</h3>
+
+
+<p>Implement <code>prune&#x2d;expr</code>, a procedure that takes in an expression, which is represented as a list, and returns the same expression with every other argument included. The operator should not be modified.</p>
+
+<blockquote><p><strong>Hint:</strong> You may find it helpful to write a helper function that prunes a list.</p></blockquote>
+
+<p>The behavior of <code>prune&#x2d;expr</code> is specified by the following doctests:</p>
+
+<pre><code class="scheme">scm&gt; (prune&#x2d;expr &#x27;(+ 10 20))
+(+ 10)
+scm&gt; (prune&#x2d;expr &#x27;(+ 10 20 30))
+(+ 10 30)
+scm&gt; (eval (prune&#x2d;expr &#x27;(+ 10 20 30)))
+40</code></pre>
+
+
+
+<solution>
+
+<pre><code>(define (prune&#x2d;expr expr)
+    (define (prune&#x2d;helper lst)
+<div class="sol-highlight">      (if (or (null? lst) (null? (cdr lst)))
+        lst
+        (cons (car lst) (prune&#x2d;helper (cdr (cdr lst))))
+      )</div>    )
+<div class="sol-highlight">    (cons (car expr) (prune&#x2d;helper (cdr expr)))</div>)</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q prune-expr<button id="copy-code-python3ok-qprune-expr" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qprune-expr").onclick = () => copyCode('python3 ok -q prune-expr', "copy-code-python3ok-qprune-expr");
+        </script>
+        <br/>
+
+
+<h2 id="chef-curry">Chef Curry</h2>
+
+<p>Recall that <code>curry</code>ing transforms a multiple argument function into a series of higher-order, one argument functions. In the next set of questions, you will be creating functions that can automatically curry a function of any length using the notion that programs are data!</p>
+
+
+<h3 id="q5-cooking-curry">Q5: Cooking Curry</h3>
+
+
+<p>Implement the function <code>curry&#x2d;cook</code>, which takes in a Scheme list <code>formals</code> and a quoted expression <code>body</code>. <code>curry&#x2d;cook</code> should generate a program as a list which is a curried version of a lambda function. The outputted program should be a curried version of a lambda function with formal arguments equal to <code>formals</code>, and a function body equal to <code>body</code>. You may assume that all functions passed in will have more than 0 <code>formals</code>; otherwise, it would not be curry-able!</p>
+
+<p>For example, if you wanted to curry the function <code>(lambda (x y) (+ x y))</code>, you would set <code>formals</code> equal to <code>&#x27;(x y)</code>, the <code>body</code> equal to <code>&#x27;(+ x y)</code>, and make a call to <code>curry&#x2d;cook</code>: <code>(curry&#x2d;cook &#x27;(x y) &#x27;(+ x y))</code>.</p>
+
+<pre><code class="scheme">scm&gt; (curry&#x2d;cook &#x27;(a) &#x27;a)
+(lambda (a) a)
+scm&gt; (curry&#x2d;cook &#x27;(x y) &#x27;(+ x y))
+(lambda (x) (lambda (y) (+ x y)))</code></pre>
+
+
+
+<solution>
+
+<pre><code>(define (curry&#x2d;cook formals body)
+<div class="sol-highlight">    (if (null? formals)
+        body
+        `(lambda (,(car formals)) ,(curry&#x2d;cook (cdr formals) body))
+    )</div>)</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q curry_cook<button id="copy-code-python3ok-qcurry_cook" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qcurry_cook").onclick = () => copyCode('python3 ok -q curry_cook', "copy-code-python3ok-qcurry_cook");
+        </script>
+        <br/>
+
+
+<h3 id="q6-consuming-curry">Q6: Consuming Curry</h3>
+
+
+<p>Now that you have a function that creates lambda programs as lists, create a function which is able to evaluate lambda functions using a series of arguments. Specifically, implement the function <code>curry&#x2d;consume</code>, which takes in a curried lambda <em>function</em> <code>curries</code> (not a list), and <code>apply</code>s the function to a list of arguments <code>args</code>. Similarly to the previous question, you may make several assumptions:</p>
+
+<ol>
+  <li>If <code>curries</code> is an <code>n</code>-curried function, then there will be at most <code>n</code> arguments in <code>args</code>.</li>
+  <li><strong>If there are 0 arguments</strong>, then you may assume that <code>curries</code> has been fully <code>apply</code>'d with relevant arguments; in this case, <code>curries</code> now contains a value representing the output of the lambda function. Return it.</li>
+</ol>
+
+<p>Note that there can be fewer <code>args</code> than <code>formals</code> for the corresponding lambda function <code>curries</code>! In the case that there are fewer arguments, <code>curry&#x2d;consume</code> should return a curried lambda function, which is the result of partially <code>apply</code>ing <code>curries</code> up to the number of <code>args</code> provdied.</p>
+
+<pre><code class="scheme">scm&gt; (define three&#x2d;curry (curry&#x2d;cook &#x27;(x y z) &#x27;(+ x (* y z))))
+three&#x2d;curry
+scm&gt; three&#x2d;curry
+(lambda (x) (lambda (y) (lambda (z) (+ x (* y z)))))
+scm&gt; (define three&#x2d;curry&#x2d;fn (eval three&#x2d;curry)) ; three&#x2d;curry&#x2d;fn is a lambda function derived from the program
+three&#x2d;curry&#x2d;fn
+scm&gt; (define eat&#x2d;two (curry&#x2d;consume three&#x2d;curry&#x2d;fn &#x27;(1 2))) ; pass in only two arguments, return should be a one&#x2d;arg lambda function!
+eat&#x2d;two
+scm&gt; eat&#x2d;two
+(lambda (z) (+ x (* y z)))
+scm&gt; (eat&#x2d;two 3) ; pass in the last argument; 1 + (2 * 3)
+7
+scm&gt; (curry&#x2d;consume three&#x2d;curry&#x2d;fn &#x27;(1 2 3)) ; all three arguments at once
+7</code></pre>
+
+
+
+<solution>
+
+<pre><code>(define (curry&#x2d;consume curries args)
+<div class="sol-highlight">    (if (null? args)
+        curries
+        (curry&#x2d;consume (curries (car args)) (cdr args))
+    )</div>)</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q curry_consume<button id="copy-code-python3ok-qcurry_consume" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qcurry_consume").onclick = () => copyCode('python3 ok -q curry_consume', "copy-code-python3ok-qcurry_consume");
+        </script>
+        <br/>
+
+
+<h2 id="optional-questions">Optional Questions</h2>
+
+<p>Homework assignments will also contain prior exam-level questions for you to take a look at.
+ These questions have no submission component; feel free to attempt them if you'd like a challenge!</p>
+
+<ol>
+  <li>Fall 2019 Final Q7c: <a href="../../exam/fa19/final/61a-fa19-final.pdf#page=9">*-to-mul</a></li>
+  <li>Fall 2021 Final Q5a: <a href="../../exam/fa21/final/61a-fa21-final.pdf#page=18">Spice</a></li>
+</ol>
+
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#scheme-editor">Scheme Editor</a></li>
+  <li><a href="index.html#required-questions">Required Questions</a></li>
+  <li><a href="index.html#getting-started-videos">Getting Started Videos</a></li>
+  <li><a href="index.html#keyword-lists">Keyword Lists</a></li>
+  <ul>
+    <li><a href="index.html#q1-keyword-list-construct">Q1: Keyword List: Construct</a></li>
+    <li><a href="index.html#q2-keyword-list-add">Q2: Keyword List: Add</a></li>
+    <li><a href="index.html#q3-optional-keyword-list-get">Q3: (Optional) Keyword List: Get</a></li>
+  </ul>
+  <li><a href="index.html#programs-as-data">Programs as Data</a></li>
+  <ul>
+    <li><a href="index.html#q4-prune">Q4: Prune</a></li>
+  </ul>
+  <li><a href="index.html#chef-curry">Chef Curry</a></li>
+  <ul>
+    <li><a href="index.html#q5-cooking-curry">Q5: Cooking Curry</a></li>
+    <li><a href="index.html#q6-consuming-curry">Q6: Consuming Curry</a></li>
+  </ul>
+  <li><a href="index.html#optional-questions">Optional Questions</a></li>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="../../index.html">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="../../weekly">Weekly Schedule</a></li>
+            <li><a href="../../office-hours">Office Hours</a></li>
+            <li><a href="../../staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="../../articles/studying">Studying Guide</a></li>
+            <li><a href="../../articles/debugging">Debugging Guide</a></li>
+            <li><a href="../../articles/composition">Composition Guide</a></li>
+            <li><a href="../../articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="../../articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="../../articles/about#assignments">Assignments</a></li>
+            <li><a href="../../articles/about#exams">Exams</a></li>
+            <li><a href="../../articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<script src="../../assets/js/sketchy.js"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  </body>
+</html>

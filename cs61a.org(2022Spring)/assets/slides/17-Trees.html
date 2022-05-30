@@ -1,0 +1,884 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Trees</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Trees</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="17-Trees.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Trees</li>
+                        <li>Tree class</li>
+                        <li>Tree processing</li>
+                        <li>Tree creation</li>
+                        <li>Tree mutation</li>
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Trees</h2>
+                </section>
+
+				<section>
+					<h3>Trees</h3>
+					<img src="https://i.imgur.com/cruE1N2.png" alt="Diagram of tree">
+					<table class="smaller">
+                        <thead>
+                            <tr>
+                                <th style="width:50%">Recursive description
+                                <th style="width:50%" class="fragment" data-fragment-index="1">Relative description
+                        <tbody>
+                            <tr>
+                                <td style="vertical-align:top;">
+                                    <ul>
+                                        <li>A tree has a <strong>root label</strong> and a list of <strong>branches</strong>
+                                        <li>Each <strong>branch</strong> is itself a tree
+                                        <li>A tree with zero branches is called a <strong>leaf</strong>
+                                        <li>A tree starts at the <strong>root</strong>
+                                    </ul>
+                                <td style="vertical-align:top;" class="fragment" data-fragment-index="1">
+                                    <ul>
+                                        <li>Each location in a tree is called a <strong>node</strong>
+                                        <li>Each node has a <strong>label</strong> that can be any value
+                                        <li>One node can be the <strong>parent/child</strong> of another
+                                        <li>The top node is the <strong>root node</strong>
+                                    </ul>
+                        </table>
+				</section>
+
+				<section class="heading-only">
+					<h2>Trees, trees, everywhere!</h2>
+				</section>
+
+				<section>
+					<h3>Directory structures</h3>
+
+					<img class="r-stretch" src="https://inst.eecs.berkeley.edu/~cs61a/sp21/lab/lab05/assets/cs61a-tree.png" alt="Tree for a directory structure">
+				</section>
+
+				<section>
+					<h3>Parse trees</h3>
+
+					<p>For natural languages...</p>
+
+					<img class="r-stretch" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Amouse.svg/1000px-Amouse.svg.png" alt="Parse tree for English sentence: A mouse eats a cat">
+					<p style="font-size:smaller">Key: S = Sentence, NP = Noun phrase, D = Determiner, N = Noun, V = Verb, VP = Verb Phrase</p>
+				</section>
+
+				<section>
+					<h3>Parse trees</h3>
+
+					<p>For programming languages, too...</p>
+
+					<img class="r-stretch" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Parse_Tree_Derivations_ETF.svg/800px-Parse_Tree_Derivations_ETF.svg.png" alt="Parse tree for an arithmetic expression">
+
+					<p style="font-size:smaller">Key: E = expression</p>
+				</section>
+
+                <section class="heading-only">
+                    <h2>Tree class</h2>
+                </section>
+
+				<section>
+					<h3>A Tree object</h3>
+
+                    <p>A Tree is an object composed of other Tree objects, 
+                        so its constructor must have a way of passing in children Trees.</p>
+
+                    <p>Our approach:</p>
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+
+                        <div style="grid-row: 1; grid-column: 2; padding-top: 20px;">
+                            <svg id="diagramSvg" xmlns="http://www.w3.org/2000/svg" style="width: 200px; height: 200px;">
+                            <style id="stylesheet">#diagramSvg text {
+                                text-anchor: middle;
+                                font-size: medium;
+                                font-weight: bold;
+                            }
+                            
+                            #diagramSvg rect {
+                                fill: lightblue;
+                                stroke: black;
+                                opacity: 0.5;
+                                stroke-width: 1.5;
+                            }
+                            
+                            #diagramSvg line {
+                                stroke: black;
+                                opacity: 0.5;
+                                stroke-width: 1.5;
+                            }
+                                </style>
+                                <defs>
+                                  <marker id="arrowHead" viewBox="-10 -5 10 10" markerUnits="strokeWidth" markerWidth="6" markerHeight="5" orient="auto">
+                                    <path d="M -10 -5 L 0 0 L -10 5 z"></path>
+                                  </marker>
+                                </defs>
+                                <g id="diagramGroup"><rect x="77px" y="0px" width="45px" height="37px"></rect><text x="100px" y="0px"><tspan x="100" dy="24.01851851851852">3</tspan></text><rect x="52px" y="81px" width="45px" height="37px"></rect><text x="74px" y="81px"><tspan x="74" dy="24.01851851851852">1</tspan></text><line x1="92px" y1="37px" x2="74px" y2="81px" marker-end="url(#arrowHead)"></line><rect x="102px" y="81px" width="45px" height="37px"></rect><text x="125px" y="81px"><tspan x="125" dy="24.01851851851852">2</tspan></text><line x1="107px" y1="37px" x2="125px" y2="81px" marker-end="url(#arrowHead)"></line><rect x="72px" y="162px" width="45px" height="37px"></rect><text x="95px" y="162px"><tspan x="95" dy="24.01851851851852">1</tspan></text><line x1="117px" y1="118px" x2="95px" y2="162px" marker-end="url(#arrowHead)"></line><rect x="132px" y="162px" width="45px" height="37px"></rect><text x="154px" y="162px"><tspan x="154" dy="24.01851851851852">1</tspan></text><line x1="132px" y1="118px" x2="154px" y2="162px" marker-end="url(#arrowHead)"></line></g>
+                              </svg>
+                        </div>
+
+                        <div style="grid-row: 1; grid-column: 1;">
+                            <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                            t = Tree(3, [
+                                        Tree(1),
+                                        Tree(2, [
+                                                Tree(1),
+                                                Tree(1)
+                                                ])
+                                        ]) 
+                            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>The Tree object (cont'd)</h3>
+
+					<p>A Tree should store these instance variables:</p>
+
+					<table style="font-size:smaller; width: 100%">
+						<tr>
+							<td style="width: 300px;"><code>label</code></td>
+							<td>The root label of the tree</td>
+						</tr>
+						<tr>
+							<td><code>branches</code></td>
+							<td>A list of branches (subtrees) of the tree</td>
+						</tr>
+					</table>
+
+                    <p>And expose this instance method:</p>
+                    <table style="font-size:smaller; width: 100%">
+						<tr>
+							<td style="width: 300px;"><code>is_leaf</code></td>
+							<td>Returns a boolean indicating if tree is a leaf</td>
+						</tr>
+					</table>
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+
+                        <div style="grid-row: 1; grid-column: 1;">
+
+                            <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                            t = Tree(3, [
+                                        Tree(1),
+                                        Tree(2, [
+                                                Tree(1),
+                                                Tree(1)
+                                                ])
+                                        ])
+                            
+                            t.label                  <span class="fragment"># 3</span>
+                            t.is_leaf()              <span class="fragment"># False</span>
+                            t.branches[0].is_leaf()  <span class="fragment"># True</span>
+                            </code></pre>
+                        </div>
+
+                        <div style="grid-row: 1; grid-column: 2; padding-top: 20px;">
+                            <svg id="diagramSvg" xmlns="http://www.w3.org/2000/svg" style="width: 200px; height: 200px;">
+                            <style id="stylesheet">#diagramSvg text {
+                                text-anchor: middle;
+                                font-size: medium;
+                                font-weight: bold;
+                            }
+                            
+                            #diagramSvg rect {
+                                fill: lightblue;
+                                stroke: black;
+                                opacity: 0.5;
+                                stroke-width: 1.5;
+                            }
+                            
+                            #diagramSvg line {
+                                stroke: black;
+                                opacity: 0.5;
+                                stroke-width: 1.5;
+                            }
+                                </style>
+                                <defs>
+                                  <marker id="arrowHead" viewBox="-10 -5 10 10" markerUnits="strokeWidth" markerWidth="6" markerHeight="5" orient="auto">
+                                    <path d="M -10 -5 L 0 0 L -10 5 z"></path>
+                                  </marker>
+                                </defs>
+                                <g id="diagramGroup"><rect x="77px" y="0px" width="45px" height="37px"></rect><text x="100px" y="0px"><tspan x="100" dy="24.01851851851852">3</tspan></text><rect x="52px" y="81px" width="45px" height="37px"></rect><text x="74px" y="81px"><tspan x="74" dy="24.01851851851852">1</tspan></text><line x1="92px" y1="37px" x2="74px" y2="81px" marker-end="url(#arrowHead)"></line><rect x="102px" y="81px" width="45px" height="37px"></rect><text x="125px" y="81px"><tspan x="125" dy="24.01851851851852">2</tspan></text><line x1="107px" y1="37px" x2="125px" y2="81px" marker-end="url(#arrowHead)"></line><rect x="72px" y="162px" width="45px" height="37px"></rect><text x="95px" y="162px"><tspan x="95" dy="24.01851851851852">1</tspan></text><line x1="117px" y1="118px" x2="95px" y2="162px" marker-end="url(#arrowHead)"></line><rect x="132px" y="162px" width="45px" height="37px"></rect><text x="154px" y="162px"><tspan x="154" dy="24.01851851851852">1</tspan></text><line x1="132px" y1="118px" x2="154px" y2="162px" marker-end="url(#arrowHead)"></line></g>
+                              </svg>
+                        </div>
+
+                    </div>
+				</section>
+
+                <section>
+					<h3>The Tree class</h3>
+
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    t = Tree(3, [Tree(1), Tree(2, [Tree(1), Tree(1)])])
+                    
+                    t.label                  # 3
+                    t.is_leaf()              # False
+                    t.branches[0].is_leaf()  # True
+                    </code></pre>
+
+                    <p>How could we write the class definition for <code>Tree</code>?</p>
+                    <pre style="font-size:0.9em" class="fragment"><code data-trim data-noescape class="python">
+                    class Tree:
+                        def __init__(self, label, branches=[]):
+                            self.label = label
+                            self.branches = list(branches)
+
+                        def is_leaf(self):
+                            return not self.branches
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <h3>A fancier Tree</h3>
+
+                    <p>This is what assignments actually use:</p>
+                    <pre style="font-size:0.35em"><code data-trim data-noescape class="python">
+                    class Tree:
+
+                        def __init__(self, label, branches=[]):
+                            self.label = label
+                            for branch in branches:
+                                assert isinstance(branch, Tree)
+                            self.branches = list(branches)
+
+                        def is_leaf(self):
+                            return not self.branches
+
+                        def __repr__(self):
+                            if self.branches:
+                                branch_str = ', ' + repr(self.branches)
+                            else:
+                                branch_str = ''
+                            return 'Tree({0}{1})'.format(self.label, branch_str)
+
+                        def __str__(self):
+                            return '\n'.join(self.indented())
+
+                        def indented(self):
+                            lines = []
+                            for b in self.branches:
+                                for line in b.indented():
+                                    lines.append('  ' + line)
+                            return [str(self.label)] + lines
+                    </code></pre>
+
+                    <p class="smaller">It's built in to code.cs61a.org, and you can <code>draw()</code> any <code>Tree</code>!</p>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Tree processing</h2>
+                </section>
+
+
+				<section>
+					<h3>Tree processing</h3>
+
+					<p>A tree is a recursive structure.</p>
+
+					<p>Each tree has:</p>
+					<ul>
+						<li>A label</li>
+						<li>0 or more branches, each a tree</li>
+					</ul>
+
+					<p>Recursive structure implies recursive algorithm!</p>
+				</section>
+
+				<section>
+					<h3>Counting leaves</h3>
+
+					<img class="r-stretch" src="https://i.imgur.com/cruE1N2.png" alt="Diagram of tree">
+
+					<pre style="font-size:1.0em;"><code data-trim data-noescape class="python">
+					def count_leaves(t):
+					    """Returns the number of leaf nodes in T."""
+					    if <span class="fragment">t.is_leaf():</span>
+					        <span class="fragment">return 1</span>
+					    else:
+					        <span class="fragment">leaves_under = 0
+					        for b in t.branches:
+					            leaves_under += count_leaves(b)
+					        return leaves_under</span>
+					</code></pre>
+
+					<p>What's the base case? What's the recursive call?</p>
+
+				</section>
+
+				<section>
+					<h3>Counting leaves (cont'd)</h3>
+
+					<p>The <a target="_blank" href="https://docs.python.org/3/library/functions.html#sum"><code>sum()</code></a>
+						function sums up the items of an iterable.</p>
+
+					<pre style="font-size:1.0em;"><code data-trim data-noescape class="python">
+					sum([1, 1, 1, 1])   # 4
+					</code></pre>
+
+					<div class="fragment">
+					<p>That leads to this shorter function:</p>
+					<pre style="font-size:0.8em;"><code data-trim data-noescape class="python">
+					def count_leaves(t):
+					    """Returns the number of leaf nodes in T."""
+					    if t.is_leaf():
+					        return 1
+					    else:
+					        branch_counts = [count_leaves(b) for b in t.branches]
+					        return sum(branch_counts)
+					</code></pre>
+					</div>
+
+				</section>
+
+
+                <section>
+                    <h3>Exercise: Printing trees</h3>
+
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    def print_tree(t, indent=0):
+                        """Prints the labels of T with depth-based indent.
+                        >>> t = Tree(3, [Tree(1), Tree(2, [Tree(1), Tree(1)])])
+                        >>> print(t)
+                        3
+                          1
+                          2
+                            1
+                            1
+                        """
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Exercise: Printing trees (solution)</h3>
+
+                    <pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    def print_tree(t, indent=0):
+                        """Prints the labels of T with depth-based indent.
+                        >>> t = Tree(3, [Tree(1), Tree(2, [Tree(1), Tree(1)])])
+                        >>> print(t)
+                        3
+                          1
+                          2
+                            1
+                            1
+                        """
+                        print(indent * " " + t.label)
+                        for b in t.branches:
+                            print_tree(b, indent + 2)
+                    </code></pre>
+                </section>
+
+				<section>
+					<h3>Exercise: List of leaves</h3>
+
+					<pre style="font-size:0.8em;"><code data-trim data-noescape class="python">
+                    def leaves(t):
+                        """Return a list containing the leaf labels of T.
+                        >>> t = Tree(20, [Tree(12, [Tree(9, [Tree(7), Tree(2)]), Tree(3)]), Tree(8, [Tree(4), Tree(4)])])
+                        >>> leaves(t)
+                        [7, 2, 3, 4, 4]
+                        """
+					</code></pre>
+
+					<p style="font-size:smaller;">Hint: If you sum a list of lists, you get
+                    a list containing the elements of those lists.
+					The sum function takes a second argument, the starting value of the sum.
+					</p>
+
+                    <pre style="font-size:1.0em;"><code data-trim data-noescape class="python">
+                    sum([ [1], [2, 3], [4] ], []) # [1, 2, 3, 4]
+                    sum([ [1] ], []) # [1]
+                    sum([ [[1]], [2] ], []) # [[1], 2]
+                    </code></pre>
+                    
+				</section>
+
+
+				<section>
+					<h3>Exercise: List of leaves (Solution)</h3>
+
+					<pre style="font-size:0.8em;"><code data-trim data-noescape class="python">
+                    def leaves(t):
+                        """Return a list containing the leaf labels of T.
+                        >>> t = Tree(20, [Tree(12, [Tree(9, [Tree(7), Tree(2)]), Tree(3)]), Tree(8, [Tree(4), Tree(4)])])
+                        >>> leaves(t)
+                        [7, 2, 3, 4, 4]
+                        """
+                        if t.is_leaf():
+                            return [t.label]
+                        else:
+                            leaf_labels = [leaves(b) for b in t.branches]
+                            return sum(leaf_labels, [])
+					</code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise: Counting paths</h3>
+
+                    <pre style="font-size:0.65em; height: 600px;"><code data-trim data-noescape class="python">
+                    def count_paths(t, total):
+                        """Return the number of paths from the root to any node in T
+                        for which the labels along the path sum to TOTAL.
+
+                        >>> t = Tree(3, [Tree(-1), Tree(1, [Tree(2, [Tree(1)]), Tree(3)]), Tree(1, [Tree(-1)])])
+                        >>> count_paths(t, 3)
+                        2
+                        >>> count_paths(t, 4)
+                        2
+                        >>> count_paths(t, 5)
+                        0
+                        >>> count_paths(t, 6)
+                        1
+                        >>> count_paths(t, 7)
+                        2
+                        """
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <h3>Exercise: Counting paths (solution)</h3>
+
+                    <pre style="font-size:0.65em; height: 600px;"><code data-trim data-noescape class="python">
+                    def count_paths(t, total):
+                        """Return the number of paths from the root to any node in T
+                        for which the labels along the path sum to TOTAL.
+
+                        >>> t = Tree(3, [Tree(-1), Tree(1, [Tree(2, [Tree(1)]), Tree(3)]), Tree(1, [Tree(-1)])])
+                        >>> count_paths(t, 3)
+                        2
+                        >>> count_paths(t, 4)
+                        2
+                        >>> count_paths(t, 5)
+                        0
+                        >>> count_paths(t, 6)
+                        1
+                        >>> count_paths(t, 7)
+                        2
+                        """
+                        if t.label == total:
+                            found = 1
+                        else:
+                            found = 0
+                        return found + sum([count_paths(b, total - t.label) for b in t.branches])
+                    </code></pre>
+                </section>
+
+
+				<section>
+					<h3>Creating trees</h3>
+
+					<p>A function that creates a tree from another tree is also often recursive.</p>
+
+					<img class="r-stretch" src="https://i.imgur.com/eVpV2gv.png">
+				</section>
+
+
+				<section>
+					<h3>Creating trees: Doubling labels</h3>
+
+					<img class="r-stretch" src="images/tree_doublelabels.png" alt="Diagram of tree">
+
+					<pre style="font-size:1.0em;"><code data-trim data-noescape class="python">
+					def double(t):
+					    """Returns a tree identical to T, but with all labels doubled."""
+					    if <span class="fragment">t.is_leaf():</span>
+					        <span class="fragment">return Tree(t.label * 2)</span>
+					    else:
+					        <span class="fragment">return Tree(t.label * 2,
+					            [double(b) for b in t.branches])</span>
+					</code></pre>
+
+					<p>What's the base case? What's the recursive call?</p>
+
+				</section>
+
+				<section>
+					<h3>Creating trees: Doubling labels</h3>
+
+					<p>A shorter solution:</p>
+					<pre style="font-size:1.0em;"><code data-trim data-noescape class="python">
+					def double(t):
+					    """Returns the number of leaf nodes in T."""
+					    return Tree(t.label * 2,
+					            [double(b) for b in t.branches])</span>
+					</code></pre>
+
+                    <p class="smaller">Explicit base cases aren't always necessary in the final code,
+                        but it's useful to think in terms of base case vs. recursive
+                        case when learning.</p>
+
+				</section>
+
+                <section class="heading-only">
+                    <h2>Tree mutation</h2>
+                </section>
+
+				<section>
+					<h3>Doubling a Tree</h3>
+
+                    <img src="https://i.imgur.com/oGLyaQD.png" alt="Doubling trees diagram" height="200">
+
+					<pre style="font-size:0.8em;"><code data-trim data-noescape class="python">
+                    def double(t):
+                        """Doubles every label in T, mutating T.
+                        >>> t = Tree(1, [Tree(3, [Tree(5)]), Tree(7)])
+                        >>> double(t)
+                        >>> t
+                        Tree(2, [Tree(6, [Tree(10)]), Tree(14)])
+                        """
+                        t.label = t.label * 2
+                        for b in t.branches:
+                            double(b)
+					</code></pre>
+
+					<aside class="notes">
+						Notice no return statement, no explicit base case.
+						Whats the base case?
+					</aside>
+                </section>
+
+                <section>
+                    <h3>Exercise: Pruning trees</h3>
+
+                    <img src="images/pruningtree.png" alt="Diagram of a tree with branches highlighted for pruning" style="float:right; height:200px;"/>
+                    <p>Removing subtrees from a tree is called <strong>pruning</strong>.</p>
+
+                    <p>Always prune branches <em>before</em> recursive processing.</p>
+                    
+                    <pre style="font-size:0.8em; clear: right;"><code data-trim data-noescape class="python">
+                    def prune(t, n):
+                        """Prune all sub-trees whose label is n.
+                        >>> t = Tree(3, [Tree(1, [Tree(0), Tree(1)]), Tree(2, [Tree(1), Tree(1, [Tree(0), Tree(1)])])])
+                        >>> prune(t, 1)
+                        >>> t
+                        Tree(3, [Tree(2)])
+                        """
+                        t.branches = [___ for b in t.branches if ___]
+                        for b in t.branches:
+                            prune(___, ___)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise: Pruning trees (Solution)</h3>
+
+                    <img src="images/pruningtree.png" alt="Diagram of a tree with branches highlighted for pruning" style="float:right; height: 200px;"/>
+                    <p>Removing subtrees from a tree is called <strong>pruning</strong>.</p>
+
+                    <p>Always prune branches <em>before</em> recursive processing.</p>
+                    
+                    <pre style="font-size:0.8em; clear:right;"><code data-trim data-noescape class="python">
+                    def prune(t, n):
+                        """Prune all sub-trees whose label is n.
+                        >>> t = Tree(3, [Tree(1, [Tree(0), Tree(1)]), Tree(2, [Tree(1), Tree(1, [Tree(0), Tree(1)])])])
+                        >>> prune(t, 1)
+                        >>> t
+                        Tree(3, [Tree(2)])
+                        """
+                        t.branches = [b for b in t.branches if b.label !=n]
+                        for b in t.branches:
+                            prune(b, n)
+                    </code></pre>
+                </section>
+
+
+			</div>
+		</div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-menu@2.1.0/menu.js"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight, RevealMenu ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge();
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+
+        </script>
+    </body>
+</html>

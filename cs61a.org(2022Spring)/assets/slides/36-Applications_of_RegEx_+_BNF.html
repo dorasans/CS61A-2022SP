@@ -1,0 +1,828 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Applications of RegEx/BNF</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+	</head>
+	<body>
+            <div class="reveal">
+                <div class="slides">
+    
+                <section class="heading-only" style="padding-top:5%">
+                    <h1>Applications of RegEx + BNF</h1>
+
+                    <div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+                        Tips for navigating the slides:
+                        <ul>
+                            <li>Press O or Escape for overview mode.</li>
+                            <li>Visit <a href="36-Applications_of_RegEx_+_BNF.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+                            <li>Press the copy icon on the upper right of code blocks to copy the code</li>
+                        </ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+                </section>
+
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Applications of RegEx
+                        <li>Applications of BNF
+                            <ul>
+                                <li>Documentation
+                                <li>Parsers
+                            </ul>
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Applications of RegEx</h2>
+                </section>
+
+                <section>
+                    <h3>RegEx in Programs</h3>
+
+                    <p>Programs written in a general purpose language (like Python)
+                        often use regular expressions for pattern matching.
+                    </p>
+
+                    <p>Example from the CS61A codebase:</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    def format_coursecode(course):
+                        """Formats a course code is a pretty way, separating the department from
+                        the course number.
+                        :param course: the course code, such as "cs61a"
+                        :return: prettified course code, such as "CS 61A"
+                        """
+                        m = re.match(r"([a-z]+)([0-9]+[a-z]?)", course)
+                        return m and (m.group(1) + " " + m.group(2)).upper()
+                    </code></pre>
+                
+                </section>
+                
+                <section>
+                    <h3>RegEx for searching</h3>
+
+                    <p>Searching in VSCode for all uses of <code>re</code> methods:</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="text">
+                    \bre\.
+                    </code></pre>
+
+                    <p>Searching with grep for all uses of <code>re</code> methods:</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="text">
+                    grep -r --include=\*.py '\bre\.' .
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>RegEx in Spreadsheets</h3>
+
+                    <p>Google Spreadsheets includes functions like <code>REGEXMATCH</code>
+                        and <code>REGEXEXTRACT</code>.</p>
+                    
+                    <p>Extracting matching patterns from a cell:</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="text">
+                    =REGEXEXTRACT(A2, ", ([\w\s]*)$")
+                    </code></pre>
+
+                    <p><a target="_blank" href="https://docs.google.com/spreadsheets/d/1Q28mGL0X0UrdQpknKIHG1uzdomWZo3_aWiAGkGhvCdA/edit?usp=sharing">
+                        See spreadsheet
+                    </a></p>
+
+                </section>
+
+                <section>
+                    <h3>RegEx in HTML</h3>
+
+                    <p>The HTML <code>input</code> tag is used for single-line form inputs.</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="html">
+                    &lt;label&gt;Username
+                        &lt;input type="text"&gt;
+                    &lt;/label&gt;
+                    </code></pre>
+
+                    <label>Username
+                        <div class="regex-input">
+                        <input type="text">
+                        </div>
+                    </label>
+
+                    <p>The <code>input</code> tag can specify a <code>pattern</code> attribute
+                        to restrict what input is considered valid.
+                    </p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="html">
+                    &lt;label&gt;Username
+                        &lt;input type="text" pattern="[a-zA-Z]+[a-zA-Z\d_]{5,}"&gt;
+                    &lt;/label&gt;
+                    </code></pre>
+
+                    <label>Username
+                        <div class="regex-input">
+                        <input type="text" pattern="[a-zA-Z]+[a-zA-Z\d_]{5,}">
+                        </div>
+                    </label>
+                </section>
+
+                <section>
+                    <h3>RegEx in SQL</h3>
+
+                    <p>SQL is a way to query/update databases.
+                       Many SQL variants have support for searching using regular expressions.
+                    </p>
+
+                    <p>Querying a public database using
+                        <a target"_blank" href="https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#regexp_contains">Google BigQuery</a>:
+                    </p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="html">
+                    SELECT place_name FROM `bigquery-public-data.geo_us_census_places.places_california`
+                        WHERE REGEXP_CONTAINS(place_name, r'\sCity$') LIMIT 10;
+                    </code></pre>
+
+                    <p>Querying Khan Academy data using BigQuery:</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="html">
+                    SELECT
+                        readable_id, edit_url, REGEXP_EXTRACT_ALL(perseus_content, r"[^!:]\[[^\]]*\]\([^)]*\)") as link
+                        FROM
+                            content_streaming.ArticleRevision_edit_full
+                        WHERE
+                            subject_slug="ap-computer-science-principles"
+                            AND REGEXP_CONTAINS(perseus_content, r"[^!:]\[[^\]]*\]\([^)]*\)")
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>⚠️ A word of caution ⚠️</h3>
+
+                    <p>Regular expressions can be very useful. However:</p>
+
+                    <ul>
+                        <li><a target="_blank" href="https://blog.codinghorror.com/regex-use-vs-regex-abuse/">
+                            Very long regular expressions</a> can be difficult
+                            for other programmers to read and modify. 🤯
+                            <br>See also: <a target="_blank" href="https://en.wikipedia.org/wiki/Write-only_language">Write-only</a>
+                        <li>Since regular expressions are declarative, it's not always clear
+                            how efficiently they'll be processed. 🐌 Some processing can be so time-consuming,
+                            it can <a target="_blank" href="https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS">take down a server.</a>
+                        <li>Regular expressions can't parse everything!
+                            <a target="_blank" href="https://stackoverflow.com/questions/1732348/regex-match-open-tags-except-xhtml-self-contained-tags">Don't write an HTML parser with regular expressions.</a>
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Applications of BNF</h2>
+                </section>
+
+                <section class="heading-only">
+                    <h2>BNF for documentation</h2>
+                </section>
+
+
+                <section>
+                    <h3>Where is BNF used?</h3>
+
+                    <ul>
+                        <li>Language specification:
+                            <a href="https://docs.python.org/3/reference/lexical_analysis.html#numeric-literals">Python</a>,
+                            <a href="https://www.w3.org/TR/css-values-3/#calc-syntax">CSS</a>,
+                            <a href="https://github.com/sass/sass/blob/master/spec/syntax.md">SaSS</a>,
+                            <a href="https://www.w3.org/TR/2008/REC-xml-20081126/#sec-logical-struct">XML</a>
+                        <li>File formats:
+                            <a href="https://developers.google.com/search/docs/advanced/robots/robots_txt#formal-syntax-definition">Google's robots.txt</a>
+                        <li>Protocols:
+                            <a href="https://kafka.apache.org/0100/protocol.html#protocol_details">Apache Kafka</a>
+                        <li>Parsers and compilers
+                        <li>Text generation
+                    </ul>
+
+                    <p>You will likely use your BNF <em>reading</em> skills
+                        more often than your BNF <em>writing</em> skills.</p>
+                </section>
+
+                <section>
+                    <h3>BNF syntax diagrams</h3>
+
+                    <p class="smaller">A syntax diagram is
+                        a common way to represent BNF & other context-free grammars.
+                        Also known as railroad diagram.
+                        </p>
+
+                    <table>
+                    <tr>
+                        <td style="vertical-align:top; font-size:0.7em;"><code>calc_expr: NUMBER | calc_op</code>
+                        <td><img src="https://i.imgur.com/UnbQ7vV.png" alt="Syntax diagram for calc_expr non-terminal rule">
+                    <tr>
+                        <td style="vertical-align:top; font-size:0.7em;"><code>calc_op: '(' OPERATOR calc_expr* ')'</code>
+                        <td><img src="https://i.imgur.com/Kwcls0e.png" alt="Syntax diagram for calc_op non-terminal rule">
+                    <tr>
+                        <td style="vertical-align:top; font-size:0.7em;"><code>OPERATOR: '+' | '-' | '*' | '/'</code></p>
+                        <td><img src="https://i.imgur.com/iuoWpXd.png" alt="Syntax diagram for OPERATOR terminal rule">
+
+                    </table>
+                </section>
+
+
+                <section>
+                    <h3>BNF for Python Integers</h3>
+
+                    <p>Adapted from the <a href="https://docs.python.org/3/reference/lexical_analysis.html#numeric-literals">Python docs</a>:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape>
+                    ?start: integer
+                    integer:  decinteger | bininteger | octinteger | hexinteger
+                    decinteger:  nonzerodigit digit*
+                    bininteger:  "0" ("b" | "B") bindigit+
+                    octinteger:  "0" ("o" | "O") octdigit+
+                    hexinteger:  "0" ("x" | "X") hexdigit+
+                    nonzerodigit:  /[1-9]/
+                    digit:  /[0-9]/
+                    bindigit:  /[01]/
+                    octdigit:  /[0-7]/
+                    hexdigit:  digit | /[a-f]/ | /[A-F]/
+                    </code></pre>
+
+                    <p>What number formats can that parse? <br>
+                    Try in <a href="https://code.cs61a.org">code.cs61a.org</a>!</p>
+
+                    <!-- Replace hexdigit with [0-9a-fA-F] -->
+                </section>
+
+                <section>
+                    <h3>Syntax diagram for Python integers</h3>
+
+                    <table>
+                    <tr>
+                        <td style="vertical-align:top; font-size:0.7em;"><code>decinteger: nonzerodigit digit*</code>
+                        <td><img src="https://i.imgur.com/YCcV72Y.png" alt="Syntax diagram for decinteger non-terminal rule">
+                    <tr>
+                        <td style="vertical-align:top; font-size:0.7em;"><code>hexinteger:  "0" ("x" | "X") hexdigit+</code>
+                        <td><img src="https://i.imgur.com/jdHgDvF.png" alt="Syntax diagram for hexinteger non-terminal rule">
+                    <tr>
+                        <td style="vertical-align:top; font-size:0.7em;"><code>hexdigit:  digit | /[a-f]/ | /[A-F]/</code></p>
+                        <td><img src="https://i.imgur.com/xOro16w.png" alt="Syntax diagram for hexdigit non-terminal rule">
+                    <tr>
+                        <td style="vertical-align:top; font-size:0.7em;"><code>digit:  /[0-9]/</code></p>
+                        <td><img src="https://i.imgur.com/0KrHZQx.png" alt="Syntax diagram for DIGIT non-terminal rule">
+
+                    </table>
+                </section>
+
+                <section>
+                    <h3>BNF for Scheme expressions</h3>
+
+                    <p>Adapted from the <a href="https://www.scheme.com/tspl2d/grammar.html">Scheme docs</a>:</p>
+
+                    <pre style="font-size:0.65em"><code data-trim data-noescape>
+                    ?start: expression
+                    expression: constant | variable | "(if " expression expression expression? ")" | application
+                    constant: BOOLEAN | NUMBER
+                    variable: identifier
+                    application: "(" expression expression* ")"
+
+                    identifier: initial subsequent* | "+" | "-" | "..."
+                    initial: LETTER | "!" | "$" | "%" | "&" | "*" | "/" | ":" | "<" | "=" | ">" | "?" | "~" | "_" | "^"
+                    subsequent: initial | DIGIT | "." | "+" | "-"
+                    LETTER: /[a-zA-z]/
+                    DIGIT: /[0-9]/
+                    BOOLEAN:  "#t" | "#f"
+
+                    %import common.NUMBER
+                    %ignore /\s+/
+                    </code></pre>
+
+                    <p class="smaller">*This BNF does not include many of the special forms, for simplicity.</p>
+
+                    <!-- Try adding (define varible expression form)-->
+                </section>
+
+                <section>
+                    <h3>Syntax diagram for Scheme expressions</h3>
+
+                    <table>
+                    <tr>
+                        <td style="vertical-align:top; font-size:0.6em;"><code>expression: constant | variable | "(if " expression expression expression? ")" | application</code>
+                        <td><img src="https://i.imgur.com/ZFIvrbQ.png" alt="Syntax diagram for expression non-terminal rule">
+                    <tr>
+                        <td style="vertical-align:top; font-size:0.6em;"><code>application: "(" expression expression* ")"</code>
+                        <td><img src="https://i.imgur.com/2viTPCc.png" alt="Syntax diagram for application non-terminal rule">
+                    <tr>
+                        <td style="vertical-align:top; font-size:0.6em;"><code>identifier: initial subsequent* | "+" | "-" | "..."</code></p>
+                        <td><img src="https://i.imgur.com/6NRgHqG.png" alt="Syntax diagram for identifier non-terminal rule">
+                    </table>
+                </section>
+
+                <section>
+                    <h3>BNF for SQL</h3>
+
+                    <p>Adapted from the SQLite documentation:<br>
+                        (Uses a slightly different BNF syntax)
+                    </p>
+
+                    <pre style="font-size:0.55em"><code data-trim data-noescape>
+                    select_stmt ::= ( SELECT [ DISTINCT | ALL ] result_column ( ',' result_column )*
+                        [ FROM ( table_or_subquery ( ',' table_or_subquery ) * | join_clause ) ]
+                        [ WHERE expr ] [ GROUP BY expr ( ',' expr ) * [ HAVING expr ] ] |
+                        VALUES '(' expr ( ',' expr )* ')' ( ',' '(' expr ( ',' expr )* ')' )  )
+                        [ ORDER BY ordering_term ( ',' ordering_term ) * ] [ LIMIT expr [ ( OFFSET | ',' ) expr ] ]
+                    </code></pre>
+
+                    <p><a target="_blank" href="https://sqlite.org/syntaxdiagrams.html#select-stmt">
+                        Syntax diagram</a> from the SQLite documentation:
+                    </p>
+                    <img src="images/sqlite_syntax_diagram.png" height="250">
+                </section>
+                
+                <section class="heading-only">
+                    <h2>BNF for Parsers</h2>
+                </section>
+
+                <section>
+                    <h3>Reminder: Interpreter phases</h3>
+
+                    <p>An interpreter first uses a parser to turn source code into an AST,
+                        and then uses an evaluator to turn the AST into an output. 
+                    </p>
+                    <img src="images/interpreter_steps.png" alt="Parser → AST → Evaluator" width="620">
+                    
+                </section>
+
+                <section>
+                    <h3>Reminder: Calculator interpreter</h3>
+
+                    <p>The Calculator interpreter is a subset of the Scheme interpreter,
+                        using basically the same parser (from scheme_reader.py)
+                        but a simpler evaluation process.
+                    </p>
+
+                    <p>From the <code>read_eval_print_loop</code> in <code>calc.py</code>:</p>
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    expression = scheme_read(src)   # Returns a Pair
+                    result = calc_eval(expression)  # Returns output
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>BNF-based interpreter, Pt 1</h3>
+
+                    <p>Replace <code>scheme_reader.py</code> with BNF + BNF engine (Lark)</p>
+
+                    <pre style="font-size:0.65em"><code data-trim data-noescape class="python">
+                    from lark import Lark
+
+                    grammar = """
+                        ?start: calc_expr
+                        ?calc_expr : NUMBER | calc_op
+                        calc_op: "(" OPERATOR calc_expr* ")"
+                        OPERATOR: "+" | "-" | "*" | "/"
+
+                        %ignore /\s+/
+                        %import common.NUMBER
+                    """
+                    parser = Lark(grammar)
+                    line = input("calc> ")
+                    tree = parser.parse(line)
+                    </code></pre>
+
+                    <pre style="font-size:0.65em"><code data-trim data-noescape class="python">
+                    calc> (+ 1 2)
+                    Tree('start', [Tree('calc_op', [Token('OPERATOR', '+'), Token('NUMBER', '1'), Token('NUMBER', '2')])])
+                    </code></pre>
+
+                    <p class="smaller">*The <code>Tree</code> class above is part of Lark; it's not the CS61A <code>Tree</code> class.</p>
+
+                    <p class="smaller">See <a target="_blank" href="https://gist.github.com/pamelafox/caffb0526227d584ba74c50c4f152712#file-calc_bnf_part1-py">full parser code</a>.</p>
+
+                </section>
+
+                <section>
+                    <h3>BNF-based interpreter, Pt 2</h3>
+
+                    <p>Change evaluator to process Lark <code>Tree</code>s instead of <code>Pair</code>s.</p>
+
+                    <p>Before:</p>
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    def calc_eval(exp):
+                        if type(exp) in (int, float):
+                            return simplify(exp)
+                        elif isinstance(exp, Pair):
+                            operator = exp.first
+                            arguments = exp.second.map(calc_eval)
+                            return simplify(calc_apply(operator, arguments))
+                    </code></pre>
+
+                    <p>After:</p>
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    def calc_eval(exp):
+                        if isinstance(exp, Token) and exp.type == 'NUMBER':
+                            return numberify(exp.value)
+                        elif isinstance(exp, Tree):
+                            operator = exp.children[0].value
+                            arguments = [calc_eval(child) for child in exp.children[1:]]
+                            return calc_apply(operator, arguments)
+                    </code></pre>
+
+                    <p class="smaller">See <a target="_blank" href="https://gist.github.com/pamelafox/caffb0526227d584ba74c50c4f152712#file-calc_bnf_part2-py">full interpreter code</a>.</p>
+
+                </section>
+
+                <section>
+                    <h3>BNF-based interpreter (Variant)</h3>
+
+                    <p>Another option for evaluation is to use the Lark <code>Transformer</code> class.</p>
+
+                    <p class="smaller">Replace <code>calc_eval</code>/<code>calc_apply</code> with:</p>
+                    <pre style="font-size:0.45em"><code data-trim data-noescape class="python">
+                    class Eval(Transformer):
+                        def start(self, args):
+                            return args[0]
+                    
+                        def calc_op(self, args):
+                            op = args[0]
+                            operands = args[1:]
+                            if op == '+':
+                                return sum(operands)
+                            elif op == '-':
+                                if len(operands) == 1:
+                                    return -operands[0]
+                                else:
+                                    return operands[0] - sum(operands[1:])
+                            elif op == '*':
+                                return reduce(mul, operands)
+                            elif op == '/':
+                                return reduce(truediv, operands)
+                    
+                        def NUMBER(self, num):
+                            return numberify(num)
+                    </code></pre>
+
+                    <p class="smaller">See <a target="_blank" href="https://gist.github.com/pamelafox/caffb0526227d584ba74c50c4f152712#file-calc_bnf_variant-py">full interpreter code</a>.</p>
+                </section>
+
+                <section>
+                    <h3>BNF-based English parser</h3>
+
+                    <p>The <a target="_blank" href="https://www.nltk.org/">NLTK Python library</a> uses a 
+                        <a target="_blank" href="https://www.nltk.org/howto/grammar.html">BNF-like grammar</a>
+                        for parsing sentences.</p>
+
+                        <pre style="font-size:0.65em"><code data-trim data-noescape class="python">
+                        tokens = nltk.word_tokenize(sentence)
+                        lil_grammar = nltk.CFG.fromstring("""
+                            S -> NP VP
+                            NP -> Det N | Det Adjs N
+                            Adjs -> Adj | Adjs Adj
+                            VP -> V | V NP | VP NP PP | V PP
+                            PP -> P NP
+                            Det -> 'the' | 'a'
+                            N -> 'fox' | 'dog' | 'cow'
+                            V -> 'jumped' | 'leaped'
+                            Adj -> 'brown' | 'lazy' | 'quick'
+                            P -> 'in' | 'over'
+                            """)
+                        parser = nltk.ChartParser(lil_grammar)
+                        tree = next(parser.parse(tokens))
+                        </code></pre>
+
+                    <p>
+                        <a target="_blank" href="https://replit.com/@PamelaFox2/NLPDemo-JustParsing#main.py">
+                        Demo: NLTK Sentence Parsing
+                        </a>
+                    </p>
+                </section>
+
+                <section>
+                    <h3>BNF in formal theory</h3>
+
+                    <p><a target="_blank" href="https://www2.eecs.berkeley.edu/Courses/CS172/">CS172</a> discusses automata theory / language types.</p>
+
+                    <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="641.67" height="462" viewBox="0 0 641.67 462">
+                        <defs>
+                            <style>
+                            .cls-1 {
+                                fill: #c4c4c4;
+                            }
+                        
+                            .cls-2 {
+                                fill: #dbdbdb;
+                            }
+                        
+                            .cls-3 {
+                                fill: #ededed;
+                            }
+                        
+                            .cls-4 {
+                                fill: #fff;
+                            }
+                        
+                            .cls-5 {
+                                font-size: 27.54px;
+                                font-family: MyriadPro-Regular, Myriad Pro;
+                            }
+                            </style>
+                        </defs>
+                        <g>
+                            <path class="cls-1" d="M320.83,461.27c-85.54,0-166-24-226.43-67.52S.73,292.46.73,231,34,111.74,94.4,68.25,235.29.73,320.83.73s166,24,226.44,67.52S640.94,169.54,640.94,231s-33.27,119.26-93.67,162.75S406.38,461.27,320.83,461.27Z"></path>
+                            <path d="M320.83,1.46A427,427,0,0,1,445.29,19.55c38,11.59,72.22,28.17,101.55,49.3s52.3,45.64,68.35,73c16.6,28.25,25,58.25,25,89.17s-8.41,60.92-25,89.17c-16.05,27.34-39.05,51.89-68.35,73s-63.5,37.71-101.55,49.3a437.16,437.16,0,0,1-248.91,0c-38-11.59-72.22-28.17-101.56-49.3s-52.29-45.64-68.35-73c-16.59-28.25-25-58.25-25-89.17s8.42-60.92,25-89.17c16.06-27.34,39.06-51.89,68.35-73s63.51-37.71,101.56-49.3A426.9,426.9,0,0,1,320.83,1.46m0-1.46C143.64,0,0,103.42,0,231S143.64,462,320.83,462,641.67,358.58,641.67,231,498,0,320.83,0Z"></path>
+                        </g>
+                        <g>
+                            <ellipse class="cls-2" cx="320.83" cy="275.45" rx="286.12" ry="170.93"></ellipse>
+                            <path d="M320.83,105.11a454.21,454.21,0,0,1,111.31,13.44c34,8.61,64.59,20.94,90.82,36.63s46.74,33.9,61.08,54.19c14.81,20.94,22.32,43.17,22.32,66.08s-7.51,45.13-22.32,66.08c-14.34,20.29-34.89,38.52-61.08,54.18s-56.79,28-90.82,36.63a454.21,454.21,0,0,1-111.31,13.44,454.33,454.33,0,0,1-111.31-13.44c-34-8.61-64.58-20.93-90.81-36.63S72,361.82,57.62,341.53c-14.8-20.95-22.31-43.18-22.31-66.08s7.51-45.14,22.31-66.08c14.35-20.29,34.9-38.52,61.09-54.19s56.78-28,90.81-36.63a454.33,454.33,0,0,1,111.31-13.44m0-1.19c-158.35,0-286.71,76.79-286.71,171.53S162.48,447,320.83,447s286.72-76.8,286.72-171.53S479.18,103.92,320.83,103.92Z"></path>
+                        </g>
+                        <g>
+                            <ellipse class="cls-3" cx="320.83" cy="318.96" rx="218.36" ry="116.95"></ellipse>
+                            <path d="M320.83,202.44C441,202.44,538.77,254.71,538.77,319S441,435.47,320.83,435.47,102.9,383.2,102.9,319s97.77-116.52,217.93-116.52m0-.86C200,201.58,102,254.13,102,319s98,117.37,218.79,117.37S539.63,383.78,539.63,319s-98-117.38-218.8-117.38Z"></path>
+                        </g>
+                        <g>
+                            <ellipse class="cls-4" cx="320.83" cy="353.7" rx="143.4" ry="67.97"></ellipse>
+                            <path d="M320.83,286C399.76,286,464,316.37,464,353.7s-64.21,67.7-143.14,67.7S177.69,391,177.69,353.7,241.91,286,320.83,286m0-.54c-79.34,0-143.67,30.55-143.67,68.24s64.33,68.23,143.67,68.23S464.5,391.38,464.5,353.7s-64.32-68.24-143.67-68.24Z"></path>
+                        </g>
+                        <text class="cls-5" transform="translate(229.24 353.91)">Type 3 - Regular</text>
+                        <text class="cls-5" transform="translate(199.17 270.34)">Type 2 - Context-Free</text>
+                        <text class="cls-5" transform="translate(172.42 176.44)">Type 1 - Context-Sensitive</text>
+                        <text class="cls-5" transform="translate(202.17 80.03)">Type 0 - Unrestricted</text>
+                        </svg>
+
+                        <p>For a quick version, watch this <a target="_blank" href="https://www.youtube.com/watch?v=224plb3bCog">Computerphile video</a>.</p>
+
+                    </section>
+
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-menu@2.1.0/menu.js"></script>
+        <!-- The loading of KaTeX is deferred to speed up page rendering -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.js" integrity="sha384-31El76TwmbHj4rF9DyLsygbq6xoIobG0W+jqXim+a3dU9W53tdH3A/ngRPxOzzaB" crossorigin="anonymous"></script>
+        <!-- To automatically render math in text elements, include the auto-render extension: -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"
+            onload="renderMathInElement(document.body, {fleqn: true});"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight, RevealMenu ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge();
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+        </script>
+    </body>
+</html>

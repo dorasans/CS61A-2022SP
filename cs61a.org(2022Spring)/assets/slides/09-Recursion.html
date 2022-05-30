@@ -1,0 +1,995 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Recursion</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+        <link rel="stylesheet" href="https://unpkg.com/balloon-css/balloon.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+                .circle-marker {
+                    position: absolute;
+                    background: blue;
+                    color: white;
+                    font-size: 20px;
+                    border-radius: 30px;
+                    width: 30px;
+                    height: 30px;
+                    text-align: center;
+                }
+                .circle-marker-arc {
+                    position: absolute;
+                    width: 60px;
+                    height: 90px;
+                    background: transparent;
+                    border-radius: 100px;
+                    border-left: 1px solid blue;
+                }
+        </style>
+        <style>
+        .bordered {
+                    border: 1px dashed blue;
+                    border-radius: 8px;
+                    padding: 6px;
+                    --balloon-font-size: 20px;
+                }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Recursion</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="09-Recursion.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Recursive functions
+                        <li>Recursion in environment diagrams
+                        <li>Mutual recursion
+                        <li>Recursion vs. iteration
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Recursive functions</h3>
+                    
+                    <p>A function is <strong>recursive</strong> if the body of that function calls itself,
+                        either directly or indirectly.</p>
+                    <p>Recursive functions often operate on increasingly smaller instances of a problem.</p>
+                    <figure>
+                        <img src="https://upload.wikimedia.org/wikipedia/en/5/55/Escher_Circle_Limit_III.jpg" alt="Wood engraving of repeated fish drawings getting smaller">
+                        <figcaption>Circle Limit, by M.C. Escher</figcaption>
+                    </figure>
+                </section>
+
+                <section>
+                    <h3>Summing digits</h3>
+
+                    <p style="font-size:1.7em;">2 + 0 + 2 + 1 = 5</p>
+
+                    <div class="fragment" style="margin-top:40px;">
+                    <p>Fun fact: The sum of the digits in a multiple of 9 is also divisible by 9.</p>
+
+                    <p style="font-size:1.7em;">9 * 82 = 738</p>
+                    <p style="font-size:1.7em;">7 + 3 + 8 = 18</p>
+                    </div>
+
+                </section>
+
+                <section>
+                    <h3>The problems within the problem</h3>
+
+                    <p>The sum of the digits of 6 is simply 6.
+                       <br>Generally: the sum of any one-digit non-negative number is that number. 
+                    </p>
+
+                    <div class="fragment">
+                    <p>The sum of the digits of 2021 is:</p>
+
+                    <svg id="sumdigits-diagram" xmlns="http://www.w3.org/2000/svg" width="305.95" height="142.56" viewBox="0 0 305.95 142.56">
+                        <defs>
+                        <style>
+                            #sumdigits-diagram .cls-1 {
+                            font-size: 25px;
+                            font-family: Courier;
+                            }
+                    
+                            #sumdigits-diagram .cls-1, #sumdigits-diagram .cls-5 {
+                            fill: #231f20;
+                            }
+                    
+                            #sumdigits-diagram .cls-2, #sumdigits-diagram .cls-4 {
+                            fill: none;
+                            stroke: #2e3192;
+                            stroke-miterlimit: 10;
+                            }
+                    
+                            #sumdigits-diagram .cls-3 {
+                            fill: #2e3192;
+                            }
+                    
+                            #sumdigits-diagram .cls-4 {
+                            stroke-dasharray: 7.4;
+                            }
+                    
+                            #sumdigits-diagram .cls-5 {
+                            font-size: 19px;
+                            }
+                    
+                            #sumdigits-diagram .cls-6 {
+                            letter-spacing: -0.01em;
+                            }
+                    
+                            #sumdigits-diagram .cls-7 {
+                            letter-spacing: -0.04em;
+                            }
+                    
+                            #sumdigits-diagram .cls-8 {
+                            letter-spacing: -0.01em;
+                            }
+                    
+                            #sumdigits-diagram .cls-9 {
+                            letter-spacing: -0.01em;
+                            }
+                        </style>
+                        </defs>
+                        <text class="cls-1" transform="translate(93.42 27.09)">2 0 2 1</text>
+                        <g>
+                        <line class="cls-2" x1="199.05" y1="49.2" x2="236.85" y2="108.93"/>
+                        <polygon class="cls-3" points="197.42 53.55 199.71 50.24 203.68 49.59 195.86 44.15 197.42 53.55"/>
+                        </g>
+                        <g>
+                        <line class="cls-2" x1="89.13" y1="109.43" x2="127.24" y2="49.2"/>
+                        <polygon class="cls-3" points="128.87 53.55 126.58 50.24 122.61 49.59 130.44 44.15 128.87 53.55"/>
+                        </g>
+                        <rect class="cls-4" x="80.56" y="0.5" width="96.03" height="42.86" rx="12.4"/>
+                        <text class="cls-5" transform="translate(0 126.68)">Sum of these digits       +     This digit</text>
+                    </svg>
+                    
+                    <p>Generally: the sum of a number is the sum of the first digits (<code>number // 10</code>),
+                        plus the last digit (<code>number % 10</code>).</p>
+                    </div>
+
+                </section>
+
+                <section>
+                    <h3>Summing digits without a loop</h3>
+
+                    <pre style="font-size:0.9em; height: 500px;"><code data-trim data-noescape class="python">
+                    def sum_digits(n):
+                        """Return the sum of the digits of positive integer n.
+                        >>> sum_digits(6)
+                        6
+                        >>> sum_digits(2021)
+                        5
+                        """<span class="fragment">
+                        if n &lt; 10:
+                            return n
+                        else:
+                            all_but_last = n // 10
+                            last = n % 10
+                            return sum_digits(all_but_last) + last</span>
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Anatomy of a recursive function</h3>
+
+                    <ul>
+                        <li><strong>Base case</strong>: Evaluated without a recursive call (the smallest subproblem).
+                        <li><strong>Recursive case</strong>: Evaluated with a recursive call (breaking down the problem further)
+                        <li><strong>Conditional statement</strong> to decide if it's a base case
+                    </ul>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    def sum_digits(n):
+                        if n &lt; 10: <span class="fragment"># BASE CASE</span>
+                            return n
+                        else:         <span class="fragment"># RECURSIVE CASE</span>
+                            all_but_last = n // 10
+                            last = n % 10
+                        return sum_digits(all_but_last) + last
+                    </code></pre>
+                </section>
+
+                <section class="heading-only">
+                    <h3>Visualizing recursion</h3>
+                </section>
+
+                <section>
+                    <h3>Recursive factorial</h3>
+
+                    <p>The factorial of a number is defined as: </p>
+                    $$\begin{equation*} 
+                    n! = \begin{cases}
+                        1  & \text{if } n = 0 \\
+                        n \cdot (n-1)! & \text{otherwise} \\
+                        \end{cases}
+                        \end{equation*}$$
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def fact(n):
+                        """
+                        >>> fact(0)
+                        1
+                        >>> fact(4)
+                        24
+                        """<span class="fragment">
+                        if n == 0:
+                            return 1
+                        else:
+                            return n * fact(n-1)</span>
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Recursive call visualization</h3>
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+
+                        <div style="grid-row: 1; grid-column: 1;">
+                            <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                            def fact(n):
+                                if n == 0:
+                                    return 1
+                                else:
+                                    return n * fact(n-1)
+
+                            fact(3)
+                            </code></pre>
+                        </div>
+
+                        <div style="grid-row: 1; grid-column: 2;">
+
+                    <svg id="fact3-diagram" xmlns="http://www.w3.org/2000/svg" width="131.46" height="530.86" viewBox="0 0 131.46 530.86">
+                        <defs>
+                          <style>
+                            #fact3-diagram .cls-1 {
+                              fill: #b7e3ef;
+                            }
+                      
+                            #fact3-diagram .cls-2 {
+                              font-size: 23px;
+                              font-family: Courier;
+                            }
+                      
+                            #fact3-diagram .cls-2, #fact3-diagram .cls-4 {
+                              fill: #231f20;
+                            }
+                      
+                            #fact3-diagram .cls-3 {
+                              fill: none;
+                              stroke: #231f20;
+                              stroke-miterlimit: 10;
+                              stroke-width: 2px;
+                            }
+                      
+                            #fact3-diagram .cls-5 {
+                              fill: #faac77;
+                            }
+                          </style>
+                        </defs>
+                        <g>
+                          <rect class="cls-1" y="114.17" width="131.46" height="42.06" rx="13.41"/>
+                          <text class="cls-2" transform="translate(17.42 139.57)">fact(3)</text>
+                        </g>
+                        <g class="fragment">
+                            <g>
+                                <line class="cls-3" x1="34.81" y1="156.23" x2="34.81" y2="227.1"/>
+                                <polygon class="cls-4" points="27.4 221.49 34.81 224.63 42.22 221.49 34.81 239.04 27.4 221.49"/>
+                            </g>
+                            <g>
+                                <rect class="cls-1" y="239.04" width="131.46" height="42.06" rx="13.41"/>
+                                <text class="cls-2" transform="translate(10.08 264.45)">fact(2)</text>
+                            </g>
+                        </g>
+                        <g class="fragment">
+                            <g>
+                                <line class="cls-3" x1="34.81" y1="281.11" x2="34.81" y2="351.98"/>
+                                <polygon class="cls-4" points="27.4 346.36 34.81 349.51 42.22 346.36 34.81 363.92 27.4 346.36"/>
+                            </g>
+                            <g>
+                                <rect class="cls-1" y="363.92" width="131.46" height="42.06" rx="13.41"/>
+                                <text class="cls-2" transform="translate(17.42 389.32)">fact(1)</text>
+                            </g>
+                        </g>
+                        <g class="fragment">
+                            <g>
+                                <line class="cls-3" x1="34.81" y1="406.19" x2="34.81" y2="477.06"/>
+                                <polygon class="cls-4" points="27.4 471.44 34.81 474.59 42.22 471.44 34.81 489 27.4 471.44"/>
+                            </g>
+                            <g>
+                                <rect class="cls-1" y="488.79" width="131.46" height="42.06" rx="13.41"/>
+                                <text class="cls-2" transform="translate(17.42 514.2)">fact(0)</text>
+                            </g>
+                        </g>
+
+                        <g class="fragment">
+                          <g>
+                            <line class="cls-3" x1="94.88" y1="418.13" x2="94.88" y2="489"/>
+                            <polygon class="cls-4" points="87.47 423.75 94.88 420.6 102.28 423.75 94.88 406.19 87.47 423.75"/>
+                          </g>
+                          <g>
+                            <circle class="cls-5" cx="94.88" cy="458.61" r="22.75"/>
+                            <text class="cls-2" transform="translate(87.98 465.42)">1</text>
+                          </g>
+                        </g>
+                        <g class="fragment">
+                          <g>
+                            <line class="cls-3" x1="94.88" y1="293.04" x2="94.88" y2="363.92"/>
+                            <polygon class="cls-4" points="87.47 298.66 94.88 295.52 102.28 298.66 94.88 281.11 87.47 298.66"/>
+                          </g>
+                          <g>
+                            <circle class="cls-5" cx="94.88" cy="332.77" r="22.75"/>
+                            <text class="cls-2" transform="translate(87.98 339.58)">1</text>
+                          </g>
+                        </g>
+                        <g class="fragment">
+                          <g>
+                            <line class="cls-3" x1="94.88" y1="168.17" x2="94.88" y2="239.04"/>
+                            <polygon class="cls-4" points="87.47 173.79 94.88 170.64 102.28 173.79 94.88 156.23 87.47 173.79"/>
+                          </g>
+                          <g>
+                            <circle class="cls-5" cx="94.88" cy="206.93" r="22.75"/>
+                            <text class="cls-2" transform="translate(87.98 213.73)">2</text>
+                          </g>
+                        </g>
+                        <g class="fragment">
+                            <g>
+                              <line class="cls-3" x1="65.73" y1="11.94" x2="65.73" y2="113.96"/>
+                              <polygon class="cls-4" points="58.33 17.56 65.73 14.41 73.14 17.56 65.73 0 58.33 17.56"/>
+                            </g>
+                            <g>
+                              <circle class="cls-5" cx="65.73" cy="66.52" r="22.75"/>
+                              <text class="cls-2" transform="translate(58.83 73.33)">6</text>
+                            </g>
+                          </g>
+                      </svg>
+
+                    </div>
+                </div>
+
+                </section>
+
+                <section>
+                    <h3>Recursion in environment diagrams</h3>
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+
+                        <div style="grid-row: 1; grid-column: 1;">
+                            <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                            def fact(n):
+                                if n == 0:
+                                    return 1
+                                else:
+                                    return n * fact(n-1)
+
+                            fact(3)
+                            </code></pre>
+
+                            <ul class="smaller" class="fragment" data-fragment-index="1">
+                                <li>The same function <code>fact</code> is called
+                                    multiple times 
+                                <li>Different frames keep track of the
+                                    different arguments in each call
+                                <li>What <code>n</code> evaluates to depends upon
+                                    the current environment
+                                <li>Each call to <code>fact</code> solves a simpler
+                                    problem than the last: smaller <code>n</code>
+                            </ul>
+                        </div>
+                        
+                        <div class="env-diagram" style="grid-row: 1; grid-column: 2">
+    
+                            <div class="env-diagram-frame">
+                                <div>Global frame</div>
+                                <table class="table" style="width:400px">
+                                    <tbody>
+                                    <tr>
+                                        <td style="width:86px;">fact
+                                        <td style="white-space:nowrap;"> → func fact[parent=Global]
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="env-diagram-frame">
+                                <div>
+                                f1: <span class="fragment" data-fragment-index="1">fact[parent=Global]</span>
+                                </div>
+                                <table class="table">
+                                    <tbody>
+                                    <tr>
+                                        <td><span class="fragment" data-fragment-index="1">n</span>
+                                        <td><span class="fragment" data-fragment-index="1">3</span>
+                                        <td>
+                                    </tr>
+                                    <tr>
+                                        <td>Return value
+                                        <td><span class="fragment" data-fragment-index="1">6</span>
+                                        <td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="env-diagram-frame">
+                                <div>
+                                f2: <span class="fragment" data-fragment-index="1">fact[parent=Global]</span>
+                                </div>
+                                <table class="table">
+                                    <tbody>
+                                    <tr>
+                                        <td><span class="fragment" data-fragment-index="1">n</span>
+                                        <td><span class="fragment" data-fragment-index="1">2</span>
+                                        <td>
+                                    </tr>
+                                    <tr>
+                                        <td>Return value
+                                        <td><span class="fragment" data-fragment-index="1">2</span>
+                                        <td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="env-diagram-frame">
+                                <div>
+                                f3: <span class="fragment" data-fragment-index="1">fact[parent=Global]</span>
+                                </div>
+                                <table class="table">
+                                    <tbody>
+                                    <tr>
+                                        <td><span class="fragment" data-fragment-index="1">n</span>
+                                        <td><span class="fragment" data-fragment-index="1">1</span>
+                                        <td>
+                                    </tr>
+                                    <tr>
+                                        <td>Return value</td>
+                                        <td><span class="fragment" data-fragment-index="1">1</span>
+                                        <td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="env-diagram-frame">
+                                <div>
+                                f4: <span class="fragment" data-fragment-index="1">fact[parent=Global]</span>
+                                </div>
+                                <table class="table">
+                                    <tbody>
+                                    <tr>
+                                        <td><span class="fragment" data-fragment-index="1">n</span>
+                                        <td><span class="fragment" data-fragment-index="1">0</span>
+                                        <td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="fragment" data-fragment-index="1">Return value</span>
+                                        <td><span class="fragment" data-fragment-index="1">1</span>
+                                        <td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+    
+                    </section>
+
+                    <section class="heading-only">
+                        <h2>Verifying recursive functions</h2>
+                    </section>
+
+                    <section>
+                        <h3>Falling dominoes</h3>
+
+                        <p>If a million dominoes are equally spaced out and 
+                            we tip the first one, will they all fall?</p>
+
+                        <ol class="smaller">
+                            <li>Verify that one domino will fall, if tipped
+                            <li>Assume that any given domino falling over will tip the next one over
+                            <li>Verify that tipping the first domino tips over the next one
+                        </ol>
+
+                        <iframe class="fragment" width="560" height="315" src="https://www.youtube-nocookie.com/embed/7Nn7NZI_LN4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </section>
+                    
+                    <section>
+                        <h3>The recursive leap of faith</h3>
+
+                        <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                        def fact(n):
+                            """Returns the factorial of N."""
+                            if n == 0:
+                                return 1
+                            else:
+                                return n * fact(n-1)
+                        </code></pre>
+
+                        <p>Is <code>fact</code> implemented correctly?</p>
+                        <ol>
+                            <li>Verify the base case 
+                            <li>Treat <code>fact</code> as a functional abstraction! 
+                            <li>Assume that <code>fact(n-1)</code> is correct (← the leap!) 
+                            <li>Verify that <code>fact(n)</code> is correct
+                        </ol>
+                    </section>
+
+                    <section>
+                        <h3>The recursive elf's promise</h3>
+
+                        <p>Imagine we're trying to compute 5!</p>
+
+                        <p>🤔 We ask ourselves, "If I somehow knew how to compute 4!, could I compute 5!?"
+                        </p>
+                        <p class="fragment">💡 Yep, 5! = 5 * 4!</p>
+
+                        <p class="fragment">🧝🏽‍♀️ The <code>fact()</code> function promises, "hey friend, tell you what, while you're working 
+                            hard on 5!, I'll compute 4! for you, and you can finish it off!"</p>
+                        
+                        <br><br>
+                        <p class="smaller">Credit: <a target="_blank" href="https://www.reddit.com/r/compsci/comments/44syr6/understanding_the_recursive_leap_of_faith/czspoy4/?utm_source=reddit&utm_medium=web2x&context=3">FuschiaKnight, r/compsci</a></p>
+
+                    </section>
+
+                    <!--TODO: Recursion as english: fact of a number is the current number times the factorial of the number before it.-->
+
+                    <section class="heading-only">
+                        <h2>Mutual recursion</h2>
+                    </section>
+
+                    <section>
+                        <h3>The Luhn algorithm</h3>
+                        <style>
+                        table.luhn-table tr td {
+                            width: 110px;
+                            font-size: smaller;
+                            text-align: center;
+                        }
+                        </style>
+                        <p>Used to verify that a credit card numbers is valid.</p>
+                        
+                        <ol>
+                            <li>From the rightmost digit, which is the check digit, moving left, double the value
+                                of every second digit; if product of this doubling operation is greater than 9 (e.g., 7 *
+                                2 = 14), then sum the digits of that product (e.g., 14: 1 + 4 = 5)
+                            <li>Take the sum of all the digits
+                        </ol>
+
+                        <table class="table bordered-table smaller luhn-table" style="width:100%; margin-top:32px;">
+                            <tbody>
+                                <tr>
+                                    <th>Original
+                                    <td>1
+                                    <td>3
+                                    <td>8
+                                    <td>7
+                                    <td>4
+                                    <td>3
+                                    <td>
+                                <tr>
+                                    <th>Processed
+                                    <td style="background-color: #ccc;"><span class="fragment" data-fragment-index="6">2</span>
+                                    <td><span class="fragment" data-fragment-index="5">3</span>
+                                    <td style="background-color: #ccc;"><span class="fragment" data-fragment-index="4">1+6=7</span>
+                                    <td><span class="fragment" data-fragment-index="3">7</span>
+                                    <td style="background-color: #ccc;"><span class="fragment" data-fragment-index="2">8</span>
+                                    <td><span class="fragment" data-fragment-index="1">3</span>
+                                    <td><span class="fragment" data-fragment-index="7">= 30</span>
+                        </table>
+
+                        <p class="smaller fragment" data-fragment-index="7">The Luhn sum of a valid credit card number is a multiple of 10</p>
+                    </section>
+
+                    <section>
+                        <h3>Calculating the Luhn sum</h3>
+                        
+                        <p>Let's start with...</p>
+                        <pre style="font-size:0.55em"><code data-trim data-noescape class="python">
+                        def sum_digits(n):
+                            if n &lt; 10:
+                                return n
+                            else:
+                                last = n % 10
+                                all_but_last = n // 10
+                                return last + sum_digits(all_but_last)
+                                
+                        def luhn_sum(n):
+                            """Returns the Luhn sum for the positive number N.
+                            >>> luhn_sum(2)
+                            2
+                            >>> luhn_sum(32)
+                            8
+                            >>> luhn_sum(5105105105105100)
+                            20
+                            """
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Luhn sum with mutual recursion</h3>
+
+                        <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                        def luhn_sum(n):
+                            if n &lt; 10:
+                                return n
+                            else:
+                                last = n % 10
+                                all_but_last = n // 10
+                                return last + luhn_sum_double(all_but_last)
+                                
+                        def luhn_sum_double(n):
+                            last = n % 10
+                            all_but_last = n // 10
+                            luhn_digit = sum_digits(last * 2)
+                            if n &lt; 10:
+                                return luhn_digit
+                            else:
+                                return luhn_digit + luhn_sum(all_but_last)
+                        </code></pre>
+                    </section>
+
+                    <section class="heading-only">
+                        <h2>Recursion and Iteration</h2>
+                    </section>
+
+                    <section>
+                        <h3>Recursion vs. iteration</h3>
+
+                        <table>
+                            <thead>
+                                <th>
+                                <th>Using recursion:
+                                <th>Using iteration:
+                            <tbody>
+                                <tr>
+                                <td>
+                                <td>
+                                    <pre style="font-size:0.8em; width:404px; height:235px;"><code data-trim data-noescape class="python">
+                                    def fact(n):
+                                      if n == 0:
+                                        return 1
+                                      else:
+                                        return n * fact(n-1)
+                                    </code></pre>
+                                <td>
+                                    <pre style="font-size:0.8em; height:235px;"><code data-trim data-noescape class="python">
+                                    def fact(n):
+                                      total = 1
+                                      k = 1
+                                      while k <= n:
+                                        total *= k
+                                        k += 1
+                                      return total
+                                    </code></pre>
+                            <tr>
+                                <th>Math:
+                                <td style="font-size:0.7em;">$$\small\begin{equation*} 
+                                    n! = \begin{cases}
+                                        1  & \text{if } n = 0 \\
+                                        n \cdot (n-1)! & \text{otherwise} \\
+                                        \end{cases}
+                                        \end{equation*}$$
+                                <td>$$n! = \prod_{k = 1}^{n} k$$
+                            <tr>
+                                <th>Names:
+                                <td><code>fact</code>, <code>n</code>
+                                <td><code>fact</code>, <code>n</code>, <code>total</code>, <code>k</code>
+                        </table>
+                    </section>
+
+                    <section>
+                        <h3>Converting recursion to iteration</h3>
+
+                        <p>Can be tricky: Iteration is a special case of recursion.</p>
+
+                        <p class="smaller">Figure out what state must be maintained by the iterative function.</p>
+
+                        <pre style="font-size:0.65em: line-height: 1.6em;"><code data-trim data-noescape class="python">
+                        def sum_digits(n):
+                            if n &lt; 10:
+                                return n
+                            else:
+                                all_but_last = n // 10
+                                last = n % 10
+                            return <span class="bordered" aria-label="A partial sum" data-balloon-pos="right" title="A partial sum">sum_digits(<span class="bordered" aria-label="What's left to sum" data-balloon-pos="up" title="What's left to sum">all_but_last</span>) + last</span>
+                        
+                        </code></pre>
+
+                        <pre style="font-size:0.65em; line-height: 1.6em;" class="fragment"><code data-trim data-noescape class="python">
+                        def sum_digits(n):
+                            digit_sum = 0
+                            while n >= 10:
+                                last = n % 10
+                                <span class="bordered" aria-label="What's left to sum" data-balloon-pos="right" title="What's left to sum">n = n // 10</span>
+                                <span class="bordered" aria-label="A partial sum" data-balloon-pos="up" title="A partial sum">digit_sum += last</span>
+                            return digit_sum
+                        </code></pre>
+                        
+                    </section>
+
+                    <section>
+                        <h3>Converting iteration to recursion</h3>
+
+                        <p>More formulaic: Iteration is a special case of recursion.</p>
+
+                        <p>The state of an iteration can be passed as arguments.</p>
+
+                        <pre style="font-size:0.6em; line-height:1.6em;"><code data-trim data-noescape class="python">
+                        def sum_digits(n):
+                            digit_sum = 0
+                            while n >= 10:
+                                last = n % 10
+                                <span class="bordered" aria-label="Updates via assignment become..." data-balloon-pos="right" title="Updates via assignment become...">n = n // 10</span>
+                                <span class="bordered" aria-label="Updates via assignment become..." data-balloon-pos="right" title="Updates via assignment become...">digit_sum += last</span>
+                            return digit_sum
+                        </code></pre>
+
+                        <pre style="font-size:0.6em; line-height:1.6em;" class="fragment"><code data-trim data-noescape class="python">
+                        def sum_digits(n, digit_sum):
+                            if n == 0:
+                                return digit_sum
+                            else:
+                                last = n % 10
+                                all_but_last = n // 10
+                                return sum_digits(<span class="bordered" aria-label="...arguments to a recursive call" data-balloon-pos="right" title="...arguments to a recursive call">all_but_last, digit_sum + last</span>)
+                        </code></pre>
+                    </section>
+            </div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <!-- The loading of KaTeX is deferred to speed up page rendering -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.js" integrity="sha384-31El76TwmbHj4rF9DyLsygbq6xoIobG0W+jqXim+a3dU9W53tdH3A/ngRPxOzzaB" crossorigin="anonymous"></script>
+        <!-- To automatically render math in text elements, include the auto-render extension: -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"
+            onload="renderMathInElement(document.body, {fleqn: true});"></script>
+		<script>
+			const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+			Reveal.initialize({
+				hash: true,
+				center: false,
+				slideNumber: true,
+				showNotes: false,
+				margin: 0.1,
+				preloadIframes: true,
+				plugins: [ RevealHighlight ],
+				pdfSeparateFragments: true
+			});
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge(options);
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+            
+		</script>
+	</body>
+</html>

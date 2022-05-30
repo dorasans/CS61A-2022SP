@@ -1,0 +1,1170 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Objects</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Objects</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="14-Objects.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Object-oriented programming
+                        <li>The class statement
+                        <li>Instance variables
+                        <li>Class variables
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Object-oriented programming</h3>
+                    
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 4fr 2fr; grid-gap: 20px;">
+
+                        <div style="grid-row: 1; grid-column: 1;" class="smaller">
+                            <p>OOP is a method for organizing programs which includes:</p>
+                            <ul>
+                                <li>Data abstraction
+                                <li>Bundling together information and related behavior 
+                            </ul>
+                            
+                            <p>A metaphor for computation using distributed state:</p>
+                            <ul>
+                                <li>Each object has its own local state
+                                <li>Each object also knows how to manage its own local state, based on method calls
+                                <li>Method calls are messages passed between objects
+                                <li>Several objects may all be instances of a common type
+                                <li>Different types may relate to each other
+                            </ul>
+                        </div>
+
+                        <div style="grid-row: 1; grid-column: 2;">
+                            <img style="width: 100%" src="https://inst.eecs.berkeley.edu/~cs61a/fa21/assets/slides/images/oop_accounts.png" alt="Diagram of two bank accounts and a user withdrawing/depositing into the accounts"/>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="heading-only">
+                    <h2>An OOP shop</h2>
+                </section>
+
+                <section>
+					<h3>Building a chocolate shop</h3>
+
+                    <img src="https://inst.eecs.berkeley.edu/~cs61a/fa21/assets/slides/images/oop_chocolateshop.png" alt="Diagram of chocolate bars and customer" class="r-stretch">
+                </section>
+
+				<section data-visibility="hidden">
+					<h3>Building a chocolate shop</h3>
+
+                    <p class="smaller">We <em>could</em> make data abstractions using functions:</p>
+
+                    <div class="row">
+                        <div class="column">
+                            <pre style="font-size:0.55em"><code data-trim data-noescape class="python">
+
+                            # Inventory tracking
+                            add_product(name, price, nutrition)
+                            get_label(product)
+                            get_nutrition_info(product)
+                            increase_inventory(product, amount)
+                            reduce_inventory(product, amount)
+
+
+                            # Customer tracking
+                            signup_customer(name, address)
+                            get_greeting(customer)
+                            get_formatted_address(customer)
+
+
+                            # Purchase tracking
+                            order(customer, product, quantity, cc_info)
+                            track(order_number)
+                            refund(order_number, reason)
+                            </code></pre>
+                        </div>
+                        <div class="column">
+                            <img src="https://inst.eecs.berkeley.edu/~cs61a/fa21/assets/slides/images/oop_chocolateshop.png" alt="Diagram of chocolate bars and customer" style="height:78%">
+                        </div>
+                    </div>
+
+                    <p class="smaller">That codebase would be organized around functions.</p>
+
+                </section>
+
+                <section>
+					<h3>The OOP approach</h3>
+
+                    <p>We can use objects to organize our code for the shop:
+                    </p>
+
+                    <div class="row">
+                        <div class="column">
+                            <pre style="font-size:0.55em"><code data-trim data-noescape class="python">
+                            # Inventory tracking
+                            Product(name, price, nutrition)
+                            Product.get_label()
+                            Product.get_nutrition_info()
+                            Product.increase_inventory(amount)
+                            Product.reduce_inventory(amount)
+                            Product.get_inventory_report()
+
+                            # Customer tracking
+                            Customer(name, address)
+                            Customer.get_greeting()
+                            Customer.get_formatted_address()
+                            Customer.buy(product, quantity, cc_info)
+
+                            # Purchase tracking
+                            Order(customer, product, quantity, cc_info)
+                            Order.ship()
+                            Order.refund(reason)
+
+                            # Shop management
+                            ChocolateShop(name)
+                            ChocolateShop.signup_customer(name, address)
+                            ChocolateShop.add_product(name, price, nutrition)
+                            </code></pre>
+                        </div>
+                        <div class="column">
+                            <img src="https://inst.eecs.berkeley.edu/~cs61a/fa21/assets/slides/images/oop_chocolateshop.png" alt="Diagram of chocolate bars and customer" style="height:78%">
+                        </div>
+                    </div>
+
+
+                    <p>An object bundles together information and related behavior.</p>
+                </section>
+
+                <section>
+                    <h3>Python OOP terminology</h3>
+
+                    <div class="row">
+                        <div class="column">
+                            <ul class="smaller">
+                                <li>A <strong>class</strong> is a template for defining new data types.</li>
+                                <li>An instance of a class is called an <strong>object</strong>.</li>
+                                <li>Each object has data attributes called <strong>instance variables</strong> that describe its state.</li>
+                                <li>Each object also has function attributes called <strong>methods</strong>.</li>
+                            </ul>
+                        </div>
+                        <div class="column">
+                            <img src="https://i.imgur.com/srhQ8xO.png" alt="Diagram of chocolate bars and customer" style="width:70%">
+                        </div>
+                    </div>
+
+                    <p class="smaller">Python includes special syntax to create classes and objects.</p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Classes</h2>
+                </section>
+
+                <section>
+                    <h3>A fully coded class and usage</h3>
+
+                    <pre style="font-size:0.40em"><code data-trim data-noescape class="python">
+                    # Define a new type of data
+                    class Product:
+
+                        # Set the initial values
+                        def __init__(self, name, price, nutrition_info):
+                            self.name = name
+                            self.price = price
+                            self.nutrition_info = nutrition_info
+                            self.inventory = 0
+
+                        # Define methods
+                        def increase_inventory(self, amount):
+                            self.inventory += amount
+
+                        def reduce_inventory(self, amount):
+                            self.inventory -= amount
+
+                        def get_label(self):
+                            return "Foxolate Shop: " + self.name
+
+                        def get_inventory_report(self):
+                            if self.inventory == 0:
+                                return "There are no bars!"
+                            return f"There are {self.inventory} bars."
+                    </code></pre>
+
+
+                    <pre style="font-size:0.6em" class="no-code-badge"><code data-trim data-noescape class="python">
+                    pina_bar = Product("Piña Chocolotta", 7.99,
+                        ["200 calories", "24 g sugar"])
+
+                    pina_bar.increase_inventory(2)
+                    </code></pre>
+
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>Let's break it down...</h2>
+                </section>
+
+                <section data-visibility="hidden">
+                    <h3>Class</h3>
+
+                    <p>Each object is an instance of a <strong>class</strong>. The class is the object's type.</p>
+
+                    <pre style="font-size:0.8em" class="no-code-badge"><code data-trim data-noescape class="python">
+                    class &lt;name&gt;:
+                        &lt;suite&gt;
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    class Product:
+                        &lt;suite&gt;
+
+                    class Customer:
+                        &lt;suite&gt;
+
+                    class Order:
+                        &lt;suite&gt;
+                    </code></pre>
+
+                </section>
+
+                <section data-visibility="hidden">
+                    <h3>What's in a class?</h3>
+
+                    <p>A class can:</p>
+                    <ul>
+                        <li>Set the <strong>initial values</strong> for instance variables.</li>
+                        <li>Define <strong>methods</strong> specific to the object,
+                            often used to change or report the values of instance variables.</li>
+                    </ul>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    class Product:
+
+                        # Set the initial values
+                        # Define methods
+                    </code></pre>
+
+                    <pre style="font-size:0.8em" class="no-code-badge fragment"><code data-trim data-noescape class="python">
+                    class Product:
+
+                        def __init__(self, name, price, nutrition_info):
+                        def increase_inventory(self, amount):
+                        def reduce_inventory(self, amount):
+                        def get_label(self):
+                        def get_inventory_report(self):
+                    </code></pre>
+
+                </section>
+
+
+
+                <section>
+                    <h3>Class instantiation (Object construction)</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    pina_bar = Product("Piña Chocolotta", 7.99,
+                        ["200 calories", "24 g sugar"])
+                    </code></pre>
+
+                    <p class="smaller"><code>Product(args)</code> is often called the <strong>constructor</strong>.</p>
+
+                    <div class="fragment">
+                    <p class="smaller">When the constructor is called:</p>
+                    <ul class="smaller">
+                        <li>A new instance of that class is created</li>
+                        <li>The <code>__init__</code> method of the class is called with the new object as its first argument (named <code>self</code>), along with any additional arguments provided in the call expression</li>
+                    </ul>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    class Product:
+
+                        def __init__(self, name, price, nutrition_info):
+                            self.name = name
+                            self.price = price
+                            self.nutrition_info = nutrition_info
+                            self.inventory = 0
+                    </code></pre>
+                    </div>
+
+                    <aside class="notes">Try making 3 bars and adding them to a list</aside>
+                </section>
+
+                <section>
+                    <h3>Instance variables</h3>
+
+                    <p><strong>Instance variables</strong> are data attributes that describe the
+                        state of an object.
+                    </p>
+
+                    <p>This <code>__init__</code> initializes 4 instance variables:</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    class Product:
+
+                        def __init__(self, name, price, nutrition_info):
+                            self.name = name
+                            self.price = price
+                            self.nutrition_info = nutrition_info
+                            self.inventory = 0
+                    </code></pre>
+
+                    <p class="smaller">The object's methods can then change the values of those variables or assign new variables.</p>
+
+                </section>
+
+                <section>
+                    <h3>Method invocation</h3>
+
+                    <p class="smaller">This expression...</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    pina_bar.increase_inventory(2)
+                    </code></pre>
+
+                    <p class="smaller">...calls this function in the class definition:</p>
+                    <pre style="font-size:0.8em" class="no-code-badge"><code data-trim data-noescape class="python">
+                    class Product:
+                        def increase_inventory(self, amount):
+                            self.inventory += amount
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p class="smaller"><code>pina_bar.increase_inventory</code> is a <strong>bound method</strong>:
+                        a function which has its first parameter pre-bound to a particular value.
+                    </p>
+                    <p class="smaller">In this case, <code>self</code> is pre-bound to <code>pina_bar</code>
+                    and <code>amount</code> is set to 2.</p>
+                    <div class="fragment">
+                    <p class="smaller">It's equivalent to:</p>
+                    <pre style="font-size:0.8em" class="no-code-badge"><code data-trim data-noescape class="python">
+                    Product.increase_inventory(pina_bar, 2)
+                    </code></pre>
+                    </div>
+                    </div>
+
+                    <aside class="notes">Try accidentally leaving off the self and calling it!
+                        Show it in REPL, it shows bound method versus function
+                    </aside>
+                </section>
+
+
+                <section>
+                    <h3>Dot notation</h3>
+
+                    <p>All object attributes (which includes variables <em>and</em> methods)
+                    can be accessed with <strong>dot notation</strong>:</p>
+
+                    <pre style="font-size:0.8em" class="no-code-badge"><code data-trim data-noescape class="python">
+                    pina_bar.increase_inventory(2)
+                    </code></pre>
+
+                    <p>That evaluates to the value of the attribute looked up by <code>increase_inventory</code>
+                    in the object referenced by <code>pina_bar</code>.</p>
+                    <br>
+                    <p class="smaller">The left-hand side of the dot notation can also be any expression
+                        that evaluates to an object reference:
+                    </p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    bars = [pina_bar, truffle_bar]
+                    bars[0].increase_inventory(2)
+                    </code></pre>
+
+                    <aside class="notes">Try increasing the inventory and getting the inventory report</aside>
+                </section>
+
+                <section>
+                    <h3>All together now</h3>
+
+                    <p class="smaller">The class definition:</p>
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    # Define a new type of data
+                    class Product:
+
+                        # Set the initial values
+                        def __init__(self, name, price, nutrition_info):
+                            self.name = name
+                            self.price = price
+                            self.nutrition_info = nutrition_info
+                            self.inventory = 0
+
+                        # Define methods
+                        def increase_inventory(self, amount):
+                            self.inventory += amount
+
+                        def reduce_inventory(self, amount):
+                            self.inventory -= amount
+                    </code></pre>
+
+                    <p class="smaller">Object instantiation and method invocation:</p>
+                    <pre style="font-size:0.6em" class="no-code-badge"><code data-trim data-noescape class="python">
+                    pina_bar = Product("Piña Chocolotta", 7.99,
+                        ["200 calories", "24 g sugar"])
+
+                    pina_bar.increase_inventory(2)
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Exercise: Player class</h3>
+
+                    <pre style="font-size:0.5em; height: 550px;"><code data-trim data-noescape class="python">
+                    """
+                    This class represents a player in a video game.
+                    It tracks their name and health.
+                    """
+                    class Player:
+                        """
+                        >>> player = Player("Mario")
+                        >>> player.name
+                        'Mario'
+                        >>> player.health
+                        100
+                        >>> player.damage(10)
+                        >>> player.health
+                        90
+                        >>> player.boost(5)
+                        >>> player.health
+                        95
+                        """
+                    </code></pre>
+
+                </section>
+
+
+                <section>
+                    <h3>Exercise: Player class (solution)</h3>
+
+                    <pre style="font-size:0.5em; height: 550px;"><code data-trim data-noescape class="python">
+                    """
+                    This class represents a player in a video game.
+                    It tracks their name and health.
+                    """
+                    class Player:
+                        """
+                        >>> player = Player("Mario")
+                        >>> player.name
+                        'Mario'
+                        >>> player.health
+                        100
+                        >>> player.damage(10)
+                        >>> player.health
+                        90
+                        >>> player.boost(5)
+                        >>> player.health
+                        95
+                        """
+                        def __init__(self, name):
+                            self.name = name
+                            self.health = 100
+                        
+                        def damage(self, amount):
+                            self.health -= amount
+                        
+                        def boost(self, amount):
+                            self.health += amount
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Exercise: Clothing class</h3>
+
+                    <pre style="font-size:0.5em; height: 550px;"><code data-trim data-noescape class="python">
+                    """
+                    Clothing is a class that represents pieces of clothing in a closet. It tracks the color, category, and clean/dirty state.
+                    """
+                    class Clothing:
+                        """
+                        >>> blue_shirt = Clothing("shirt", "blue")
+                        >>> blue_shirt.category
+                        'shirt'
+                        >>> blue_shirt.color
+                        'blue'
+                        >>> blue_shirt.is_clean
+                        True
+                        >>> blue_shirt.wear()
+                        >>> blue_shirt.is_clean
+                        False
+                        >>> blue_shirt.clean()
+                        >>> blue_shirt.is_clean
+                        True
+                        """
+                    </code></pre>
+
+                </section>
+
+
+                <section>
+                    <h3>Exercise: Clothing class (solution)</h3>
+
+                    <pre style="font-size:0.5em; height: 550px;"><code data-trim data-noescape class="python">
+                    """
+                    Clothing is a class that represents pieces of clothing in a closet. It tracks the color, category, and clean/dirty state.
+                    """
+                    class Clothing:
+                        """
+                        >>> blue_shirt = Clothing("shirt", "blue")
+                        >>> blue_shirt.category
+                        'shirt'
+                        >>> blue_shirt.color
+                        'blue'
+                        >>> blue_shirt.is_clean
+                        True
+                        >>> blue_shirt.wear()
+                        >>> blue_shirt.is_clean
+                        False
+                        >>> blue_shirt.clean()
+                        >>> blue_shirt.is_clean
+                        True
+                        """
+
+                        def __init__(self, category, color):
+                            self.category = category
+                            self.color = color
+                            self.is_clean = True
+
+                        def wear(self):
+                            self.is_clean = False
+
+                        def clean(self):
+                            self.is_clean = True
+                    </code></pre>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Dynamic attributes</h2>
+                </section>
+
+                <section>
+                    <h3>Classes in environment diagrams</h3>
+
+                    <pre style="font-size:0.75em" class="no-code-badge"><code data-trim data-noescape class="python">
+                    class Product:
+
+                        def __init__(self, name, price, nutrition_info):
+                        def increase_inventory(self, amount):
+                        def reduce_inventory(self, amount):
+                        def get_label(self):
+                        def get_inventory_report(self):
+                    </code></pre>
+
+                    <ul class="smaller">
+                        <li>A class statement creates a new class and binds that class to the class name in the first frame of the current environment.</li>
+                        <li>Inner <code>def</code> statements create attributes of the class (<em>not</em> names in frames).</li>
+                    </ul>
+
+                    <p class="python-tutor-link">
+                        <a href="http://pythontutor.com/composingprograms.html#code=class%20Product%3A%0A%20%20%20%20%0A%20%20%20%20def%20__init__%28self,%20name,%20price,%20nutrition_info%29%3A%0A%20%20%20%20%20%20%20%20self.name%20%3D%20name%0A%20%20%20%20%20%20%20%20self.price%20%3D%20price%0A%20%20%20%20%20%20%20%20self.nutrition_info%20%3D%20nutrition_info%0A%20%20%20%20%20%20%20%20self.inventory%20%3D%200%0A%20%20%20%20%20%20%20%20%0A%20%20%20%20def%20increase_inventory%28self,%20amount%29%3A%0A%20%20%20%20%20%20%20%20self.inventory%20%2B%3D%20amount%0A%20%20%20%20%0A%20%20%20%20def%20reduce_inventory%28self,%20amount%29%3A%0A%20%20%20%20%20%20%20%20self.inventory%20-%3D%20amount%0A%20%20%20%20%20%20%20%20%0A%20%20%20%20def%20get_label%28self%29%3A%0A%20%20%20%20%20%20%20%20return%20%22Foxolate%20Shop%3A%20%22%20%2B%20self.name%0A%20%20%20%20%20%20%20%20%0A%20%20%20%20def%20get_inventory_report%28self%29%3A%0A%20%20%20%20%20%20%20%20if%20self.inventory%20%3D%3D%200%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20%22There%20are%20no%20bars!%22%0A%20%20%20%20%20%20%20%20return%20f%22There%20are%20%7Bself.inventory%7D%20bars.%22%0A%20%20&cumulative=true&curInstr=0&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D" target="_blank">
+                        Visualize in PythonTutor
+                        </a>
+                    </p>
+
+                </section>
+
+                <section>
+                    <h3>Dynamic instance variables</h3>
+
+                    <p class="smaller">An object can create a new instance variable whenever it'd like.</p>
+                    <p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    class Product:
+
+                        def reduce_inventory(self, amount):
+                            if (self.inventory - amount) <= 0:
+                                self.needs_restocking = True
+                            self.inventory -= amount
+
+                    pina_bar = Product("Piña Chocolotta", 7.99,
+                        ["200 calories", "24 g sugar"])
+                    pina_bar.reduce_inventory(1)
+                    </code></pre>
+
+                    <p class="smaller">Now <code>pina_bar</code> has an updated binding for
+                    <code>inventory</code>
+                    and a new binding for <code>needs_restocking</code> (which was not in <code>__init__</code>).
+                    </p>
+
+                    <p class="python-tutor-link">
+                        <a target="_blank" href="http://pythontutor.com/composingprograms.html#code=class%20Product%3A%0A%20%20%20%20%0A%20%20%20%20def%20__init__%28self,%20name,%20price,%20nutrition_info%29%3A%0A%20%20%20%20%20%20%20%20self.name%20%3D%20name%0A%20%20%20%20%20%20%20%20self.price%20%3D%20price%0A%20%20%20%20%20%20%20%20self.nutrition_info%20%3D%20nutrition_info%0A%20%20%20%20%20%20%20%20self.inventory%20%3D%200%0A%20%20%20%20%20%20%20%20%0A%20%20%20%20def%20increase_inventory%28self,%20amount%29%3A%0A%20%20%20%20%20%20%20%20self.inventory%20%2B%3D%20amount%0A%20%20%20%20%0A%20%20%20%20def%20reduce_inventory%28self,%20amount%29%3A%0A%20%20%20%20%20%20%20%20if%20%28self.inventory%20-%20amount%29%20%3C%3D%200%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20self.needs_restocking%20%3D%20True%0A%20%20%20%20%20%20%20%20self.inventory%20-%3D%20amount%0A%20%20%20%20%20%20%20%20%0A%20%20%20%20def%20get_label%28self%29%3A%0A%20%20%20%20%20%20%20%20return%20%22Foxolate%20Shop%3A%20%22%20%2B%20self.name%0A%20%20%20%20%20%20%20%20%0A%20%20%20%20def%20get_inventory_report%28self%29%3A%0A%20%20%20%20%20%20%20%20if%20self.inventory%20%3D%3D%200%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20return%20%22There%20are%20no%20bars!%22%0A%20%20%20%20%20%20%20%20return%20f%22There%20are%20%7Bself.inventory%7D%20bars.%22%0A%20%20%20%20%20%20%20%20%0Apina_bar%20%3D%20Product%28%22Pi%C3%B1a%20Chocolotta%22,%207.99,%0A%20%20%20%20%5B%22200%20calories%22,%20%2224%20g%20sugar%22%5D%29%0Apina_bar.reduce_inventory%282%29&cumulative=false&curInstr=0&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">
+                        Visualize in PythonTutor
+                        </a>
+                    </p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Class variables</h2>
+                </section>
+
+                <section>
+                    <h3>Class variables</h3>
+
+                    <p>A <strong>class variable</strong> is an assignment inside the class that isn't inside a method body.</p>
+
+                    <pre style="font-size:0.6em" class="no-code-badge"><code data-trim data-noescape class="python">
+                    class Product:
+                        sales_tax = 0.07
+                    </code></pre>
+
+                    <p class="smaller">
+                        Class variables are "shared" across all instances of a class because they are attributes of the class, not the instance.
+                    </p>
+
+                    <pre style="font-size:0.5em" class="no-code-badge"><code data-trim data-noescape class="python">
+                    class Product:
+                        sales_tax = 0.07
+
+                        def get_total_price(self, quantity):
+                            return (self.price * (1 + self.sales_tax)) * quantity
+
+                    pina_bar = Product("Piña Chocolotta", 7.99,
+                        ["200 calories", "24 g sugar"])
+                    truffle_bar = Product("Truffalapagus", 9.99,
+                        ["170 calories", "19 g sugar"])
+
+                    pina_bar.sales_tax
+                    truffle_bar.sales_tax
+                    pina_bar.get_total_price(4)
+                    truffle_bar.get_total_price(4)
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Exercise: StudentGrade class</h3>
+
+                    <pre style="font-size:0.5em; height:550px;"><code data-trim data-noescape class="python">
+                    """
+                    This class represents grades for students in a class.
+                    """
+                    class StudentGrade:
+                        """
+                        >>> grade1 = StudentGrade("Arfur Artery", 300)
+                        >>> grade1.is_failing()
+                        False
+                        >>> grade2 = StudentGrade("MoMo OhNo", 158)
+                        >>> grade2.is_failing()
+                        True
+                        >>> grade1.failing_grade
+                        159
+                        >>> grade2.failing_grade
+                        159
+                        >>> StudentGrade.failing_grade
+                        159
+                        >>>
+                        """
+                        def __init__(self, student_name, num_points):
+                            self.student_name = student_name
+                            self.num_points = num_points
+
+                        def is_failing(self):
+                            return self.num_points < ___
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Exercise: StudentGrade class (solution)</h3>
+
+                    <pre style="font-size:0.5em; height: 550px;"><code data-trim data-noescape class="python">
+                        """
+                        This class represents grades for students in a class.
+                        """
+                        class StudentGrade:
+                            """
+                            >>> grade1 = StudentGrade("Arfur Artery", 300)
+                            >>> grade1.is_failing()
+                            False
+                            >>> grade2 = StudentGrade("MoMo OhNo", 158)
+                            >>> grade2.is_failing()
+                            True
+                            >>> grade1.failing_grade
+                            159
+                            >>> grade2.failing_grade
+                            159
+                            >>> StudentGrade.failing_grade
+                            159
+                            >>>
+                            """
+                            failing_grade = 159
+
+                            def __init__(self, student_name, num_points):
+                                self.student_name = student_name
+                                self.num_points = num_points
+    
+                            def is_failing(self):
+                                return self.num_points < self.failing_grade
+                    </code></pre>
+                </section>
+
+                <section class="heading-only">
+                    <h3>Accessing attributes</h3>
+                </section>
+
+                <section>
+                    <h3>getattr/hasattr built-ins</h3>
+
+                    <p>Using <code>getattr</code>, we can look up an attribute using a string</p>
+
+                    <pre style="font-size:0.5em"><code data-trim data-noescape class="python">
+                    getattr(pina_bar, 'inventory')   # 1
+                    
+                    hasattr(pina_bar, 'reduce_inventory')  # True
+                    </code></pre>
+
+                    <p><code>getattr</code> and dot expressions look up a name in the same way</p>
+
+                    <p>Looking up an attribute name in an object may return:</p>
+                    <ul>
+                        <li>One of its instance attributes, or
+                        <li>One of the attributes of its class
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Public vs. Private</h2>
+                </section>
+
+                <section>
+                    <h3>Attributes are all public</h3>
+
+                    <p>As long as you have a reference to an object,
+                     you can access or change any attributes.
+                    </p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    pina_bar = Product("Piña Chocolotta", 7.99,
+                        ["200 calories", "24 g sugar"])
+
+                    current = pina_bar.inventory
+                    pina_bar.inventory = 5000000
+                    pina_bar.inventory = -5000
+                    </code></pre>
+
+                    <p class="padded">You can even assign new instance variables:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    pina_bar.brand_new_attribute_haha = "instanception"
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>"Private" attributes</h3>
+
+                    <p>To communicate the desired access level of attributes,
+                    Python programmers generally use this convention:
+                    </p>
+
+                    <ul class="smaller">
+                        <li><code>__</code> (double underscore) before very private attribute names</li>
+                        <li><code>_</code> (single underscore) before semi-private attribute names</li>
+                        <li>no underscore before public attribute names</li>
+                    </ul>
+
+                    <p>That allows classes to hide implementation details
+                        and add additional error checking.
+                    </p>
+                </section>
+
+
+
+
+                <section class="heading-only">
+                    <h2>Quiz: Objects + Classes</h2>
+                </section>
+
+
+                <section>
+                    <h3>Multiple instances</h3>
+
+                    <p>There can be multiple instances of each class.</p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    pina_bar = Product("Piña Chocolotta", 7.99,
+                        ["200 calories", "24 g sugar"])
+
+                    cust1 = Customer("Coco Lover",
+                        ["123 Pining St", "Nibbsville", "OH"])
+
+                    cust2 = Customer("Nomandy Noms",
+                        ["34 Shlurpalot St", "Buttertown", "IN"])
+                    </code></pre>
+
+                    <p class="smaller">
+                      What are the classes here?
+                      <span class="fragment" data-fragment-index="1"><code>Product</code>, <code>Customer</code></span><br>
+                      How many instances of each?
+                      <span class="fragment" data-fragment-index="1">1 <code>Product</code>, 2 <code>Customer</code></span>
+                    </p>
+                </section>
+
+                <section>
+                    <h3>State management</h3>
+
+                    <p>An object can use instance variables to describe its state.
+                    A best practice is to hide the representation of the state
+                    and manage it entirely via method calls.
+                    </p>
+
+                    <div class="row">
+                        <div class="column">
+                            <pre style="font-size:0.65em" class="no-code-badge"><code data-trim data-noescape class="python">
+                            >>> pina_bar = Product("Piña Chocolotta", 7.99,
+                                    ["200 calories", "24 g sugar"])
+
+                            >>> pina_bar.get_inventory_report()
+                            "There are NO bars!"
+
+                            >>> pina_bar.increase_inventory(3)
+                            >>> pina_bar.get_inventory_report()
+                            "There are 3 bars total (worth $23.97 total)."
+                            </code></pre>
+                        </div>
+                        <div class="column">
+                            <img src="https://i.imgur.com/T78XDZg.png" alt="Diagram of state changes">
+                        </div>
+                    </div>
+
+                    <p class="smaller">
+                      What's the initial state? <span class="fragment" data-fragment-index="1">0 bars in inventory</span><br>
+                      What changes the state? <span class="fragment" data-fragment-index="1"><code>increase_inventory()</code> by changing the instance variable <code>_inventory</code></span>
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Class vs. instance variables</h3>
+
+                    <pre style="font-size:0.55em" class="no-code-badge"><code data-trim data-noescape class="python">
+                    class Customer:
+
+                        salutation = "Dear"
+
+                        def __init__(self, name, address):
+                            self.name = name
+                            self.address = address
+
+                        def get_greeting(self):
+                            return f"{self.salutation} {self.name},"
+
+                        def get_formatted_address(self):
+                            return "\n".join(self.address)
+
+                    cust1 = Customer("Coco Lover",
+                        ["123 Pining St", "Nibbsville", "OH"])
+                    </code></pre>
+
+                    <p class="smaller">
+                        What are the class variables? <span class="fragment" data-fragment-index="1"><code>salutation</code></span><br>
+                        What are the instance variables? <span class="fragment" data-fragment-index="1"><code>name</code>, <code>address</code></span>
+                      </p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Python Project of The Day!</h2>
+                </section>
+
+                <section>
+                    <h3>Replicate.ai</h3>
+
+                    <p><a target="_blank" href="https://replicate.ai/">Replicate.ai</a>: An effort
+                        to make machine learning models easy to replicate by anyone.</a>.
+                        <br>
+                        <img src="https://inst.eecs.berkeley.edu/~cs61a/fa21/assets/slides/images/screenshot_replicateai.png" alt="Screenshot of a ML model running progressively to output an image" height="200">
+                    </p>
+
+                    <p>👉🏽 <a target="_blank" href="https://replicate.ai/bfirsh/vqgan-clip">An example demo using generators</a> (<a target="_blank" href="https://github.com/bfirsh/vqgan-clip/blob/b030fb649e5b1011bf87c43da69f0752f05d3339/predict.py#L164-L175">and its source code</a>)</p>
+                </section>
+
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-menu@2.1.0/menu.js"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight, RevealMenu ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge();
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+
+        </script>
+    </body>
+</html>

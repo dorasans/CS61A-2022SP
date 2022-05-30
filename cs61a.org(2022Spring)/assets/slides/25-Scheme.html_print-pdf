@@ -1,0 +1,854 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Scheme</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Scheme</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="25-Scheme.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Scheme expressions
+                        <li>Call expressions
+                        <li>Special forms
+                        <li>Examples
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Scheme</h2>
+                </section>
+
+                <section>
+                    <h3>A brief history of programming languages</h3>
+
+                    <p>The Lisp programming language was introduced in 1958.</p>
+
+                    <p>The Scheme dialect of Lisp was introduced in the 1970s,
+                        and is still maintained by a standards committee today.</p>
+
+                    <a href="https://upload.wikimedia.org/wikipedia/commons/2/25/Genealogical_tree_of_programming_languages.svg">Genealogical tree of programming languages</a>
+                        
+                    <p>Scheme itself is not commonly used in production,
+                        but has influenced many other languages,
+                        and is a good example of a functional programming language.</p>
+                </section>
+
+                <section>
+                    <h3>Scheme expressions</h3>
+                    
+                    <p>Scheme programs consist of expressions, which can be:</p>
+                    <ul>
+                        <li><strong>Primitive expressions:</strong><br>
+                            <code>2</code> <code>3.3</code> <code>#t</code> <code>#f</code> <code>+</code> <code>quotient</code></li>
+                        <li class="fragment"><strong>Combinations:</strong><br>
+                            <code>(quotient 10 2)</code> <code>(not #t)</code><br>
+                            <span class="smaller">Combinations are either a call expression or a special form.</span>
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h3>Call expressions</h3>
+                </section>
+
+                <section>
+                    <h3>Call expressions</h3>
+                    
+                    <p>Call expressions include an operator and 0 or more operands in parentheses:</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="scheme">
+                    > (quotient 10 2)
+                    5
+                    > (quotient (+ 8 7) 5)
+                    3
+                    > (+ (* 3
+                            (+ (* 2 4)
+                               (+ 3 5)))
+                         (+ (- 10 7)
+                            6))
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Built-in arithmetic procedures</h3>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>+</code></td>
+                                <td><code>(+ 1 2 3)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>-</code></td>
+                                <td><code>(- 12)</code> <code>(- 3 2 1)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>*</code></td>
+                                <td><code>(*)</code> <code>(* 2)</code> <code>(* 2 3)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>/</code></td>
+                                <td><code>(/ 2)</code> <code>(/ 4 2)</code> <code>(/ 16 2 2)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>quotient</code></td>
+                                <td><code>(quotient 7 3)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>abs</code></td>
+                                <td><code>(abs -12)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>expt</code></td>
+                                <td><code>(expt 2 10)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>remainder</code></td>
+                                <td><code>(remainder 7 3)</code> <code>(remainder -7 3)</code></td>
+                            </tr>
+                            <tr style="display:none">
+                                <td><code>modulo</code></td>
+                                <td><code>(modulo 7 3)</code> <code>(modulo -7 3)</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p class="smaller padded">📖  <a target="_blank" href="../../articles/scheme-builtins/index.html#arithmetic-operations">Scheme procedure reference: Arithmetic operations</a></p>
+                </section>
+
+
+                <section>
+                    <h3>Built-in Boolean procedures (for numbers)</h3>
+
+                    <p>These procedures <em>only</em> work on numbers:</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>True expressions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>=</code></td>
+                                <td><code>(= 4 4)</code> <code>(= 4 (+ 2 2))</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>&lt;</code></td>
+                                <td><code>(&lt; 4 5)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>&gt;</code></td>
+                                <td><code>(&gt; 5 4)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>&lt;=</code></td>
+                                <td><code>(&lt;= 4 5)</code> <code>(&lt;= 4 4)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>&gt;=</code></td>
+                                <td><code>(&gt;= 5 4)</code> <code>(&gt;= 4 4)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>even?</code></td>
+                                <td><code>(even? 2)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>odd?</code></td>
+                                <td><code>(odd? 3)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>zero?</code></td>
+                                <td><code>(zero? 0)</code> <code>(zero? 0.0)</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+
+                <section>
+                    <h3>Built-in Boolean procedures</h3>
+                    <p>These procedures work on all data types:</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>True expressions</th>
+                                <th>False expressions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td><code>eq</code></td>
+                                <td><code>(eq? #t #t)</code> <br><code>(eq? 0 (- 1 1))</code></td>
+                                <td><code>(eq? #t #f)</code> <br><code>(eq? 0 0.0)</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>not</code></td>
+                                <td><code>(not #f)</code></td>
+                                <td><code>(not 0)</code> <br><code>(not #t)</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p>The only falsey value in Scheme is <code>#f</code>. <br>All other values are truthy.</p>
+                    
+                    <p class="smaller padded"><a target="_blank" href="../../articles/scheme-builtins/index.html#boolean-operations">📖  Scheme procedure reference: Boolean operations</a></p>
+                    <p class="smaller"><a target="_blank" href="../../articles/scheme-spec/index.html#booleans">📖  Scheme specification: Booleans</a></p>
+
+                </section>
+
+                <section class="heading-only">
+                    <h3>Special forms</h3>
+                </section>
+
+                <section>
+                    <h3>Special forms</h3>
+
+                    <p>A combination that is not a call expression is a special form:</p>
+                    <ul>
+                        <li>if expression: <br>
+                            <code>(if &lt;predicate&gt; &lt;consequent&gt; &lt;alternative&gt;)</code>
+                        <li>and/or: <br>
+                            <code>(and &lt;e1&gt; ... &lt;en&gt;)</code> <br>
+                            <code>(or &lt;e1&gt; ... &lt;en&gt;)</code>
+                        <li>Binding symbols:<br>
+                            <code>(define &lt;symbol&gt; &lt;expression&gt;)</code>
+                        <li>New procedures: <br>
+                            <code>(define (&lt;symbol&gt; &lt;formal parameters&gt;) &lt;body&gt;)</code>
+                    </ul>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-spec/index.html#special-forms-2">📖  Scheme spec: special forms</a></p>
+                </section>
+
+                <section>
+                    <h3>define form</h3>
+
+                    <code>define &lt;name&gt; &lt;expression&gt;</code>
+
+                    <p>Evaluates <code>&lt;expression&gt;</code> and binds the value to <code>&lt;name&gt;</code> in the current
+                        environment. <code>&lt;name&gt;</code> must be a valid Scheme symbol.</p>
+                    
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (define x 2)
+                    </code></pre>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-spec/index.html#define">📖  Scheme Spec: define</a></p>
+                </section>
+
+
+                <section>
+                    <h3>define procedure</h3>
+
+                    <code>define (&lt;name&gt; [param] ...) &lt;body&gt;)</code>
+                    
+                    <p>Constructs a new  procedure with <code>param</code>s as its parameters and the <code>body</code>
+                    expressions as its body and binds it to <code>name</code> in the current environment.
+                    <code>name</code> must be a valid Scheme symbol. Each <code>param</code> must be a unique valid Scheme
+                    symbol.</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (define (double x) (* 2 x) )
+                    </code></pre>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-spec/index.html#define">📖  Scheme Spec: define</a></p>
+                </section>
+
+                <section>
+                    <h3>If expression</h3>
+
+                    <code>if &lt;predicate&gt; &lt;consequent&gt; &lt;alternative&gt;</code>
+                    <p>Evaluates <code>predicate</code>. If true, the <code>consequent</code> is evaluated and returned.
+                        Otherwise, the <code>alternative</code>, if it exists, is evaluated and returned (if no
+                        <code>alternative</code> is present in this case, the return value is undefined).</p>
+                    
+                    <p class="padded"><strong>Example:</strong>
+                        This code evaluates to 100/x for non-zero numbers and 0 otherwise:</p>
+                    
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (define x 5)
+                    (if (zero? x)
+                        0
+                        (/ 100 x))
+                    </code></pre>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-spec/index.html#if">📖  Scheme Spec: If</a></p>
+                </section>
+
+                <section>
+                    <h3>and form</h3>
+
+                    <code>(and [test] ...)</code>
+
+                    <p>Evaluate the <code>test</code>s in order, returning the first false value. If no <code>test</code>
+                        is false, return the last <code>test</code>. If no arguments are provided, return <code>#t</code>.</p>
+
+                    <p><strong>Example:</strong>
+                    This <code>and</code> form evaluates to true whenever <code>x</code> is both greater than 10 and less than 20.</p>
+                    
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (define x 15)
+                    (and (> x 10) (< x 20))
+                    </code></pre>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-spec/index.html#and">📖  Scheme Spec: And</a></p>
+
+                </section>
+
+                <section>
+                    <h3>or form</h3>
+
+                    <code>(or [test] ...)</code>
+
+                    <p>Evaluate the <code>test</code>s in order, returning the first true value. If no <code>test</code>
+                        is true and there are no more <code>test</code>s left, return <code>#f</code>.</p>
+                    <p><strong>Example:</strong>
+                        This <code>or</code> form evaluates to true when either <code>x</code> is less than -10 or greater than 10.</p>
+                    
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (define x -15)
+                    (or (< x -10) (> x 10))
+                    </code></pre>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-spec/index.html#or">📖  Scheme Spec: Or</a></p>
+
+                </section>
+
+
+                <section>
+                    <h3>Cond form</h3>
+
+                    <p>The cond special form that behaves similar to if expressions in Python.</p>
+                    
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    if x > 10:
+                        print('big')
+                    elif x > 5:
+                        print('medium')
+                    else:
+                        print('small')
+                    </code></pre>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="scheme">
+                    (cond ((> x 10) (print 'big))
+                        ((> x 5) (print 'medium))
+                        (else (print 'small)))
+                    </code></pre>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="scheme">
+                    (print (cond ((> x 10) 'big)
+                        ((> x 5) 'medium)
+                        (else 'small)))
+                    </code></pre>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-spec/index.html#cond">📖  Scheme Spec: Cond</a></p>
+
+                </section>
+
+                <section>
+                    <h3>Why is cond needed?</h3>
+
+                    <p>Without <code>cond</code>, we'd have deeply nested <code>if</code> forms:</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="scheme">
+                    (if (> x 10) (print 'big)
+                        (if (> x 5) (print 'medium)
+                            (print 'small)
+                        )
+                    )
+                    </code></pre>
+
+                    <p>So much nicer with <code>cond</code>!</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="scheme">
+                    (cond 
+                        ((> x 10) (print 'big))
+                        ((> x 5)  (print 'medium))
+                        (else     (print 'small)))
+                    </code></pre>
+
+                    
+                </section>
+
+                <section>
+                    <h3>The begin form</h3>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    if x > 10:
+                        print('big')
+                        print('pie')
+                    else:
+                        print('small')
+                        print('fry')
+                    </code></pre>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="scheme">
+                    (cond ((> x 10) (begin (print 'big) (print 'pie)))
+                           (else (begin (print 'small) (print 'fry))))
+                    </code></pre>
+
+                    <pre style="font-size:0.7em" class="fragment"><code data-trim data-noescape class="scheme">
+                    (if (> x 10) (begin
+                                    (print 'big)
+                                    (print 'pie))
+                                  (begin
+                                    (print 'small)
+                                    (print 'fry)))
+                    </code></pre>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-spec/index.html#begin">📖  Scheme Spec: Begin</a></p>
+
+                </section>
+                        
+                <section>
+                    <h3>let form</h3>
+
+                    <p>The <code>let</code> special form binds symbols to values temporarily; just for one expression</p>
+
+                    <pre style="font-size:1.0em" class=""><code data-trim data-noescape class="python">
+                    a = 3
+                    b = 2 + 2
+                    c = math.sqrt(a * a + b * b)
+                    </code></pre>
+                    <p>⬆️ a and b are still bound down here</p>
+
+                    <pre style="font-size:1.0em" class="padded"><code data-trim data-noescape class="scheme">
+                    (define c (let ((a 3)
+                        (b (+ 2 2)))
+                        (sqrt (+ (* a a) (* b b)))))
+                    </code></pre>
+                    <p>⬆️ a and b are <strong>not</strong> bound down here</p>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-spec/index.html#let">📖  Scheme Spec: Let</a></p>
+
+                </section>
+
+
+                <section>
+                    <h3>lambda expressions</h3>
+
+                    <p>Lambda expressions evaluate to anonymous procedures.</p>
+
+                    <code>(lambda ([param] ...) &lt;body&gt; ...)</code>
+
+                    <p>Two equivalent expressions:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (define (plus4 x) (+ x 4))
+                    (define plus4 (lambda (x) (+ x 4)))
+                    </code></pre>
+
+                    <p>An operator can be a lambda expression too:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    ((lambda (x y z) (+ x y (square z))) 1 2 3)
+                    </code></pre>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-spec/index.html#lambda">📖  Scheme Spec: Lambda</a></p>
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>Exercises</h2>
+                </section>
+
+
+                <section>
+                    <h3>Exercise: Sum of squares</h3>
+                    <p>What's the sum of the squares of even numbers less than 10, starting with some number?</p>
+
+                    <p class="smaller">Python version (iterative):</p>
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    def sum_of_squares(num):
+                        total = 0
+                        while num &lt; 10:
+                            total += num ** 2
+                            num += 2
+                        return total
+                    
+                    sum_of_squares(2)  # 120
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p class="smaller">Python version (recursive):</p>
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    def sum_of_squares(num, total):
+                        if num >= 10:
+                            return total
+                        else:
+                            return sum_of_squares(num + 2, total + num ** 2)
+                    
+                    sum_of_squares(2, 0)  # 120
+                    </code></pre>
+
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Exercise: Sum of squares (solution)</h3>
+                    <p>Scheme version:</p>
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="scheme">
+                    (define (sum_of_squares num total)
+                        (if (>= num 10)
+                            total
+                            (sum_of_squares (+ num 2) (+ total (* num num)))
+                        )
+                    )
+                     </code></pre>
+
+                     <pre style="font-size:0.9em"><code data-trim data-noescape class="scheme">
+                     (sum_of_squares 2 0)
+                     </code></pre>
+
+                </section>
+                
+                <section>
+                    <h3>Using helper functions</h3>
+
+                    <p>What if we said the <code>sum_of_squares </code> function could only take one argument?</p>
+
+                    <p>In Python, we could use a helper function:</p>
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    def sum_of_squares(num):
+                        def with_total(num, total):
+                            if num >= 10:
+                                return total
+                            else:
+                                return with_total(num + 2, total + num ** 2)
+                        return with_total(num, 0)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Using helper functions (Scheme)</h3>
+
+                    <p>Similarly in Scheme!</p>
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="scheme">
+                    (define (sum_of_squares num)
+                        (define (with_total num total)
+                            (if (>= num 10)
+                                total
+                                (with_total (+ num 2) (+ total (* num num)))
+                            )
+                        )
+                        (with_total num 0)
+                    )
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Scheme tips</h3>
+
+                    <ul>
+                        <li>Use the references!
+                            <ul>
+                                <li><a target="_blank" href="../../articles/scheme-builtins/index.html#general">Scheme built-in procedure</a></li>
+                                <li><a target="_blank" href="../../articles/scheme-spec/index.html">Scheme specification</a></li>
+                            </ul>
+                        <li>Auto-format your code!
+                        <li>Constrain your brain: you're now 
+                            living in a world of applicative programming.
+                            Look, ma, no mutation!
+                    </ul>
+                </section>
+
+			</div>
+		</div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-menu@2.1.0/menu.js"></script>
+        <!-- The loading of KaTeX is deferred to speed up page rendering -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.js" integrity="sha384-31El76TwmbHj4rF9DyLsygbq6xoIobG0W+jqXim+a3dU9W53tdH3A/ngRPxOzzaB" crossorigin="anonymous"></script>
+        <!-- To automatically render math in text elements, include the auto-render extension: -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"
+            onload="renderMathInElement(document.body, {fleqn: true});"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight, RevealMenu ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge();
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+        </script>
+    </body>
+</html>

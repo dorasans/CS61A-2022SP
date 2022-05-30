@@ -1,0 +1,805 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Backus-Naur Form</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:valid {
+                background-color: #b9e1b9;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+	</head>
+	<body>
+            <div class="reveal">
+                <div class="slides">
+    
+                <section class="heading-only" style="padding-top:5%">
+                    <h1>Backus-Naur Form</h1>
+
+                    <div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+                        Tips for navigating the slides:
+                        <ul>
+                            <li>Press O or Escape for overview mode.</li>
+                            <li>Visit <a href="35-Backus-Naur_Form.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+                            <li>Press the copy icon on the upper right of code blocks to copy the code</li>
+                        </ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+                </section>
+
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Backus-Naur Form
+                        <li>(E)BNF syntax
+                        <li>Parse tree formation
+                        <li>Exercises
+                        <li>Ambiguity
+                    </ul>
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>Backus-Naur Form</h2>
+                </section>
+
+                <section>
+                    <h3>Describing language syntax</h3>
+
+                    <p>BNF was invented in 1960 to describe
+                        the ALGOL language and is now used to 
+                        describe many programming languages.
+                    </p>
+
+                    <p>An example BNF grammar from the Python docs:</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="bnf">
+                    dict_display: "{" [key_list | dict_comprehension] "}"
+                    key_list: key_datum ("," key_datum)* [","]
+                    key_datum: expression ":" expression
+                    dict_comprehension: expression ":" expression comp_for
+                    </code></pre>
+
+                    <p>A BNF grammar can be used as a form of documentation,
+                        or even as a way to automatically create a parser
+                        for a language.</p>
+                </section>
+
+                <section>
+                    <h3>BNF vs. Regular expressions</h3>
+
+                    <p class="smaller">BNF is more powerful than regular expressions. For example, regular expressions cannot accurately match a language
+                        (like Scheme) in which parentheses balance and can be arbitrarily
+                        nested.</p>
+                    
+                    <div class="fragment">
+                    <p class="smaller">In formal language theory, BNF can describe
+                        "context-free languages" whereas regular expressions
+                        can only describe "regular languages".</p>
+                                            
+
+                        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="641.67" height="462" viewBox="0 0 641.67 462">
+                            <defs>
+                                <style>
+                                .cls-1 {
+                                    fill: #c4c4c4;
+                                }
+                            
+                                .cls-2 {
+                                    fill: #dbdbdb;
+                                }
+                            
+                                .cls-3 {
+                                    fill: #ededed;
+                                }
+                            
+                                .cls-4 {
+                                    fill: #fff;
+                                }
+                            
+                                .cls-5 {
+                                    font-size: 27.54px;
+                                    font-family: MyriadPro-Regular, Myriad Pro;
+                                }
+                                </style>
+                            </defs>
+                            <g>
+                                <path class="cls-1" d="M320.83,461.27c-85.54,0-166-24-226.43-67.52S.73,292.46.73,231,34,111.74,94.4,68.25,235.29.73,320.83.73s166,24,226.44,67.52S640.94,169.54,640.94,231s-33.27,119.26-93.67,162.75S406.38,461.27,320.83,461.27Z"/>
+                                <path d="M320.83,1.46A427,427,0,0,1,445.29,19.55c38,11.59,72.22,28.17,101.55,49.3s52.3,45.64,68.35,73c16.6,28.25,25,58.25,25,89.17s-8.41,60.92-25,89.17c-16.05,27.34-39.05,51.89-68.35,73s-63.5,37.71-101.55,49.3a437.16,437.16,0,0,1-248.91,0c-38-11.59-72.22-28.17-101.56-49.3s-52.29-45.64-68.35-73c-16.59-28.25-25-58.25-25-89.17s8.42-60.92,25-89.17c16.06-27.34,39.06-51.89,68.35-73s63.51-37.71,101.56-49.3A426.9,426.9,0,0,1,320.83,1.46m0-1.46C143.64,0,0,103.42,0,231S143.64,462,320.83,462,641.67,358.58,641.67,231,498,0,320.83,0Z"/>
+                            </g>
+                            <g>
+                                <ellipse class="cls-2" cx="320.83" cy="275.45" rx="286.12" ry="170.93"/>
+                                <path d="M320.83,105.11a454.21,454.21,0,0,1,111.31,13.44c34,8.61,64.59,20.94,90.82,36.63s46.74,33.9,61.08,54.19c14.81,20.94,22.32,43.17,22.32,66.08s-7.51,45.13-22.32,66.08c-14.34,20.29-34.89,38.52-61.08,54.18s-56.79,28-90.82,36.63a454.21,454.21,0,0,1-111.31,13.44,454.33,454.33,0,0,1-111.31-13.44c-34-8.61-64.58-20.93-90.81-36.63S72,361.82,57.62,341.53c-14.8-20.95-22.31-43.18-22.31-66.08s7.51-45.14,22.31-66.08c14.35-20.29,34.9-38.52,61.09-54.19s56.78-28,90.81-36.63a454.33,454.33,0,0,1,111.31-13.44m0-1.19c-158.35,0-286.71,76.79-286.71,171.53S162.48,447,320.83,447s286.72-76.8,286.72-171.53S479.18,103.92,320.83,103.92Z"/>
+                            </g>
+                            <g>
+                                <ellipse class="cls-3" cx="320.83" cy="318.96" rx="218.36" ry="116.95"/>
+                                <path d="M320.83,202.44C441,202.44,538.77,254.71,538.77,319S441,435.47,320.83,435.47,102.9,383.2,102.9,319s97.77-116.52,217.93-116.52m0-.86C200,201.58,102,254.13,102,319s98,117.37,218.79,117.37S539.63,383.78,539.63,319s-98-117.38-218.8-117.38Z"/>
+                            </g>
+                            <g>
+                                <ellipse class="cls-4" cx="320.83" cy="353.7" rx="143.4" ry="67.97"/>
+                                <path d="M320.83,286C399.76,286,464,316.37,464,353.7s-64.21,67.7-143.14,67.7S177.69,391,177.69,353.7,241.91,286,320.83,286m0-.54c-79.34,0-143.67,30.55-143.67,68.24s64.33,68.23,143.67,68.23S464.5,391.38,464.5,353.7s-64.32-68.24-143.67-68.24Z"/>
+                            </g>
+                            <text class="cls-5" transform="translate(229.24 353.91)">Type 3 - Regular</text>
+                            <text class="cls-5" transform="translate(199.17 270.34)">Type 2 - Context-Free</text>
+                            <text class="cls-5" transform="translate(172.42 176.44)">Type 1 - Context-Sensitive</text>
+                            <text class="cls-5" transform="translate(202.17 80.03)">Type 0 - Unrestricted</text>
+                            </svg>                          
+
+                    </div>
+                
+                </section>
+
+                <section>
+                    <h3>Basic BNF</h3>
+
+                    <p class="smaller">A BNF grammar consists of a set of grammar rules.
+                        We will specifically use the rule syntax
+                        supported by the
+                        <a target="_blank" href="https://lark-parser.readthedocs.io/en/latest/">Lark</a> Python package.
+                    </p>
+
+                    <p class="smaller">The basic form of a grammar rule:</p>
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="bnf">
+                    symbol₀: symbol₁ symbol₂ ... symbolₙ
+                    </code></pre>
+
+                    <p class="padded smaller">Symbols represent sets of strings and come in 2 flavors:</p>
+                    <ul class="smaller">
+                        <li><strong>Non-terminal symbols</strong>: Can expand into either non-terminal symbols (themselves)
+                            or terminals.
+                        <li><strong>Terminal symbols</strong>: Strings (inside double quotes) or regular expressions (inside forward slashes).
+                    </ul>
+                    <p class="smaller">To give multiple alternative rules for a non-terminal, use <code>|</code>:</p>
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="bnf">
+                    symbol₀: symbol₁ | symbol₂
+                    </code></pre>
+
+                </section>
+
+        <section>
+            <h3>BNF example</h3>
+
+            <p>A simple grammar with three rules:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="bnf">
+                    ?start: numbers 
+                    numbers: INTEGER | numbers "," INTEGER
+                    INTEGER: /-?\d+/
+                    </code></pre>
+
+                    <p style="margin-bottom:0px;">For the Lark library,</p>
+            <ul>
+                        <li>Grammars need to start with a <code>start</code> symbol.
+                        <li>Non-terminal symbol names are written in lowercase.
+                        <li>Terminal symbols are written in UPPERCASE.
+                    </ul>
+                        
+                    <p>What strings are described by that grammar?</p>
+                    <pre class="fragment" style="font-size:1.0em"><code data-trim data-noescape class="bnf">
+                    10
+                    10,-11
+                    10,-11,12
+                    </code></pre>
+                    
+                </section>
+
+                <section>
+            <h3>Trying out BNF grammars</h3>
+
+                    <p class="smaller">You can paste a BNF grammar in code.cs61a.org,
+                    and it will be automatically recognized and processed by Lark
+                    as long as the first line starts with <code>?start:</code>.
+                    </p>
+
+                    <p class="smaller">If the grammar is parsed successfully,
+                    then you can type strings from the language in the prompt.</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="bnf">
+                    lark&gt; 10,-11
+                    </code></pre>
+
+                    <p class="smaller">If the string can be parsed according to the grammar,
+                    a parse tree appears! 🥳 🎉 🤯</p>
+
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="233" style="width: 100%;"><rect id="SvgjsRect1088" width="73.608" height="50" rx="50" ry="50" x="138.814" y="90" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1083" width="73.608" height="50" rx="50" ry="50" x="10" y="170" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1078" width="98.814" height="50" rx="50" ry="50" x="10" y="90" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1073" width="98.814" height="50" rx="50" ry="50" x="10" y="10" stroke="black" stroke-width="2" fill="transparent"></rect><text id="SvgjsText1074" font-family="Monaco, monospace" x="30" y="22" fill="black" font-size="14"><tspan id="SvgjsTspan1075" dy="18.2" x="30">numbers</tspan></text><polygon id="SvgjsPolygon1076" points="59.407,90 49.407,95 49.407,85" fill="black" transform="matrix(6.123233995736766e-17,1,-1,6.123233995736766e-17,149.40699999999998,30.592999999999996)"></polygon><line id="SvgjsLine1077" x1="59.407" y1="60" x2="59.407" y2="85" stroke="black" stroke-width="2"></line><text id="SvgjsText1079" font-family="Monaco, monospace" x="30" y="102" fill="black" font-size="14"><tspan id="SvgjsTspan1080" dy="18.2" x="30">numbers</tspan></text><polygon id="SvgjsPolygon1081" points="46.804,170 36.804,175 36.804,165" fill="black" transform="matrix(-0.3873108533392402,0.9219491867156397,-0.9219491867156397,-0.3873108533392402,221.66305892134855,192.69193533263203)"></polygon><line id="SvgjsLine1082" x1="59.407" y1="140" x2="48.7405542666962" y2="165.3902540664218" stroke="black" stroke-width="2"></line><text id="SvgjsText1084" font-family="Monaco, monospace" x="30" y="182" fill="black" font-size="14"><tspan id="SvgjsTspan1085" dy="18.2" x="30">'10'</tspan></text><polygon id="SvgjsPolygon1086" points="175.618,90 165.618,95 165.618,85" fill="black" transform="matrix(0.9682570313542528,0.2499566387056955,-0.2499566387056955,0.9682570313542528,28.07073415114141,-41.04001779809957)"></polygon><line id="SvgjsLine1087" x1="59.407" y1="60" x2="170.77671484322872" y2="88.75021680647153" stroke="black" stroke-width="2"></line><text id="SvgjsText1089" font-family="Monaco, monospace" x="158.814" y="102" fill="black" font-size="14"><tspan id="SvgjsTspan1090" dy="18.2" x="158.814">'11'</tspan></text></svg>
+
+        </section>
+
+        <section>
+            <h3>Defining terminals</h3>
+                    
+                    <p>Terminals are the base cases of the grammar
+                        (like the tokens from the Scheme project).</p>
+                    
+                    <p style="margin-bottom:0px">In Lark grammars, they can be written as:</p>
+                    <ul class="smaller">
+                    <li>Quoted strings which simply match themselves (e.g. <code>"*"</code> or <code>"define"</code>)
+                    <li>Regular expressions surrounded by <code>/</code> on both sides (e.g. <code>/\d+/</code>)
+                    <li>Symbols written in uppercase which are defined by lexical rules (e.g. <code>NUMBER: /\d+(\.\d+)/</code> 
+                    </ul>
+                    
+                    <p>It's common to want to always ignore some terminals
+                    before matching. You can do that in Lark by adding an <code>%ignore</code>
+                    directive at the end of the grammar.</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="bnf">
+                    %ignore /\s+/    // Ignores all whitespace
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <h3>Example: Sentences</h3>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="bnf">
+?start: sentence
+sentence: noun_phrase verb
+noun: NOUN
+noun_phrase: article noun
+article : | ARTICLE   // The first option matches ""
+verb: VERB
+NOUN: "horse" | "dog" | "hamster"
+ARTICLE: "a" | "the"
+VERB: "stands" | "walks" | "jumps"
+%ignore /\s+/
+                    </code></pre>
+
+                    <p>What strings can this grammar parse?</p>
+                    <pre class="fragment" style="font-size:0.9em"><code data-trim data-noescape class="bnf">
+                    the horse jumps
+                    a dog walks
+                    hamster stands
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Repetition</h3>
+
+                    <p>EBNF is an extension to BNF that supports
+                    some shorthand notations for specifying how many
+                    of a particular symbol to match.</p>
+
+                    <table>
+                    <thead><tr><td>EBNF<td>Meaning<td>BNF equiv
+                    <tbody>
+                        <tr>
+                        <td><code>item*</code> <td>Zero or more items <td><code>items: | items item</code>
+                        <tr>
+                        <td><code>item+</code> <td>One or more items  <td><code>items: item | items item</code>
+                        <tr>
+                        <td><code>item?</code> <td>Optional item      <td><code>optitem: | item</code>
+                    </table>
+                    <p>All of our grammars for Lark can use EBNF shorthands.</p>
+                </section>
+
+                <section>
+                <h3>Grouping</h3>
+                
+                <p>Parentheses can be used for grouping.</p>
+                <pre style="font-size:0.9em"><code data-trim data-noescape class="bnf">
+                ?start: list
+                list: ( NAME | NUM )+
+                NAME: /[a-zA-Z]+/
+                NUM: /\d+/
+
+                %ignore /\s/
+                </code></pre>
+                
+                <p>Square brackets indicate an optional group.</p>
+                <pre style="font-size:0.9em"><code data-trim data-noescape class="bnf">
+                numbered_list: ( NAME [ ":" NUM ] )+
+                    </code></pre>
+                
+                    <p>Exercise: Describe a comma-separated list of zero or more names (no comma at the end).</p>
+                <pre class="fragment" style="font-size:0.9em"><code data-trim data-noescape class="bnf">
+                comma_separated_list: [ NAME ("," NAME)* ]
+                </code></pre>
+                </section> 
+
+
+                <section>
+                    <h3>Importing common terminals</h3>
+                    
+                    <p>Lark also provides pre-defined terminals
+                    for common types of data to match.</p>
+
+                <pre style="font-size:0.9em"><code data-trim data-noescape class="bnf">
+                    %import common.NUMBER
+                    %import common.SIGNED_NUMBER
+                    %import common.DIGIT
+                    %import common.HEXDIGIT
+                    </code></pre>
+
+                    <p><a target="_blank" href="https://github.com/lark-parser/lark/blob/master/lark/grammars/common.lark">See all here</a></p>
+                </section> 
+
+                <section>
+                    <h3>Example: Calculator</h3>
+
+                    <p>A BNF for the Calculator language:</p>
+                <pre style="font-size:0.9em"><code data-trim data-noescape class="bnf">
+                ?start: calc_expr
+                ?calc_expr: NUMBER | calc_op
+                calc_op: "(" OPERATOR calc_expr* ")"
+                OPERATOR: "+" | "-" | "*" | "/"
+
+                %ignore /\s+/
+                %import common.NUMBER
+                </code></pre>
+                </section>
+
+                <section>
+                    <h3>Calculator tree breakdown</h3>
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+                <pre style="grid-row: 1; grid-column: 1; font-size:0.9em"><code data-trim data-noescape class="bnf">
+                ?start: calc_expr
+                ?calc_expr: NUMBER | calc_op
+                calc_op: "(" OPERATOR calc_expr* ")"
+                OPERATOR: "+" | "-" | "*" | "/"
+                </code></pre>
+        
+                
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="233" style="grid-row:1; grid-column: 2; width: 100%;"><rect id="SvgjsRect1369" width="65.20599999999999" height="50" rx="50" ry="50" x="200.41199999999998" y="170" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1364" width="65.20599999999999" height="50" rx="50" ry="50" x="105.20599999999999" y="170" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1359" width="65.20599999999999" height="50" rx="50" ry="50" x="10" y="170" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1354" width="98.814" height="50" rx="50" ry="50" x="200.41199999999998" y="90" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1349" width="65.20599999999999" height="50" rx="50" ry="50" x="105.20599999999999" y="90" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1344" width="65.20599999999999" height="50" rx="50" ry="50" x="10" y="90" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1339" width="98.814" height="50" rx="50" ry="50" x="10" y="10" stroke="black" stroke-width="2" fill="transparent"></rect><text id="SvgjsText1340" font-family="Monaco, monospace" x="30" y="22" fill="black" font-size="14"><tspan id="SvgjsTspan1341" dy="18.2" x="30">calc_op</tspan></text><polygon id="SvgjsPolygon1342" points="42.602999999999994,90 32.602999999999994,95 32.602999999999994,85" fill="black" transform="matrix(-0.4886919226900238,0.8724564199417228,-0.8724564199417228,-0.4886919226900238,141.94381977711814,96.81301218332493)"></polygon><line id="SvgjsLine1343" x1="59.407" y1="60" x2="45.04645961345011" y2="85.63771790029139" stroke="black" stroke-width="2"></line><text id="SvgjsText1345" font-family="Monaco, monospace" x="30" y="102" fill="black" font-size="14"><tspan id="SvgjsTspan1346" dy="18.2" x="30">'*'</tspan></text><polygon id="SvgjsPolygon1347" points="137.80899999999997,90 127.80899999999997,95 127.80899999999997,85" fill="black" transform="matrix(0.9339613420513677,0.357374049916342,-0.357374049916342,0.9339613420513677,41.26438590571385,-43.30588122954424)"></polygon><line id="SvgjsLine1348" x1="59.407" y1="60" x2="133.13919328974313" y2="88.21312975041829" stroke="black" stroke-width="2"></line><text id="SvgjsText1350" font-family="Monaco, monospace" x="125.20599999999999" y="102" fill="black" font-size="14"><tspan id="SvgjsTspan1351" dy="18.2" x="125.20599999999999">'4'</tspan></text><polygon id="SvgjsPolygon1352" points="249.81899999999996,90 239.81899999999996,95 239.81899999999996,85" fill="black" transform="matrix(0.9878149003814796,0.15563329523057579,-0.15563329523057579,0.9878149003814796,17.051065972350983,-37.78349521554037)"></polygon><line id="SvgjsLine1353" x1="59.407" y1="60" x2="244.87992549809258" y2="89.22183352384712" stroke="black" stroke-width="2"></line><text id="SvgjsText1355" font-family="Monaco, monospace" x="220.41199999999998" y="102" fill="black" font-size="14"><tspan id="SvgjsTspan1356" dy="18.2" x="220.41199999999998">calc_op</tspan></text><polygon id="SvgjsPolygon1357" points="42.602999999999994,170 32.602999999999994,175 32.602999999999994,165" fill="black" transform="matrix(-0.9896818108566143,0.14328263418702414,-0.14328263418702414,-0.9896818108566143,109.12446199971843,332.14163778135463)"></polygon><line id="SvgjsLine1358" x1="249.81899999999996" y1="140" x2="47.55140905428306" y2="169.2835868290649" stroke="black" stroke-width="2"></line><text id="SvgjsText1360" font-family="Monaco, monospace" x="30" y="182" fill="black" font-size="14"><tspan id="SvgjsTspan1361" dy="18.2" x="30">'+'</tspan></text><polygon id="SvgjsPolygon1362" points="137.80899999999997,170 127.80899999999997,175 127.80899999999997,165" fill="black" transform="matrix(-0.9659538244225332,0.2587145320299616,-0.2587145320299616,-0.9659538244225332,314.90760103493824,298.5589592073137)"></polygon><line id="SvgjsLine1363" x1="249.81899999999996" y1="140" x2="142.63876912211265" y2="168.7064273398502" stroke="black" stroke-width="2"></line><text id="SvgjsText1365" font-family="Monaco, monospace" x="125.20599999999999" y="182" fill="black" font-size="14"><tspan id="SvgjsTspan1366" dy="18.2" x="125.20599999999999">'7'</tspan></text><polygon id="SvgjsPolygon1367" points="233.015,170 223.015,175 223.015,165" fill="black" transform="matrix(-0.48869192269002343,0.8724564199417231,-0.8724564199417231,-0.48869192269002343,495.20513975570873,49.78219416458339)"></polygon><line id="SvgjsLine1368" x1="249.81899999999996" y1="140" x2="235.4584596134501" y2="165.6377179002914" stroke="black" stroke-width="2"></line><text id="SvgjsText1370" font-family="Monaco, monospace" x="220.41199999999998" y="182" fill="black" font-size="14"><tspan id="SvgjsTspan1371" dy="18.2" x="220.41199999999998">'5'</tspan></text></svg>
+    
+                </div>
+
+                    <ul class="smaller padded">
+                    <li>Terminals are always leaf values, never branches.
+                    <li>Lark removes unnamed literals entirely (like <code>"("</code>) but does show the values
+                        of named terminals (like <code>OPERATOR</code>) or unnamed regular expressions.
+                    <li>Lark removes any nodes whose rules start with <code>?</code> and have only one child, replacing them with that child (like <code>calc_expr</code>).  
+                    </ul>
+    
+                    <p class="smaller">Because the tree is simplified, we call it an <strong>abstract syntax tree</strong>.</p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Exercises</h2>
+                </section>
+
+                <section>
+                    <h3>Exercise: Python comparisons</h3>
+
+                    <p>Write a BNF that can parse simple Python comparisons between numbers:
+                        <code>5 &gt; 2</code>, <code>3 &lt; 5</code>, <code>32 == 33</code>, etc.
+                    </p>
+
+                    <p>The comparison <code>5 > 2</code> should result in this parse tree:</p>
+                    <img src="images/bnf_comparison.svg" alt="Diagram of resulting parse tree for Python comparison 5 > 2">
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="bnf">
+                    ?start: comparison
+                    comparison: ______________________
+                    __________: ______________________
+
+                    %ignore /\s+/
+                    %import common.NUMBER
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Exercise: Python comparisons (Solution)</h3>
+
+                    <p>Write a BNF that can parse simple Python comparisons between numbers:
+                        <code>5 &gt; 2</code>, <code>3 &lt; 5</code>, <code>32 == 33</code>, etc.
+                    </p>
+
+                    <p>The comparison <code>5 > 2</code> should result in this parse tree:</p>
+                    <img src="images/bnf_comparison.svg" alt="Diagram of resulting parse tree for Python comparison 5 > 2">
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="text">
+                    ?start: comparison
+                    comparison: NUMBER COMPARATOR NUMBER
+                    COMPARATOR: "=="  | "&gt;" | "&lt;"                 
+
+                    %ignore /\s+/
+                    %import common.NUMBER
+                    </code></pre>
+
+                </section>
+
+
+                <section>
+                    <h3>Exercise: Python ands</h3>
+
+                    <p>Write a BNF that can parse simple comparisons <em>or</em>
+                        Python <code>and</code> expressions with those simple comparisons:<br>
+                        <code>5 &gt; 2</code>, <code>5 &gt; 2 and 3 &lt; 5</code>, <code>5 &gt; 2 and 3 &lt; 5 and 2 &lt; 4</code>.
+                    </p>
+
+                    <p><code>5 > 2 and 2 &lt; 3</code> should result in this parse tree:</p>
+                    <img src="images/bnf_andexpression.svg" alt="Diagram of resulting parse tree for Python and expression 5 > 2 and 2 &lt; 3" style="width:600px;">
+                    <p>Note: An <code>and</code> expression may itself contain nested <code>and</code>s.</p>
+
+                    <p>Start from the previous solution.</p>
+                </section>
+
+                <section>
+                    <h3>Exercise: Python ands (Solution)</h3>
+
+                    <p>Write a BNF that can parse simple comparisons <em>or</em>
+                        Python <code>and</code> expressions with those simple comparisons:<br>
+                        <code>5 &gt; 2</code>, <code>5 &gt; 2 and 3 &lt; 5</code>, <code>5 &gt; 2 and 3 &lt; 5 and 2 &lt; 4</code>.
+                    </p>
+
+                    <p>Note: An <code>and</code> expression may itself contain nested <code>and</code>s.</p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="text">
+                    ?start: expression
+                    ?expression: and_expression | comparison
+                    and_expression: expression "and" expression
+                    comparison: NUMBER COMPARATOR NUMBER
+                    COMPARATOR: ">" | "<" | "=="
+
+                    %ignore /\s+/
+                    %import common.NUMBER
+                    </code></pre>
+
+                </section>
+
+
+                <section>
+                    <h3>Exercise: Python and/ors</h3>
+
+                    <p>Add support for <code>or</code> expressions to previous BNF.<br>
+                        <code>5 &gt; 2</code>, <code>5 &gt; 2 or 3 &lt; 5</code>, <code>5 &gt; 2 and 3 &lt; 5 or 2 &lt; 4</code>.
+                    </p>
+
+                    <p><code>5 > 2 and 2 &lt; 3 or 3 > 4</code> should result in this tree:</p>
+                    <img src="images/bnf_andorexpr.svg" alt="Diagram of resulting parse tree for Python and expression 5 > 2 and 2 &lt; 3 or 3 > 4" style="width:600px;">
+
+                </section>
+
+                <section>
+                    <h3>Exercise: Python and/ors (Solution)</h3>
+
+                    <p>Add support for <code>or</code> expressions to previous BNF.<br>
+                        <code>5 &gt; 2</code>, <code>5 &gt; 2 or 3 &lt; 5</code>, <code>5 &gt; 2 and 3 &lt; 5 or 2 &lt; 4</code>.
+                    </p>
+
+                    <p><code>5 > 2 and 2 &lt; 3 or 3 > 4</code> should result in this tree:</p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="text">
+                    ?start: expression
+                    ?expression: or_expression | and_expression | comparison
+                    or_expression: expression "or" expression
+                    and_expression: expression "and" expression
+                    comparison: NUMBER COMPARATOR NUMBER
+                    COMPARATOR: ">" | "&lt;" | "=="
+
+                    %ignore /\s+/
+                    %import common.NUMBER
+                    </code></pre>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Resolving ambiguity</h2>
+                </section>
+
+                <section>
+                    <h3>Ambiguity</h3>
+
+                    <p>Ambiguity arises when a grammar supports multiple possible
+                        parses of the same string.</p>
+
+                    <p>Python infix expression grammar:</p>
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="bnf">
+                    ?start: expr
+                    ?expr: NUMBER | expr OPERATOR expr
+                    OPERATOR: "+" | "-" | "*" | "/"
+                    </code></pre>
+
+                    <p>What tree should we get for 3+7*2?</p>
+            
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="233" style="width: 100%; grid-row: 1; grid-column: 1;"><rect id="SvgjsRect1086" width="65.20599999999999" height="50" rx="50" ry="50" x="208.814" y="90" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1081" width="65.20599999999999" height="50" rx="50" ry="50" x="113.608" y="90" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1076" width="65.20599999999999" height="50" rx="50" ry="50" x="200.41199999999998" y="170" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1071" width="65.20599999999999" height="50" rx="50" ry="50" x="105.20599999999999" y="170" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1066" width="65.20599999999999" height="50" rx="50" ry="50" x="10" y="170" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1061" width="73.608" height="50" rx="50" ry="50" x="10" y="90" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1056" width="73.608" height="50" rx="50" ry="50" x="10" y="10" stroke="black" stroke-width="2" fill="transparent"></rect><text id="SvgjsText1057" font-family="Monaco, monospace" x="30" y="22" fill="black" font-size="14"><tspan id="SvgjsTspan1058" dy="18.2" x="30">expr</tspan></text><polygon id="SvgjsPolygon1059" points="46.804,90 36.804,95 36.804,85" fill="black" transform="matrix(6.123233995736766e-17,1,-1,6.123233995736766e-17,136.804,43.19599999999999)"></polygon><line id="SvgjsLine1060" x1="46.804" y1="60" x2="46.804" y2="85" stroke="black" stroke-width="2"></line><text id="SvgjsText1062" font-family="Monaco, monospace" x="30" y="102" fill="black" font-size="14"><tspan id="SvgjsTspan1063" dy="18.2" x="30">expr</tspan></text><polygon id="SvgjsPolygon1064" points="42.602999999999994,170 32.602999999999994,175 32.602999999999994,165" fill="black" transform="matrix(-0.13868022111826483,0.9903372134129814,-0.9903372134129814,-0.13868022111826483,216.8685197405083,151.3843012870718)"></polygon><line id="SvgjsLine1065" x1="46.804" y1="140" x2="43.296401105591315" y2="165.0483139329351" stroke="black" stroke-width="2"></line><text id="SvgjsText1067" font-family="Monaco, monospace" x="30" y="182" fill="black" font-size="14"><tspan id="SvgjsTspan1068" dy="18.2" x="30">'3'</tspan></text><polygon id="SvgjsPolygon1069" points="137.80899999999997,170 127.80899999999997,175 127.80899999999997,165" fill="black" transform="matrix(0.9497268967839649,0.3130795769849894,-0.3130795769849894,0.9497268967839649,60.15161416854676,-34.59875587799843)"></polygon><line id="SvgjsLine1070" x1="46.804" y1="140" x2="133.06036551608014" y2="168.43460211507505" stroke="black" stroke-width="2"></line><text id="SvgjsText1072" font-family="Monaco, monospace" x="125.20599999999999" y="182" fill="black" font-size="14"><tspan id="SvgjsTspan1073" dy="18.2" x="125.20599999999999">'+'</tspan></text><polygon id="SvgjsPolygon1074" points="233.015,170 223.015,175 223.015,165" fill="black" transform="matrix(0.9872694696010768,0.15905657607784882,-0.15905657607784882,0.9872694696010768,30.0060224741394,-34.89837790696299)"></polygon><line id="SvgjsLine1075" x1="46.804" y1="140" x2="228.07865265199462" y2="169.20471711961076" stroke="black" stroke-width="2"></line><text id="SvgjsText1077" font-family="Monaco, monospace" x="220.41199999999998" y="182" fill="black" font-size="14"><tspan id="SvgjsTspan1078" dy="18.2" x="220.41199999999998">'7'</tspan></text><polygon id="SvgjsPolygon1079" points="146.211,90 136.211,95 136.211,85" fill="black" transform="matrix(0.9573534473606643,0.2889193258102541,-0.2889193258102541,0.9573534473606643,32.23813443087276,-38.40499380850284)"></polygon><line id="SvgjsLine1080" x1="46.804" y1="60" x2="141.4242327631967" y2="88.55540337094872" stroke="black" stroke-width="2"></line><text id="SvgjsText1082" font-family="Monaco, monospace" x="133.608" y="102" fill="black" font-size="14"><tspan id="SvgjsTspan1083" dy="18.2" x="133.608">'*'</tspan></text><polygon id="SvgjsPolygon1084" points="241.41699999999997,90 231.41699999999997,95 231.41699999999997,85" fill="black" transform="matrix(0.9883262119464942,0.1523525476632847,-0.1523525476632847,0.9883262119464942,16.529980180208838,-35.729854074411676)"></polygon><line id="SvgjsLine1085" x1="46.804" y1="60" x2="236.47536894026751" y2="89.23823726168358" stroke="black" stroke-width="2"></line><text id="SvgjsText1087" font-family="Monaco, monospace" x="228.814" y="102" fill="black" font-size="14"><tspan id="SvgjsTspan1088" dy="18.2" x="228.814">'2'</tspan></text></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="233" style="width: 100%; grid-row: 1; grid-column: 2;"><rect id="SvgjsRect1120" width="65.20599999999999" height="50" rx="50" ry="50" x="200.41199999999998" y="170" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1115" width="65.20599999999999" height="50" rx="50" ry="50" x="105.20599999999999" y="170" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1110" width="65.20599999999999" height="50" rx="50" ry="50" x="10" y="170" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1105" width="107.216" height="50" rx="50" ry="50" x="200.41199999999998" y="90" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1100" width="65.20599999999999" height="50" rx="50" ry="50" x="105.20599999999999" y="90" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1095" width="65.20599999999999" height="50" rx="50" ry="50" x="10" y="90" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1090" width="107.216" height="50" rx="50" ry="50" x="10" y="10" stroke="black" stroke-width="2" fill="transparent"></rect><text id="SvgjsText1091" font-family="Monaco, monospace" x="30" y="22" fill="black" font-size="14"><tspan id="SvgjsTspan1092" dy="18.2" x="30">expr</tspan></text><polygon id="SvgjsPolygon1093" points="42.602999999999994,90 32.602999999999994,95 32.602999999999994,85" fill="black" transform="matrix(-0.573553970281329,0.8191677747412457,-0.8191677747412457,-0.573553970281329,140.76321952260759,106.72085261801833)"></polygon><line id="SvgjsLine1094" x1="63.608" y1="60" x2="45.47076985140664" y2="85.90416112629377" stroke="black" stroke-width="2"></line><text id="SvgjsText1096" font-family="Monaco, monospace" x="30" y="102" fill="black" font-size="14"><tspan id="SvgjsTspan1097" dy="18.2" x="30">'3'</tspan></text><polygon id="SvgjsPolygon1098" points="137.80899999999997,90 127.80899999999997,95 127.80899999999997,85" fill="black" transform="matrix(0.9270933456869672,0.37483053288512325,-0.37483053288512325,0.9270933456869672,43.781941083885826,-45.093422018192996)"></polygon><line id="SvgjsLine1099" x1="63.608" y1="60" x2="133.17353327156513" y2="88.12584733557438" stroke="black" stroke-width="2"></line><text id="SvgjsText1101" font-family="Monaco, monospace" x="125.20599999999999" y="102" fill="black" font-size="14"><tspan id="SvgjsTspan1102" dy="18.2" x="125.20599999999999">'+'</tspan></text><polygon id="SvgjsPolygon1103" points="254.01999999999998,90 244.01999999999998,95 244.01999999999998,85" fill="black" transform="matrix(0.9878149003814796,0.15563329523057579,-0.15563329523057579,0.9878149003814796,17.102255575848375,-38.43731068880402)"></polygon><line id="SvgjsLine1104" x1="63.608" y1="60" x2="249.0809254980926" y2="89.22183352384712" stroke="black" stroke-width="2"></line><text id="SvgjsText1106" font-family="Monaco, monospace" x="220.41199999999998" y="102" fill="black" font-size="14"><tspan id="SvgjsTspan1107" dy="18.2" x="220.41199999999998">expr</tspan></text><polygon id="SvgjsPolygon1108" points="42.602999999999994,170 32.602999999999994,175 32.602999999999994,165" fill="black" transform="matrix(-0.9900817760928612,0.14049226544121732,-0.14049226544121732,-0.9900817760928612,108.6671390318911,332.3285099511942)"></polygon><line id="SvgjsLine1109" x1="254.01999999999998" y1="140" x2="47.5534088804643" y2="169.2975386727939" stroke="black" stroke-width="2"></line><text id="SvgjsText1111" font-family="Monaco, monospace" x="30" y="182" fill="black" font-size="14"><tspan id="SvgjsTspan1112" dy="18.2" x="30">'7'</tspan></text><polygon id="SvgjsPolygon1113" points="137.80899999999997,170 127.80899999999997,175 127.80899999999997,165" fill="black" transform="matrix(-0.9682570313542527,0.24995663870569584,-0.24995663870569584,-0.9682570313542527,313.73616181386643,300.1574209068297)"></polygon><line id="SvgjsLine1114" x1="254.01999999999998" y1="140" x2="142.65028515677125" y2="168.7502168064715" stroke="black" stroke-width="2"></line><text id="SvgjsText1116" font-family="Monaco, monospace" x="125.20599999999999" y="182" fill="black" font-size="14"><tspan id="SvgjsTspan1117" dy="18.2" x="125.20599999999999">'*'</tspan></text><polygon id="SvgjsPolygon1118" points="233.015,170 223.015,175 223.015,165" fill="black" transform="matrix(-0.5735539702813287,0.819167774741246,-0.819167774741246,-0.5735539702813287,505.9202000911156,76.62579591649444)"></polygon><line id="SvgjsLine1119" x1="254.01999999999998" y1="140" x2="235.88276985140664" y2="165.90416112629376" stroke="black" stroke-width="2"></line><text id="SvgjsText1121" font-family="Monaco, monospace" x="220.41199999999998" y="182" fill="black" font-size="14"><tspan id="SvgjsTspan1122" dy="18.2" x="220.41199999999998">'2'</tspan></text></svg>
+                    </div>
+
+                </section>
+
+                <section>
+                    <h3>Ambiguity resolution</h3>
+
+                    <p>One way to resolve this ambiguity:</p>
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="bnf">
+                    ?start: expr
+                    ?expr: add_expr
+                    ?add_expr: mul_expr | add_expr ADDOP mul_expr
+                    ?mul_expr: NUMBER | mul_expr MULOP NUMBER
+                    ADDOP: "+" | "-"
+                    MULOP: "*" | "/"
+                    </code></pre>
+
+                    <p>That grammar can only produce this parse tree:</p>
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="233" style="width: 100%;"><rect id="SvgjsRect1271" width="65.20599999999999" height="50" rx="50" ry="50" x="200.41199999999998" y="170" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1266" width="65.20599999999999" height="50" rx="50" ry="50" x="105.20599999999999" y="170" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1261" width="65.20599999999999" height="50" rx="50" ry="50" x="10" y="170" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1256" width="107.216" height="50" rx="50" ry="50" x="200.41199999999998" y="90" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1251" width="65.20599999999999" height="50" rx="50" ry="50" x="105.20599999999999" y="90" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1246" width="65.20599999999999" height="50" rx="50" ry="50" x="10" y="90" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1241" width="107.216" height="50" rx="50" ry="50" x="10" y="10" stroke="black" stroke-width="2" fill="transparent"></rect><text id="SvgjsText1242" font-family="Monaco, monospace" x="30" y="22" fill="black" font-size="14"><tspan id="SvgjsTspan1243" dy="18.2" x="30">add_expr</tspan></text><polygon id="SvgjsPolygon1244" points="42.602999999999994,90 32.602999999999994,95 32.602999999999994,85" fill="black" transform="matrix(-0.573553970281329,0.8191677747412457,-0.8191677747412457,-0.573553970281329,140.76321952260759,106.72085261801833)"></polygon><line id="SvgjsLine1245" x1="63.608" y1="60" x2="45.47076985140664" y2="85.90416112629377" stroke="black" stroke-width="2"></line><text id="SvgjsText1247" font-family="Monaco, monospace" x="30" y="102" fill="black" font-size="14"><tspan id="SvgjsTspan1248" dy="18.2" x="30">'3'</tspan></text><polygon id="SvgjsPolygon1249" points="137.80899999999997,90 127.80899999999997,95 127.80899999999997,85" fill="black" transform="matrix(0.9270933456869672,0.37483053288512325,-0.37483053288512325,0.9270933456869672,43.781941083885826,-45.093422018192996)"></polygon><line id="SvgjsLine1250" x1="63.608" y1="60" x2="133.17353327156513" y2="88.12584733557438" stroke="black" stroke-width="2"></line><text id="SvgjsText1252" font-family="Monaco, monospace" x="125.20599999999999" y="102" fill="black" font-size="14"><tspan id="SvgjsTspan1253" dy="18.2" x="125.20599999999999">'+'</tspan></text><polygon id="SvgjsPolygon1254" points="254.01999999999998,90 244.01999999999998,95 244.01999999999998,85" fill="black" transform="matrix(0.9878149003814796,0.15563329523057579,-0.15563329523057579,0.9878149003814796,17.102255575848375,-38.43731068880402)"></polygon><line id="SvgjsLine1255" x1="63.608" y1="60" x2="249.0809254980926" y2="89.22183352384712" stroke="black" stroke-width="2"></line><text id="SvgjsText1257" font-family="Monaco, monospace" x="220.41199999999998" y="102" fill="black" font-size="14"><tspan id="SvgjsTspan1258" dy="18.2" x="220.41199999999998">mul_expr</tspan></text><polygon id="SvgjsPolygon1259" points="42.602999999999994,170 32.602999999999994,175 32.602999999999994,165" fill="black" transform="matrix(-0.9900817760928612,0.14049226544121732,-0.14049226544121732,-0.9900817760928612,108.6671390318911,332.3285099511942)"></polygon><line id="SvgjsLine1260" x1="254.01999999999998" y1="140" x2="47.5534088804643" y2="169.2975386727939" stroke="black" stroke-width="2"></line><text id="SvgjsText1262" font-family="Monaco, monospace" x="30" y="182" fill="black" font-size="14"><tspan id="SvgjsTspan1263" dy="18.2" x="30">'7'</tspan></text><polygon id="SvgjsPolygon1264" points="137.80899999999997,170 127.80899999999997,175 127.80899999999997,165" fill="black" transform="matrix(-0.9682570313542527,0.24995663870569584,-0.24995663870569584,-0.9682570313542527,313.73616181386643,300.1574209068297)"></polygon><line id="SvgjsLine1265" x1="254.01999999999998" y1="140" x2="142.65028515677125" y2="168.7502168064715" stroke="black" stroke-width="2"></line><text id="SvgjsText1267" font-family="Monaco, monospace" x="125.20599999999999" y="182" fill="black" font-size="14"><tspan id="SvgjsTspan1268" dy="18.2" x="125.20599999999999">'*'</tspan></text><polygon id="SvgjsPolygon1269" points="233.015,170 223.015,175 223.015,165" fill="black" transform="matrix(-0.5735539702813287,0.819167774741246,-0.819167774741246,-0.5735539702813287,505.9202000911156,76.62579591649444)"></polygon><line id="SvgjsLine1270" x1="254.01999999999998" y1="140" x2="235.88276985140664" y2="165.90416112629376" stroke="black" stroke-width="2"></line><text id="SvgjsText1272" font-family="Monaco, monospace" x="220.41199999999998" y="182" fill="black" font-size="14"><tspan id="SvgjsTspan1273" dy="18.2" x="220.41199999999998">'2'</tspan></text></svg>
+
+                </section>
+
+                <section>
+                    <h3>BNF Tips</h3>
+
+                    <ul>
+                        <li>Check your parse trees on code.cs61a.org</li>
+                        <li>Consider whether a ? should be in front of a non-terminal</li>
+                    </ul>
+                </section>
+
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-menu@2.1.0/menu.js"></script>
+        <!-- The loading of KaTeX is deferred to speed up page rendering -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.js" integrity="sha384-31El76TwmbHj4rF9DyLsygbq6xoIobG0W+jqXim+a3dU9W53tdH3A/ngRPxOzzaB" crossorigin="anonymous"></script>
+        <!-- To automatically render math in text elements, include the auto-render extension: -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"
+            onload="renderMathInElement(document.body, {fleqn: true});"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight, RevealMenu ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge();
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+        </script>
+    </body>
+</html>

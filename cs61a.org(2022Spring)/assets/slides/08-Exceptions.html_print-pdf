@@ -1,0 +1,582 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Exceptions & Decorators</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Exceptions & Decorators</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="08-Exceptions.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Exceptions
+                        <li>Decorators
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Exceptions</h2>
+                </section>
+                
+                <section>
+                    <h3>Handling errors</h3>
+
+                    <p class="smaller">Sometimes, computer programs behave in non-standard ways.</p>
+                    <ul class="smaller">
+                        <li>A function receives an argument value of an improper type
+                        <li>Some resource (such as a file) is not available
+                        <li>A network connection is lost in the middle of data transmission
+                    </ul>
+
+                    <figure>
+                        <img src="images/bug_in_machine.png" alt="Moth found in a computer by Grace Hopper"/>
+                        <figcaption class="smaller">Moth found in a Mark II Computer (Grace Hopper's Notebook, 1947)</figcaption>
+                    </figure>
+                </section>
+
+                <section>
+                    <h3>Exceptions</h3>
+
+                    <p>An <strong>exception</strong> is a built-in mechanism in a programming language to declare and respond to "exceptional"
+                        conditions.</p>
+                    
+                    <p>A program raises an exception when an error occurs.</p>
+
+                    <p>If the exception is not handled, the program will stop running entirely.</p>
+
+                    <p>But if a programmer can anticipate when exceptions might happen,
+                        they can include code for <strong>handling the exception</strong>, so that the program continues running.</p>
+
+                    <p>Many languages include exception handling: C++, Java, Python, JavaScript, etc.</p>
+                </section>
+
+                <section>
+                    <h3>Exceptions in Python</h3>
+
+                    <p>Python raises an exception whenever a runtime error occurs.</p>
+
+                    <p>How an unhandled exception is reported:</p>
+                    <pre style="font-size:0.7em; margin-bottom: 40px;"><code data-trim data-noescape class="python">
+                    >>> 10/0
+                    Traceback (most recent call last):
+                        File "&lt;stdin&gt;", line 1, in <module>
+                    ZeroDivisionError: division by zero
+                    </code></pre>
+
+                    <p>If an exception is not handled, the program stops executing immediately.</p>
+                </section>
+
+                <section>
+                    <h3>Types of exceptions</h3>
+
+                    <p>A few exception types and examples of buggy code:</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Exception
+                                <th>Example
+                        <tbody>
+                            <tr>
+                                <td><code>OverflowError</code>
+                                <td><code>pow(2.12, 1000)</code>
+                            <tr>
+                                <td><code>TypeError</code>
+                                <td><code>'hello'[1] = 'j'</code>
+                            <tr>
+                                <td><code>IndexError</code>
+                                <td><Code>'hello'[7]</code>
+                            <tr>
+                                <td><code>NameError</code>
+                                <td><code>x += 5</code>
+                            <tr>
+                                <td><code>FileNotFoundError</code>
+                                <td><code>open('dsfdfd.txt')</code>
+                    </table>
+
+                    <p>See full list in the <a target="_blank" href="https://docs.python.org/3/library/exceptions.html">exceptions docs</a>.</p>
+
+                </section>
+
+                <section>
+                    <h3>The try statement</h3>
+
+                    <p>To handle an exception (keep the program running), use a <code>try</code> statement.</p>
+
+                    <pre style="font-size:1.0em; margin-bottom: 40px;"><code data-trim data-noescape class="python">
+                    try:
+                        &lt;try suite&gt;
+                    except &lt;exception class&gt; as &lt;name&gt;:
+                        &lt;except suite&gt;
+                       ...
+                    </code></pre>
+
+                    <p class="smaller">The <code>&lt;try suite&gt;</code> is executed first.
+                        If, during the course of executing the <code>&lt;try suite&gt;</code>, an exception is raised that is not handled otherwise, and
+                        If the class of the exception inherits from <code>&lt;exception class&gt;</code>, then
+                        the <code>&lt;except suite&gt;</code> is executed, with <code>&lt;name&gt;</code> bound to the exception.
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Try statement example</h3>
+
+                    <pre style="font-size:1.0em; margin-bottom: 40px;"><code data-trim data-noescape class="python">
+                    try:
+                        quot = 10/0
+                    except ZeroDivisionError as e:
+                        print('handling a', type(e))
+                        quot = 0
+                    </code></pre>
+
+                    <p class="python-tutor-link"><a target="_blank" href="http://pythontutor.com/visualize.html#code=try%3A%0A%20%20%20%20quot%20%3D%2010/0%0Aexcept%20ZeroDivisionError%20as%20e%3A%0A%20%20%20%20print%28'handling%20a',%20type%28e%29%29%0A%20%20%20%20quot%20%3D%200&cumulative=true&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false">Try in PythonTutor</a></p>
+                </section>
+
+                <section>
+                    <h3>Try inside a function</h3>
+
+                    <pre style="font-size:0.9em; margin-bottom: 40px;"><code data-trim data-noescape class="python">
+                    def div_numbers(dividend, divisor):
+                        try:
+                            quotient = dividend/divisor
+                        except ZeroDivisionError:
+                            print("Function was called with 0 as divisor")
+                            quotient = 0
+                        return quotient
+
+                    div_numbers(10, 2)
+                    div_numbers(10, 0)
+                    div_numbers(10, -1)
+                    </code></pre>
+
+                    <p class="python-tutor-link"><a target="_blank" href="http://pythontutor.com/visualize.html#code=def%20div_numbers%28dividend,%20divisor%29%3A%0A%20%20%20%20try%3A%0A%20%20%20%20%20%20%20%20quotient%20%3D%20dividend/divisor%0A%20%20%20%20except%20ZeroDivisionError%3A%0A%20%20%20%20%20%20%20%20print%28%22Function%20was%20called%20with%200%20as%20divisor%22%29%0A%20%20%20%20%20%20%20%20quotient%20%3D%200%0A%20%20%20%20return%20quotient%0A%0Adiv_numbers%2810,%202%29%0Adiv_numbers%2810,%200%29%0Adiv_numbers%2810,%20-1%29&cumulative=true&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false">Try in PythonTutor</a></p>
+                </section>
+
+                <section>
+                    <h3>What would Python Do?</h3>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    def invert(x):
+                        inverse = 1/x # Raises a ZeroDivisionError if x is 0
+                        print('Never printed if x is 0')
+                        return inverse
+                    
+                    def invert_safe(x):
+                        try:
+                            return invert(x)
+                        except ZeroDivisionError as e:
+                            print('Handled', e)
+                            return 0
+                    </code></pre>
+
+                    <pre style="font-size:0.7em" class="fragment"><code data-trim data-noescape class="python">
+                    invert_safe(1/0)
+                    </code></pre>
+
+                    <pre style="font-size:0.7em" class="fragment"><code data-trim data-noescape class="python">
+                    try:
+                        invert_safe(0)
+                    except ZeroDivisionError as e:
+                        print('Handled!')
+                    </code></pre>
+
+                    <pre style="font-size:0.7em" class="fragment"><code data-trim data-noescape class="python">
+                    inverrrrt_safe(1/0)
+                    </code></pre>
+                </section>
+                
+
+                <section class="heading-only">
+                    <h2>Raising exceptions</h2>
+                </section>
+
+
+                <section>
+                    <h3>Assert statements</h3>
+
+                    <p>Assert statements raise an exception of type <code>AssertionError</code>:</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    assert &lt;expression&gt;, &lt;string&gt;
+                    </code></pre>
+
+                    <p>Assertions are designed to be used liberally. They can be ignored to increase efficiency
+                        by running Python with the "-O" flag; "O" stands for optimized.</p>
+                    
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    python3 -O
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Raise statements</h3>
+
+                    <p>Any type of exception can be raised with a <code>raise</code> statement</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    raise &lt;expression&gt;
+                    </code></pre>
+
+                    <p>&lt;expression&gt; must evaluate to a subclass of <code>BaseException</code> or an instance of one</p>
+
+                    <p>Exceptions are constructed like any other object. E.g., <code>TypeError('Bad argument!')</code></p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Decorators</h2>
+                </section>
+
+                <section>
+                    <h3>A tracing function</h3>
+                    
+                    <p>Let's make a higher-order tracing function.</p>
+
+                    <pre style="font-size:0.65em"><code data-trim data-noescape class="python">
+                    def trace1(f):
+                        """Return a function that takes a single argument, x, prints it,
+                        computes and prints F(x), and returns the computed value.
+                        >>> square = lambda x: x * x
+                        >>> trace1(square)(3)
+                        -> 3
+                        <- 9
+                        9
+                        """<span class="fragment">
+                        def traced(x):
+                            print("->", x)
+                            r = f(x)
+                            print("<-", r)
+                            return r
+                        return traced</span>
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <h3>A tracing decorator</h3>
+
+                    <p>What if we always wanted a function to be traced?</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    @trace1
+                    def square(x):
+                        return x * x
+                    </code></pre>
+                    
+                    <p>That's equivalent to..</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    def square(x):
+                        return x * x
+                    square = trace1(square)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>General decorator syntax</h3>
+
+                    <p>The notation:</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    @ATTR
+                    def aFunc(...):
+                        ...
+                    </code></pre>
+
+                    <p>is essentially equivalent to:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def aFunc(...):
+                        ...
+                    aFunc = ATTR(aFunc)
+                    </code></pre>
+
+                    <p><code>ATTR</code> can be any expression, not just a single function name.</p>
+                </section>
+
+			</div>
+		</div>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge(options);
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+        </script>
+    </body>
+</html>

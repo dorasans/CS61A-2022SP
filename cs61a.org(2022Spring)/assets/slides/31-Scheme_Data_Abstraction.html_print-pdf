@@ -1,0 +1,901 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Scheme Data Abstraction</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Scheme Data Abstraction</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="31-Scheme_Data_Abstraction.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Data abstraction
+                        <li>Rational abstraction
+                        <li>Tree abstraction
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Data abstraction</h2>
+                </section>
+
+                <section>
+                    <h3>Data abstractions</h3>
+
+                    <p>Many values in programs are compound values, a value composed of other values.</p>
+
+                    <ul>
+                        <li>A date: a year, a month, and a day
+                        <li>A geographic position: latitude and longitude
+                    </ul>
+
+                    <p>Scheme does not support OOP or have a dictionary data type, 
+                        so how can we represent compound values?</p>
+
+                    <p>A <strong>data abstraction</strong> lets us manipulate compound values as units,
+                        without needing to worry about the way the values are stored.
+                    </p>
+                </section>
+
+
+                <section>
+                    <h3>A pair abstraction</h3>
+
+                    <p>If we needed to frequently manipulate "pairs" of values in our program,
+                        we could use a <code>pair</code> data abstraction.</p>
+
+                    <table class="smaller" style="margin:0">
+                        <tr>
+                            <td><code>(pair a b)</code>
+                            <td>constructs a new pair from the two arguments.
+                        <tr>
+                            <td><code>(first pair)</code>
+                            <td>returns the first value in the given pair.
+                        <tr>
+                            <td><code>(second pair)</code>
+                            <td>returns the second value in the given pair.
+                    </table>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (define couple (pair 'neil 'david))
+
+                    (first couple)   ; 'neil
+                    (second couple)  ; 'david
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>A pair implementation</h3>
+
+                    <p>Only the developers of the <code>pair</code> abstraction needs to
+                    know/decide how to implement it.</p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="scheme">
+                    (define (pair a b)
+                        <span class="fragment">(cons a (cons b '()))</span>
+                    )
+
+                    (define (first pair)
+                        <span class="fragment">(car pair)</span>
+                    )
+                    
+                    (define (second pair)
+                        <span class="fragment">(car (cdr pair))</span>
+                    )
+                    </code></pre>
+
+                    <p>🤔  How else could it be implemented?</p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Rational abstraction</h2>
+                </section>
+
+                <section>
+                    <h3>Rational numbers</h3>
+
+                    <p class="smaller">If we needed to represent fractions exactly...</p>
+
+                    <p class="smaller">$$\small\dfrac{numerator}{denominator}$$</p>
+
+                    <p class="smaller">We could use this data abstraction:</p>
+                    <table class="smaller">
+                        <tbody>
+                        <tr>
+                            <td>Constructor <td style="width:250px;"><code>(rational n d)</code><td>constructs a new rational number.
+                        <tr>
+                            <td rowspan="2" style="border-bottom:none;">Selectors <td><code>(numer r)</code>    <td>returns the numerator of the given rational number.
+                        <tr>
+                            <td><code>(denom r)</code>    <td>returns the denominator of the given rational number.
+                    </table>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define quarter (rational 1 4))
+                    (numer quarter) ; 1
+                    (denom quarter) ; 4
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Rational number arithmetic</h3>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Example
+                                <th>General form
+                        <tbody>
+                            <tr>
+                                <td>$$\frac{3}{2} \times  \frac{3}{5} = \frac{9}{10}$$
+                                <td>$$\frac{n_x}{d_x} \times  \frac{n_y}{d_y} = \frac{n_x \times n_y}{d_x \times d_y}$$
+                            <tr>
+                                <td>$$\frac{3}{2} +  \frac{3}{5} = \frac{21}{10}$$
+                                <td>$$\frac{n_x}{d_x} +  \frac{n_y}{d_y} = \frac{n_x \times d_y + n_y \times d_x}{d_x \times d_y}$$
+                    </table>
+                </section>
+
+                <section>
+                    <h3>Rational number arithmetic code</h3>
+
+                    <p>We can implement arithmetic using the data abstractions:</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Implementation
+                                <th>General form
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <pre style="font-size:0.65em; width: 400px;"><code data-trim data-noescape class="scheme">
+                                    (define (mul-rational x y)
+                                        (rational 
+                                            (* (numer x) (numer y))
+                                            (* (denom x) (denom y))
+                                        )
+                                    )
+                                    </code></pre>
+                                <td style="font-size:1.0em">$$\small\frac{n_x}{d_x} \times  \frac{n_y}{d_y} = \frac{n_x \times n_y}{d_x \times d_y}$$
+                    </table>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (mul-rational (rational 3 2) (rational 3 5))  ; (9 10)
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Rational number arithmetic code</h3>
+
+                    <p>We can implement arithmetic using the data abstractions:</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Implementation
+                                <th>General form
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <pre style="font-size:0.65em; width: 400px;"><code data-trim data-noescape class="scheme">
+                                        (define (add-rational x y)
+                                            (define nx (numer x))
+                                            (define dx (denom x))
+                                            (define ny (numer y))
+                                            (define dy (denom y))
+                                            (rational
+                                                (+ (* nx dy) (* ny dx) )
+                                                (* dx dy)
+                                            )
+                                        )
+                                        </code></pre>
+                                <td style="font-size:1.0em">$$\small\frac{n_x}{d_x} +  \frac{n_y}{d_y} = \frac{n_x \times d_y + n_y \times d_x}{d_x \times d_y}$$
+                    </table>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (add-rational (rational 3 2) (rational 3 5))  ; (21 10)
+                    </code></pre>
+
+                </section>
+
+
+                <section>
+                    <h3>Rational numbers utilities</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (print-rational x)
+                        (print (numer x) '/ (denom x))
+                    )
+                    </code></pre>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (print-rational (rational 3 2) )  ; 3 / 2
+                    </code></pre>
+                    
+                    <div class="fragment" style="margin-top:55px">
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (rationals-are-equal x y)
+                        (and
+                            (= (* (numer x) (denom y))
+                               (* (numer y) (denom x))
+                            )
+                        )
+                    )
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (rationals-are-equal (rational 3 2) (rational 6 4) ) #t
+                    (rationals-are-equal (rational 3 2) (rational 3 2) ) #t
+                    (rationals-are-equal (rational 3 2) (rational 1 2) ) #f
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Rational numbers implementation</h3>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="scheme">
+                    ; Construct a rational number that represents N/D
+                    (define (rational n d)
+                        (list n d)   
+                    )
+
+                    ; Return the numerator of rational number R.
+                    (define (numer r)
+                        (car r)
+                    )
+
+                    ; Return the denominator of rational number R.
+                    (define (denom r)
+                        (car (cdr r))
+                    )
+                    </code></pre>
+                </section>
+                
+                <section>
+                    <h3>Reducing to lowest terms</h3>
+
+                    <p>What's the current problem with...</p>
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="scheme">
+                    (add-rational (rational 3 4) (rational 2 16) )  ; 56/64
+                    (add-rational (rational 3 4) (rational 4 16) )  ; 64/64
+                    </code></pre>
+
+                    <table class="smaller fragment">
+                        <tr>
+                            <td>$$\small\frac{3}{4} + \frac{2}{16} = \frac{56}{64}$$
+                            <td>Addition results in a non-reduced fraction...
+                        <tr>
+                            <td>$$\frac{56 \div 8}{64 \div 8} = \frac{7}{8}$$
+                            <td>...so we always divide top and bottom by GCD!
+                    </table>
+                </section>
+
+                <section>
+                    <h3>Improved rational constructor</h3>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="scheme">
+                    (define (gcd a b)
+                        (if (= b 0)
+                            (abs a)
+                            (gcd b (modulo a b))))
+
+                    (define (rational n d)
+                            (let ((g (if (> d 0)
+                                         (gcd n d)
+                                         (- (gcd n d)))))
+                              (list (/ n g) (/ d g))))
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Using rationals</h3>
+
+                    <p>User programs can use the rational data abstraction for their own specific needs.</p>
+
+                    <pre style="font-size:0.85em"><code data-trim data-noescape class="scheme">
+                    ; Return 1 + 1/2 + 1/3 + ... + 1/N as a rational number.
+                    (define (nth-harmonic-number n)
+                        (define (helper rat k)
+                            (if (= k (+ n 1)) rat
+                                (helper (add-rational rat (rational 1 k)) (+ k 1))
+                            )
+                        )
+                        (helper (rational 0 1) 1)
+                    )
+                    </code></pre>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Abstraction barriers</h2>
+                </section>
+
+                <section>
+                    <h3>Layers of abstraction</h3>
+
+                    <table>
+						<tr>
+							<td style="font-weight:bold;">Primitive Representation</td>
+							<td><code>(list n d)</code> <br> <code>(car r)</code> <code>(car (cdr r))</code></td>
+						</tr>
+						<tr">
+							<td  style="font-weight:bold;" rowspan="2">Data abstraction</td>
+							<td style="border-bottom: 1px dashed;"><code>(rational n d)</code><br> <code>(numer r)</code> <code>(denom r)</code></code></td>
+						</tr>
+						<tr>
+							<td><code>(add-rational x y)</code> <br><code>(mul-rational x y)</code><br> <code>(print-rational r)</code><br> <code>(are-rationals-equal x y)</code></td>
+						</tr>
+						<tr>
+							<td style="font-weight:bold;">User program</td>
+							<td><code>(nth-harmonic-number n)</code></td>
+						</tr>
+					</table>
+                    <br>
+					<p>
+						Each layer only uses the layer above it.
+					</p>
+                </section>
+
+                <section>
+                    <h3>Violating abstraction barriers</h3>
+
+                    <p>What's wrong with...</p>
+
+                    <pre style="font-size:0.8em; margin-bottom:40px;"><code data-trim data-noescape class="scheme">
+                    (add-rational (list 1 2)  (list 1 4))
+                    <span class="fragment">; Doesn't use constructor!</span>
+                    </code></pre>
+
+                    <pre style="font-size:0.8em;" class="fragment"><code data-trim data-noescape class="scheme">
+                    (define (divide-rationals x y)
+                        (define new-n (* (car x) (car (cdr y))))
+                        (define new-d (* (car (cdr x)) (car y)))
+                        (list new-n new-d)
+                    )
+                    <span class="fragment">; Doesn't use constructor or selectors!</span>
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Other rational implementations</h3>
+
+                    <p>The <code>rational</code> data abstraction
+                        could use an entirely different underlying representation.</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="scheme">
+                    (define (rational n d)
+                        (define (choose which)
+                            (if (= which 0) n d)  
+                        )
+                        choose
+                    )
+                    
+                    (define (numer r)
+                        (r 0)
+                    )
+                    
+                    (define (denom r)
+                        (r 1)
+                    )
+                    </code></pre>
+
+                </section>
+
+
+                <section>
+                    <h3>Rational numbers implementation #2</h3>
+
+                    <p>We could use another abstraction!</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="scheme">
+                    ; Construct a rational number that represents N/D
+                    (define (rational n d)
+                        (pair n d)
+                    )
+
+                    ; Return the numerator of rational number R.
+                    (define (numer r)
+                        (first r)
+                    )
+
+                    ; Return the denominator of rational number R.
+                    (define (denom r)
+                        (second r)
+                    )
+                    </code></pre>
+                </section>
+
+                <section class="heading-only">
+                    <h2>A tree abstraction</h2>
+                </section>
+
+
+				<section>
+					<h3>A tree abstraction</h3>
+
+					<p>We want this constructor and selectors:</p>
+
+					<table style="font-size:smaller;">
+						<tr>
+							<td style="font-size:smaller; width: 300px;"><code>(tree label branches)</code></td>
+							<td>Returns a tree with root <code>label</code> and list of <code>branches</code></td>
+						</tr>
+						<tr>
+							<td style="font-size:smaller;"><code>(label t)</code></td>
+							<td>Returns the root label of <code>t</code></td>
+						</tr>
+						<tr>
+							<td style="font-size:smaller;"><code>(branches t)</code></td>
+							<td>Returns the branches of <code>t</code> (each a tree).</td>
+						</tr>
+						<tr>
+							<td style="font-size:smaller;"><code>(is-leaf t)</code></td>
+							<td>Returns true if <code>t</code> is a leaf node.</td>
+						</tr>
+					</table>
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+
+                        <div style="grid-row: 1; grid-column: 1;">
+
+                            <pre style="font-size:0.7em;"><code data-trim data-noescape class="scheme">
+                            (define t
+                                (tree 3
+                                      (list (tree 1 nil)
+                                            (tree 2 (list (tree 1 nil) (tree 1 nil))))))
+                            
+                            (label t)       ; 3
+                            (branches t)    ; ((1) (2 (1) (1)))
+                            (is-leaf t)     ; #f
+                            </code></pre>
+
+                    </div>
+
+
+                        <div style="grid-row: 1; grid-column: 2; padding-top: 20px;">
+                        
+                            <svg id="diagramSvg" xmlns="http://www.w3.org/2000/svg" style="width: 200px; height: 200px;">
+                                <style id="stylesheet">#diagramSvg text {
+                            text-anchor: middle;
+                            font-size: medium;
+                            font-weight: bold;
+                          }
+                          
+                          #diagramSvg rect {
+                            fill: lightblue;
+                            stroke: black;
+                            opacity: 0.5;
+                            stroke-width: 1.5;
+                          }
+                          
+                          #diagramSvg line {
+                            stroke: black;
+                            opacity: 0.5;
+                            stroke-width: 1.5;
+                          }
+                            </style>
+                                <defs>
+                                  <marker id="arrowHead" viewBox="-10 -5 10 10" markerUnits="strokeWidth" markerWidth="6" markerHeight="5" orient="auto">
+                                    <path d="M -10 -5 L 0 0 L -10 5 z"></path>
+                                  </marker>
+                                </defs>
+                                <g id="diagramGroup"><rect x="77px" y="0px" width="45px" height="37px"></rect><text x="100px" y="0px"><tspan x="100" dy="24.01851851851852">3</tspan></text><rect x="52px" y="81px" width="45px" height="37px"></rect><text x="74px" y="81px"><tspan x="74" dy="24.01851851851852">1</tspan></text><line x1="92px" y1="37px" x2="74px" y2="81px" marker-end="url(#arrowHead)"></line><rect x="102px" y="81px" width="45px" height="37px"></rect><text x="125px" y="81px"><tspan x="125" dy="24.01851851851852">2</tspan></text><line x1="107px" y1="37px" x2="125px" y2="81px" marker-end="url(#arrowHead)"></line><rect x="72px" y="162px" width="45px" height="37px"></rect><text x="95px" y="162px"><tspan x="95" dy="24.01851851851852">1</tspan></text><line x1="117px" y1="118px" x2="95px" y2="162px" marker-end="url(#arrowHead)"></line><rect x="132px" y="162px" width="45px" height="37px"></rect><text x="154px" y="162px"><tspan x="154" dy="24.01851851851852">1</tspan></text><line x1="132px" y1="118px" x2="154px" y2="162px" marker-end="url(#arrowHead)"></line></g>
+                              </svg>
+
+                        </div>
+                    </div>
+
+				</section>
+
+				<section>
+					<h3>Tree: Our implementation</h3>
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+
+                        <div style="grid-row: 1; grid-column: 1;">
+                            <pre style="font-size:0.7em;"><code data-trim data-noescape class="scheme">
+                            (define t
+                                (tree 3
+                                      (list (tree 1 nil)
+                                            (tree 2 (list (tree 1 nil) (tree 1 nil))))))
+                            </code></pre>
+
+                    </div>
+
+
+                        <div style="grid-row: 1; grid-column: 2; padding-top: 20px;">
+                        
+                            <svg id="diagramSvg2" xmlns="http://www.w3.org/2000/svg" style="width: 150px; height: 150px;">
+                                <style id="stylesheet">#diagramSvg2 text {
+                            text-anchor: middle;
+                            font-size: medium;
+                            font-weight: bold;
+                          }
+                          
+                          #diagramSvg2 rect {
+                            fill: lightblue;
+                            stroke: black;
+                            opacity: 0.5;
+                            stroke-width: 1.5;
+                          }
+                          
+                          #diagramSvg2 line {
+                            stroke: black;
+                            opacity: 0.5;
+                            stroke-width: 1.5;
+                          }
+                            </style>
+                                <defs>
+                                  <marker id="arrowHead" viewBox="-10 -5 10 10" markerUnits="strokeWidth" markerWidth="6" markerHeight="5" orient="auto">
+                                    <path d="M -10 -5 L 0 0 L -10 5 z"></path>
+                                  </marker>
+                                </defs>
+                                <g id="diagramGroup"><rect x="57px" y="0px" width="34px" height="27px"></rect><text x="75px" y="0px"><tspan x="75" dy="19.388888888888886">3</tspan></text><rect x="39px" y="61px" width="34px" height="27px"></rect><text x="56px" y="61px"><tspan x="56" dy="19.388888888888886">1</tspan></text><line x1="69px" y1="27px" x2="56px" y2="61px" marker-end="url(#arrowHead)"></line><rect x="76px" y="61px" width="34px" height="27px"></rect><text x="93px" y="61px"><tspan x="93" dy="19.388888888888886">2</tspan></text><line x1="80px" y1="27px" x2="93px" y2="61px" marker-end="url(#arrowHead)"></line><rect x="54px" y="122px" width="34px" height="27px"></rect><text x="71px" y="122px"><tspan x="71" dy="19.388888888888886">1</tspan></text><line x1="88px" y1="88px" x2="71px" y2="122px" marker-end="url(#arrowHead)"></line><rect x="99px" y="122px" width="34px" height="27px"></rect><text x="116px" y="122px"><tspan x="116" dy="19.388888888888886">1</tspan></text><line x1="99px" y1="88px" x2="116px" y2="122px" marker-end="url(#arrowHead)"></line></g>
+                              </svg>
+
+                        </div>
+                    </div>
+
+
+					<p class="smaller">Each tree is stored as a list where first element is label
+                        and subsequent elements are branches.
+                    </p>
+                    
+					<pre style="font-size:0.7em;"><code data-trim data-noescape class="scheme">
+                    (3 (1) (2 (1) (1)))
+                    </code></pre>
+
+					<pre style="font-size:0.6em;"><code data-trim data-noescape class="scheme">
+                    (define (tree label branches)
+                        (cons label branches))
+                      
+                    (define (label t) (car t))
+                      
+                    (define (branches t) (cdr t))
+                      
+                    (define (is-leaf t) (null? (branches t)))
+					</code></pre>
+
+				</section>
+
+                <section>
+                    <h3>Exercise: Label doubling</h3>
+
+                    <p>Let's implement a Scheme version of the <a target="_blank" href="17-Trees.html#/24/0/2">Python function</a>.</p>
+                    <pre style="font-size:0.8em;"><code data-trim data-noescape class="scheme">
+                    (define (double tr)
+                        ; Returns a tree identical to TR, but with all labels doubled.
+
+                    )
+                    </code></pre>
+
+                    <pre style="font-size:0.8em;"><code data-trim data-noescape class="scheme">
+                    (define tree1
+                            (tree 6
+                                (list (tree 3 (list (tree 1 nil)))
+                                        (tree 5 nil)
+                                        (tree 7 (list (tree 8 nil) (tree 9 nil))))))
+                                        
+                    (expect tree1 (6 (3 (1)) (5) (7 (8) (9))))
+                    (expect (double tree1) (12 (6 (2)) (10) (14 (16) (18))))
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Exercise: Label doubling (Solution)</h3>
+
+                    <p>Let's implement a Scheme version of the <a target="_blank" href="https://cs61a.org/slides/17-Trees.html#/24/0/2">Python function</a>.</p>
+                    <pre style="font-size:0.8em;"><code data-trim data-noescape class="scheme">
+                    (define (double tr)
+                        ; Returns a tree identical to TR, but with all labels doubled.
+                        (tree (* (label tr) 2) (map double (branches tr)))
+                    )
+                    </code></pre>
+
+                    <pre style="font-size:0.8em;"><code data-trim data-noescape class="scheme">
+                    (define tree1
+                            (tree 6
+                                (list (tree 3 (list (tree 1 nil)))
+                                        (tree 5 nil)
+                                        (tree 7 (list (tree 8 nil) (tree 9 nil))))))
+                                        
+                    (expect tree1 (6 (3 (1)) (5) (7 (8) (9))))
+                    (expect (double tree1) (12 (6 (2)) (10) (14 (16) (18))))
+                    </code></pre>
+
+                </section>
+
+			</div>
+		</div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-menu@2.1.0/menu.js"></script>
+        <!-- The loading of KaTeX is deferred to speed up page rendering -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.js" integrity="sha384-31El76TwmbHj4rF9DyLsygbq6xoIobG0W+jqXim+a3dU9W53tdH3A/ngRPxOzzaB" crossorigin="anonymous"></script>
+        <!-- To automatically render math in text elements, include the auto-render extension: -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"
+            onload="renderMathInElement(document.body, {fleqn: true});"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight, RevealMenu ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge();
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+        </script>
+    </body>
+</html>

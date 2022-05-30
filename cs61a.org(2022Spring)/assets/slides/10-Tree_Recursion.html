@@ -1,0 +1,2843 @@
+
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Tree Recursion (Multiple Recursion)</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+        <link rel="stylesheet" href="https://unpkg.com/balloon-css/balloon.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+            .reveal ::selection {
+                color: inherit;
+                background: #ccc;
+            }
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+                .circle-marker {
+                    position: absolute;
+                    background: blue;
+                    color: white;
+                    font-size: 20px;
+                    border-radius: 30px;
+                    width: 30px;
+                    height: 30px;
+                    text-align: center;
+                }
+                .circle-marker-arc {
+                    position: absolute;
+                    width: 60px;
+                    height: 90px;
+                    background: transparent;
+                    border-radius: 100px;
+                    border-left: 1px solid blue;
+                }
+        </style>
+        <style>
+        .bordered {
+                    border: 1px dashed blue;
+                    border-radius: 8px;
+                    padding: 6px;
+                    --balloon-font-size: 20px;
+                }
+        </style>
+        <style>
+        .graph .node, .graph .edge, .graph .node text {
+            visibility: hidden;
+        }
+        .graph .node.activated text:first-of-type {
+            visibility: visible;
+        }
+        .graph .node.activated path {
+            visibility: visible;
+        }
+        .graph .node text.activated {
+            visibility: visible;
+        }
+        .graph .edge.activated {
+            visibility: visible;
+        }
+        .svg-controls {
+            width: 600px;
+            display: grid;
+            grid-template-rows: 1fr;
+            grid-template-columns: 100px 1fr 100px;
+            grid-gap: 8px;
+            position: fixed;
+            right: 0;
+            top: 0;
+            background: #80808070;
+        }
+        .svg-controls button:first-of-type {
+            grid-row: 1;
+            grid-column: 1;
+        }
+        .svg-controls input {
+            grid-row: 1;
+            grid-column: 2;
+        }
+        .svg-controls button:last-of-type {
+            grid-row: 1;
+            grid-column: 3;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Tree Recursion
+                    </h1>
+                    
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="10-Tree_Recursion.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Order of recursive calls
+                        <li>Tree recursion 
+                        <li>Counting partitions
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Order of recursive calls</h2>
+                </section>
+
+                <section>
+                    <h3>The cascade function</h3>
+
+                    <pre style="font-size:0.65em;"><code data-trim data-noescape class="python">
+                    def cascade(n):
+                        if n &lt; 10:
+                            print(n)
+                        else:
+                            print(n)
+                            cascade(n//10)
+                            print(n)
+                    </code></pre>
+
+                    <p>What would this display?</p>
+                    <pre style="font-size:0.65em;"><code data-trim data-noescape class="python">
+                    cascade(123)
+                    </code></pre>
+                    
+                    <div class="fragment" style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+
+                    <pre style="font-size:0.65em;grid-row: 1; grid-column: 1;"><code data-trim data-noescape class="python">
+                    1
+                    12
+                    123
+                    12
+                    1</code></pre>
+
+                    <pre style="font-size:0.65em;grid-row: 1; grid-column: 2;"><code data-trim data-noescape class="python">
+                    123
+                    12
+                    1
+                    12
+                    123
+                    </code></pre>
+                    </div>
+                </section>
+                
+                <section>
+                    <h3>Cascade environment diagram</h3>
+
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+
+                        <div style="grid-row: 1; grid-column: 1;">
+                            <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                            def cascade(n):
+                                if n &lt; 10:
+                                    print(n)
+                                else:
+                                    print(n)
+                                    cascade(n//10)
+                                    print(n)
+
+                            cascade(123)
+                            </code></pre>
+                            <p class="python-tutor-link">
+                                <a href="https://pythontutor.com/composingprograms.html#code=def%20cascade%28n%29%3A%0A%20%20%20%20if%20n%20%3C%2010%3A%0A%20%20%20%20%20%20%20%20print%28n%29%0A%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20print%28n%29%0A%20%20%20%20%20%20%20%20cascade%28n//10%29%0A%20%20%20%20%20%20%20%20print%28n%29%0A%20%20%20%20%20%20%20%20%0Acascade%28123%29&cumulative=true&curInstr=0&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">View in PythonTutor</a>
+                            </p>
+                            <ul class="smaller">
+                                <li>Each cascade frame is from a different call to cascade.
+                                <li>Until the Return value appears, that call has not completed.
+                                <li>Any statement can appear before or after the recursive call.
+                            </ul>
+                        </div>
+                        
+                        <div class="env-diagram" style="grid-row: 1; grid-column: 2; font-size:0.5em;">
+    
+                            <div class="env-diagram-frame">
+                                <div>Global frame</div>
+                                <table class="table" style="width:400px">
+                                    <tbody>
+                                    <tr>
+                                        <td style="width:86px;">cascade
+                                        <td style="white-space:nowrap;"> → func cascade(n)[parent=Global]
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="env-diagram-frame" style="background-color: #ffddc0">
+                                <div>
+                                f1: cascade[parent=Global]
+                                </div>
+                                <table class="table">
+                                    <tbody>
+                                    <tr>
+                                        <td>n
+                                        <td>123
+                                        <td>
+                                    </tr>
+                                    <tr>
+                                        <td>Return value
+                                        <td>None
+                                        <td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="env-diagram-frame" style="background-color:#b2e3cf">
+                                <div>
+                                f2: cascade[parent=Global]
+                                </div>
+                                <table class="table">
+                                    <tbody>
+                                    <tr>
+                                        <td>n
+                                        <td>12
+                                        <td>
+                                    </tr>
+                                    <tr>
+                                        <td>Return value
+                                        <td>None
+                                        <td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="env-diagram-frame" style="background-color:#dec1ef">
+                                <div>
+                                f3: cascade[parent=Global]
+                                </div>
+                                <table class="table">
+                                    <tbody>
+                                    <tr>
+                                        <td>n
+                                        <td>1
+                                        <td>
+                                    </tr>
+                                    <tr>
+                                        <td>Return value
+                                        <td>None
+                                        <td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div>Print output:<br>
+                                <pre style="font-size:1.0em; margin-top: 6px;"><code data-trim data-noescape class="python">
+                                <span style="background-color:#ffddc0">123</span>
+                                <span style="background-color:#b2e3cf">12</span>
+                                <span style="background-color:#dec1ef">1</span>
+                                <span style="background-color:#b2e3cf">12</span>
+                                <span style="background-color:#ffddc0">123</span>
+                                </code></pre>
+                            </div>
+                        </div>
+    
+                </section>
+
+                <section>
+                    <h3>Two definitions of cascade</h3>
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+
+                        <div style="grid-row: 1; grid-column: 1;">
+                            <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                            def cascade(n):
+                                if n &lt; 10:
+                                    print(n)
+                                else:
+                                    print(n)
+                                    cascade(n//10)
+                                    print(n)
+                            </code></pre>
+                        </div>
+                        <div style="grid-row: 1; grid-column: 2;">
+
+                            <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                            def cascade(n):
+                                print(n)
+                                if n >= 10:
+                                    cascade(n//10)
+                                    print(n)
+                            </code></pre>
+                        </div>
+                    </div>
+
+                    <ul class="smaller">
+                        <li>If two implementations are equally clear, then the shorter one is usually better
+                        <li>When learning to write recursive functions, put the base cases first
+                        <li>Both are recursive functions, even though only the first has typical structure
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Inverse cascade</h3>
+
+                    <p>How can we output this cascade instead?</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    1
+                    12
+                    123
+                    12
+                    1
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Inverse cascade solution</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def inverse_cascade(n):
+                        grow(n)
+                        print(n)
+                        shrink(n)
+                    <span class="fragment">
+                    def f_then_g(f, g, n):
+                        if n:
+                            f(n)
+                            g(n)</span>
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    grow = lambda n: f_then_g(<span class="fragment">grow, print, n//10</span>)
+                    shrink = lambda n: f_then_g(<span class="fragment">print, shrink, n//10</span>)
+                    </code></pre>
+
+                    <p class="python-tutor-link"><a target="_blank" href="https://pythontutor.com/composingprograms.html#code=def%20inverse_cascade%28n%29%3A%0A%20%20%20%20grow%28n%29%0A%20%20%20%20print%28n%29%0A%20%20%20%20shrink%28n%29%0A%0Adef%20f_then_g%28f,%20g,%20n%29%3A%0A%20%20%20%20if%20n%3A%0A%20%20%20%20%20%20%20%20f%28n%29%0A%20%20%20%20%20%20%20%20g%28n%29%0A%20%20%20%20%20%20%20%20%0Agrow%20%3D%20lambda%20n%3A%20f_then_g%28grow,%20print,%20n//10%29%0Ashrink%20%3D%20lambda%20n%3A%20f_then_g%28print,%20shrink,%20n//10%29%0A%0Ainverse_cascade%281234%29&cumulative=true&curInstr=4&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">
+                        View in PythonTutor</a></p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Tree recursion <br>
+                        (Multiple recursion)
+                    </h2>
+                </section>
+
+                <section>
+                    <h3>Tree Recursion</h3>
+
+                    <p>Tree-shaped processes arise whenever a recursive function makes more
+                        than one recursive call.</p>
+
+                    <br>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/x45qQFiPFyE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <p><a target="_blank" href="https://replit.com/@PamelaFox2/SierpinskiCurve#main.py">Sierpinski curve</a></p>
+                </section>
+
+                <section>
+                    <h3>Recursive Virahanka-Fibonacci</h3>
+
+                    <p>The nth number is defined as: </p>
+                    <p style="font-size:0.7em">
+                    $$\small\begin{equation*} 
+                    \text{virfib}(n) = \begin{cases}
+                        0 & \text{if } n = 0 \\
+                        1  & \text{if } n = 1 \\
+                        \text{virfib}(n - 1) + \text{virfib}(n - 2) & \text{otherwise} \\
+                        \end{cases}
+                        \end{equation*}$$
+                    </p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    def virfib(n):
+                        """Compute the nth Virahanka-Fibonacci number, for N >= 1.
+                        >>> virfib(2)
+                        1
+                        >>> virfib(6)
+                        8
+                        """<span class="fragment">
+                        if n == 0:
+                            return 0
+                        elif n == 1:
+                            return 1
+                        else:
+                            return virfib(n-1) + virfib(n-2)</span>
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>A tree-recursive call graph</h3>
+
+                    <style>
+                    #virfib5-svg {
+                        margin-top: -40px;
+                    }
+                    #virfib5-svg + .svg-controls {
+                        margin-top: 80px;
+                        left: 0px;
+                    }
+                    </style>
+                    
+                
+                    <svg id="virfib5-svg" width="620pt" height="491pt"
+                        viewBox="0.00 0.00 620.00 491.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 487)">
+                        <polygon fill="white" stroke="transparent" points="-4,4 -4,-487 616,-487 616,4 -4,4"/>
+                        <!-- 140489090487008 -->
+                        <g id="node1" class="node">
+                        <title>140489090487008</title>
+                        <path fill="none" stroke="black" d="M284,-267.5C284,-267.5 320,-267.5 320,-267.5 326,-267.5 332,-273.5 332,-279.5 332,-279.5 332,-292.5 332,-292.5 332,-298.5 326,-304.5 320,-304.5 320,-304.5 284,-304.5 284,-304.5 278,-304.5 272,-298.5 272,-292.5 272,-292.5 272,-279.5 272,-279.5 272,-273.5 278,-267.5 284,-267.5"/>
+                        <text text-anchor="middle" x="302" y="-282.6" font-family="Times,serif" font-size="13.00">virfib(4)</text>
+                        </g>
+                        <!-- 140489896869120 -->
+                        <g id="node2" class="node">
+                        <title>140489896869120</title>
+                        <path fill="none" stroke="black" d="M426,-267.5C426,-267.5 462,-267.5 462,-267.5 468,-267.5 474,-273.5 474,-279.5 474,-279.5 474,-292.5 474,-292.5 474,-298.5 468,-304.5 462,-304.5 462,-304.5 426,-304.5 426,-304.5 420,-304.5 414,-298.5 414,-292.5 414,-292.5 414,-279.5 414,-279.5 414,-273.5 420,-267.5 426,-267.5"/>
+                        <text text-anchor="middle" x="444" y="-282.6" font-family="Times,serif" font-size="13.00">virfib(3)</text>
+                        </g>
+                        <!-- 140489627348624 -->
+                        <g id="node3" class="node">
+                        <title>140489627348624</title>
+                        <path fill="none" stroke="black" d="M166,-178.5C166,-178.5 202,-178.5 202,-178.5 208,-178.5 214,-184.5 214,-190.5 214,-190.5 214,-203.5 214,-203.5 214,-209.5 208,-215.5 202,-215.5 202,-215.5 166,-215.5 166,-215.5 160,-215.5 154,-209.5 154,-203.5 154,-203.5 154,-190.5 154,-190.5 154,-184.5 160,-178.5 166,-178.5"/>
+                        <text text-anchor="middle" x="184" y="-193.6" font-family="Times,serif" font-size="13.00">virfib(3)</text>
+                        </g>
+                        <!-- 140489090487008&#45;&gt;140489627348624 -->
+                        <g id="edge8" class="edge">
+                        <title>140489090487008&#45;&gt;140489627348624</title>
+                        <path fill="none" stroke="black" d="M271.86,-284.35C245.34,-282.02 207.95,-274.1 188,-249 182.87,-242.55 180.94,-234.07 180.55,-225.88"/>
+                        <polygon fill="black" stroke="black" points="184.05,-225.92 180.77,-215.85 177.05,-225.77 184.05,-225.92"/>
+                        <text text-anchor="middle" x="195" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#2)</text>
+                        </g>
+                        <!-- 140489090487008&#45;&gt;140489627348624 -->
+                        <g id="edge9" class="edge">
+                        <title>140489090487008&#45;&gt;140489627348624:c</title>
+                        <path fill="none" stroke="green" d="M263.31,-262.73C256.4,-258.38 249.38,-253.71 243,-249 229.15,-238.79 214.64,-226.04 203.48,-215.71"/>
+                        <polygon fill="green" stroke="green" points="261.58,-265.77 271.93,-268.04 265.25,-259.81 261.58,-265.77"/>
+                        <text text-anchor="middle" x="263.5" y="-237.8" font-family="Times,serif" font-size="14.00">2 (#11)</text>
+                        </g>
+                        <!-- 140489627381168 -->
+                        <g id="node4" class="node">
+                        <title>140489627381168</title>
+                        <path fill="none" stroke="black" d="M271,-178.5C271,-178.5 307,-178.5 307,-178.5 313,-178.5 319,-184.5 319,-190.5 319,-190.5 319,-203.5 319,-203.5 319,-209.5 313,-215.5 307,-215.5 307,-215.5 271,-215.5 271,-215.5 265,-215.5 259,-209.5 259,-203.5 259,-203.5 259,-190.5 259,-190.5 259,-184.5 265,-178.5 271,-178.5"/>
+                        <text text-anchor="middle" x="289" y="-193.6" font-family="Times,serif" font-size="13.00">virfib(2)</text>
+                        </g>
+                        <!-- 140489090487008&#45;&gt;140489627381168 -->
+                        <g id="edge10" class="edge">
+                        <title>140489090487008&#45;&gt;140489627381168</title>
+                        <path fill="none" stroke="black" d="M294.26,-267.39C292.12,-261.64 290.08,-255.15 289,-249 287.69,-241.53 287.26,-233.35 287.26,-225.77"/>
+                        <polygon fill="black" stroke="black" points="290.77,-225.68 287.51,-215.6 283.77,-225.51 290.77,-225.68"/>
+                        <text text-anchor="middle" x="298" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#12)</text>
+                        </g>
+                        <!-- 140489090487008&#45;&gt;140489627381168 -->
+                        <g id="edge11" class="edge">
+                        <title>140489090487008&#45;&gt;140489627381168:c</title>
+                        <path fill="none" stroke="green" d="M307.94,-257.43C308.72,-249.78 308.73,-241.51 307,-234 305.56,-227.73 302.9,-221.3 300.07,-215.59"/>
+                        <polygon fill="green" stroke="green" points="304.47,-256.95 306.51,-267.35 311.4,-257.96 304.47,-256.95"/>
+                        <text text-anchor="middle" x="329.5" y="-237.8" font-family="Times,serif" font-size="14.00">1 (#17)</text>
+                        </g>
+                        <!-- 140489627327024 -->
+                        <g id="node11" class="node">
+                        <title>140489627327024</title>
+                        <path fill="none" stroke="black" d="M453,-178.5C453,-178.5 489,-178.5 489,-178.5 495,-178.5 501,-184.5 501,-190.5 501,-190.5 501,-203.5 501,-203.5 501,-209.5 495,-215.5 489,-215.5 489,-215.5 453,-215.5 453,-215.5 447,-215.5 441,-209.5 441,-203.5 441,-203.5 441,-190.5 441,-190.5 441,-184.5 447,-178.5 453,-178.5"/>
+                        <text text-anchor="middle" x="471" y="-193.6" font-family="Times,serif" font-size="13.00">virfib(2)</text>
+                        </g>
+                        <!-- 140489896869120&#45;&gt;140489627327024 -->
+                        <g id="edge12" class="edge">
+                        <title>140489896869120&#45;&gt;140489627327024</title>
+                        <path fill="none" stroke="black" d="M431.4,-267.12C426,-257.15 421.96,-244.63 427,-234 428.95,-229.87 431.64,-226.07 434.73,-222.59"/>
+                        <polygon fill="black" stroke="black" points="437.26,-225.01 442,-215.53 432.39,-219.99 437.26,-225.01"/>
+                        <text text-anchor="middle" x="436" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#20)</text>
+                        </g>
+                        <!-- 140489896869120&#45;&gt;140489627327024 -->
+                        <g id="edge13" class="edge">
+                        <title>140489896869120&#45;&gt;140489627327024:c</title>
+                        <path fill="none" stroke="green" d="M452.47,-257.39C456.64,-243.82 461.55,-227.81 465.26,-215.69"/>
+                        <polygon fill="green" stroke="green" points="449.05,-256.61 449.46,-267.19 455.74,-258.66 449.05,-256.61"/>
+                        <text text-anchor="middle" x="480.5" y="-237.8" font-family="Times,serif" font-size="14.00">1 (#25)</text>
+                        </g>
+                        <!-- 140489896870176 -->
+                        <g id="node12" class="node">
+                        <title>140489896870176</title>
+                        <path fill="none" stroke="black" d="M549,-178.5C549,-178.5 585,-178.5 585,-178.5 591,-178.5 597,-184.5 597,-190.5 597,-190.5 597,-203.5 597,-203.5 597,-209.5 591,-215.5 585,-215.5 585,-215.5 549,-215.5 549,-215.5 543,-215.5 537,-209.5 537,-203.5 537,-203.5 537,-190.5 537,-190.5 537,-184.5 543,-178.5 549,-178.5"/>
+                        <text text-anchor="middle" x="567" y="-193.6" font-family="Times,serif" font-size="13.00">virfib(1)</text>
+                        </g>
+                        <!-- 140489896869120&#45;&gt;140489896870176 -->
+                        <g id="edge14" class="edge">
+                        <title>140489896869120&#45;&gt;140489896870176</title>
+                        <path fill="none" stroke="black" d="M474.05,-268.51C484.1,-262.67 495.23,-255.84 505,-249 516.74,-240.78 529.05,-230.94 539.57,-222.11"/>
+                        <polygon fill="black" stroke="black" points="541.89,-224.73 547.24,-215.59 537.35,-219.4 541.89,-224.73"/>
+                        <text text-anchor="middle" x="533" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#26)</text>
+                        </g>
+                        <!-- 140489896869120&#45;&gt;140489896870176 -->
+                        <g id="edge15" class="edge">
+                        <title>140489896869120&#45;&gt;140489896870176:c</title>
+                        <path fill="none" stroke="green" d="M484.09,-278.96C504.81,-274.01 529.21,-265.06 546,-249 555.29,-240.12 560.58,-226.57 563.53,-215.53"/>
+                        <polygon fill="green" stroke="green" points="483.3,-275.55 474.27,-281.09 484.78,-282.4 483.3,-275.55"/>
+                        <text text-anchor="middle" x="576.5" y="-237.8" font-family="Times,serif" font-size="14.00">1 (#27)</text>
+                        </g>
+                        <!-- 140489090487536 -->
+                        <g id="node5" class="node">
+                        <title>140489090487536</title>
+                        <path fill="none" stroke="black" d="M60,-89.5C60,-89.5 96,-89.5 96,-89.5 102,-89.5 108,-95.5 108,-101.5 108,-101.5 108,-114.5 108,-114.5 108,-120.5 102,-126.5 96,-126.5 96,-126.5 60,-126.5 60,-126.5 54,-126.5 48,-120.5 48,-114.5 48,-114.5 48,-101.5 48,-101.5 48,-95.5 54,-89.5 60,-89.5"/>
+                        <text text-anchor="middle" x="78" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(2)</text>
+                        </g>
+                        <!-- 140489627348624&#45;&gt;140489090487536 -->
+                        <g id="edge16" class="edge">
+                        <title>140489627348624&#45;&gt;140489090487536</title>
+                        <path fill="none" stroke="black" d="M153.92,-191.91C119.42,-186.52 66.05,-175.84 54,-160 48.28,-152.49 50.29,-143.39 55,-134.97"/>
+                        <polygon fill="black" stroke="black" points="58,-136.79 60.68,-126.54 52.19,-132.88 58,-136.79"/>
+                        <text text-anchor="middle" x="61" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#3)</text>
+                        </g>
+                        <!-- 140489627348624&#45;&gt;140489090487536 -->
+                        <g id="edge17" class="edge">
+                        <title>140489627348624&#45;&gt;140489090487536:c</title>
+                        <path fill="none" stroke="green" d="M144.58,-182.29C132.24,-176.7 119.2,-169.32 109,-160 98.91,-150.78 91.08,-137.52 85.81,-126.69"/>
+                        <polygon fill="green" stroke="green" points="143.25,-185.52 153.82,-186.21 145.99,-179.08 143.25,-185.52"/>
+                        <text text-anchor="middle" x="126" y="-148.8" font-family="Times,serif" font-size="14.00">1 (#8)</text>
+                        </g>
+                        <!-- 140489090488912 -->
+                        <g id="node6" class="node">
+                        <title>140489090488912</title>
+                        <path fill="none" stroke="black" d="M156,-89.5C156,-89.5 192,-89.5 192,-89.5 198,-89.5 204,-95.5 204,-101.5 204,-101.5 204,-114.5 204,-114.5 204,-120.5 198,-126.5 192,-126.5 192,-126.5 156,-126.5 156,-126.5 150,-126.5 144,-120.5 144,-114.5 144,-114.5 144,-101.5 144,-101.5 144,-95.5 150,-89.5 156,-89.5"/>
+                        <text text-anchor="middle" x="174" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(1)</text>
+                        </g>
+                        <!-- 140489627348624&#45;&gt;140489090488912 -->
+                        <g id="edge18" class="edge">
+                        <title>140489627348624&#45;&gt;140489090488912</title>
+                        <path fill="none" stroke="black" d="M160.93,-178.37C155.69,-173.09 150.84,-166.86 148,-160 144.57,-151.73 146.78,-142.96 151.08,-135.07"/>
+                        <polygon fill="black" stroke="black" points="154.07,-136.89 156.63,-126.61 148.22,-133.05 154.07,-136.89"/>
+                        <text text-anchor="middle" x="155" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#9)</text>
+                        </g>
+                        <!-- 140489627348624&#45;&gt;140489090488912 -->
+                        <g id="edge19" class="edge">
+                        <title>140489627348624&#45;&gt;140489090488912:c</title>
+                        <path fill="none" stroke="green" d="M180.82,-167.99C179.28,-154.5 177.49,-138.69 176.12,-126.69"/>
+                        <polygon fill="green" stroke="green" points="177.37,-168.65 181.98,-178.19 184.32,-167.86 177.37,-168.65"/>
+                        <text text-anchor="middle" x="200.5" y="-148.8" font-family="Times,serif" font-size="14.00">1 (#10)</text>
+                        </g>
+                        <!-- 140489090398176 -->
+                        <g id="node9" class="node">
+                        <title>140489090398176</title>
+                        <path fill="none" stroke="black" d="M249,-89.5C249,-89.5 285,-89.5 285,-89.5 291,-89.5 297,-95.5 297,-101.5 297,-101.5 297,-114.5 297,-114.5 297,-120.5 291,-126.5 285,-126.5 285,-126.5 249,-126.5 249,-126.5 243,-126.5 237,-120.5 237,-114.5 237,-114.5 237,-101.5 237,-101.5 237,-95.5 243,-89.5 249,-89.5"/>
+                        <text text-anchor="middle" x="267" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(1)</text>
+                        </g>
+                        <!-- 140489627381168&#45;&gt;140489090398176 -->
+                        <g id="edge20" class="edge">
+                        <title>140489627381168&#45;&gt;140489090398176</title>
+                        <path fill="none" stroke="black" d="M263,-178.41C257.34,-173.21 252.12,-167 249,-160 245.58,-152.32 246.75,-143.77 249.73,-135.9"/>
+                        <polygon fill="black" stroke="black" points="252.95,-137.27 254.07,-126.74 246.62,-134.28 252.95,-137.27"/>
+                        <text text-anchor="middle" x="258" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#13)</text>
+                        </g>
+                        <!-- 140489627381168&#45;&gt;140489090398176 -->
+                        <g id="edge21" class="edge">
+                        <title>140489627381168&#45;&gt;140489090398176:c</title>
+                        <path fill="none" stroke="green" d="M282.1,-168.39C278.7,-154.82 274.7,-138.81 271.67,-126.69"/>
+                        <polygon fill="green" stroke="green" points="278.73,-169.34 284.55,-178.19 285.52,-167.64 278.73,-169.34"/>
+                        <text text-anchor="middle" x="300.5" y="-148.8" font-family="Times,serif" font-size="14.00">1 (#14)</text>
+                        </g>
+                        <!-- 140489627319936 -->
+                        <g id="node10" class="node">
+                        <title>140489627319936</title>
+                        <path fill="none" stroke="black" d="M345,-89.5C345,-89.5 381,-89.5 381,-89.5 387,-89.5 393,-95.5 393,-101.5 393,-101.5 393,-114.5 393,-114.5 393,-120.5 387,-126.5 381,-126.5 381,-126.5 345,-126.5 345,-126.5 339,-126.5 333,-120.5 333,-114.5 333,-114.5 333,-101.5 333,-101.5 333,-95.5 339,-89.5 345,-89.5"/>
+                        <text text-anchor="middle" x="363" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(0)</text>
+                        </g>
+                        <!-- 140489627381168&#45;&gt;140489627319936 -->
+                        <g id="edge22" class="edge">
+                        <title>140489627381168&#45;&gt;140489627319936</title>
+                        <path fill="none" stroke="black" d="M307.85,-178.18C313.54,-172.53 319.68,-166.15 325,-160 331.75,-152.19 338.64,-143.28 344.67,-135.12"/>
+                        <polygon fill="black" stroke="black" points="347.55,-137.1 350.59,-126.96 341.89,-132.99 347.55,-137.1"/>
+                        <text text-anchor="middle" x="347" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#15)</text>
+                        </g>
+                        <!-- 140489627381168&#45;&gt;140489627319936 -->
+                        <g id="edge23" class="edge">
+                        <title>140489627381168&#45;&gt;140489627319936:c</title>
+                        <path fill="none" stroke="green" d="M328.63,-184.58C340.67,-179.11 352.65,-171.22 360,-160 366.34,-150.32 367.09,-137.32 366.25,-126.74"/>
+                        <polygon fill="green" stroke="green" points="326.99,-181.46 319.04,-188.46 329.62,-187.95 326.99,-181.46"/>
+                        <text text-anchor="middle" x="386.5" y="-148.8" font-family="Times,serif" font-size="14.00">0 (#16)</text>
+                        </g>
+                        <!-- 140489090488064 -->
+                        <g id="node7" class="node">
+                        <title>140489090488064</title>
+                        <path fill="none" stroke="black" d="M12,-0.5C12,-0.5 48,-0.5 48,-0.5 54,-0.5 60,-6.5 60,-12.5 60,-12.5 60,-25.5 60,-25.5 60,-31.5 54,-37.5 48,-37.5 48,-37.5 12,-37.5 12,-37.5 6,-37.5 0,-31.5 0,-25.5 0,-25.5 0,-12.5 0,-12.5 0,-6.5 6,-0.5 12,-0.5"/>
+                        <text text-anchor="middle" x="30" y="-15.6" font-family="Times,serif" font-size="13.00">virfib(1)</text>
+                        </g>
+                        <!-- 140489090487536&#45;&gt;140489090488064 -->
+                        <g id="edge24" class="edge">
+                        <title>140489090487536&#45;&gt;140489090488064</title>
+                        <path fill="none" stroke="black" d="M47.88,-97.78C35.07,-92.21 21.4,-83.66 14,-71 9.74,-63.71 10.53,-55.16 13.31,-47.16"/>
+                        <polygon fill="black" stroke="black" points="16.61,-48.37 17.5,-37.81 10.22,-45.51 16.61,-48.37"/>
+                        <text text-anchor="middle" x="21" y="-61.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#4)</text>
+                        </g>
+                        <!-- 140489090487536&#45;&gt;140489090488064 -->
+                        <g id="edge25" class="edge">
+                        <title>140489090487536&#45;&gt;140489090488064:c</title>
+                        <path fill="none" stroke="green" d="M57.26,-80.97C55.02,-77.69 52.88,-74.33 51,-71 45.07,-60.49 39.96,-47.96 36.26,-37.83"/>
+                        <polygon fill="green" stroke="green" points="54.6,-83.27 63.3,-89.31 60.27,-79.16 54.6,-83.27"/>
+                        <text text-anchor="middle" x="68" y="-59.8" font-family="Times,serif" font-size="14.00">1 (#5)</text>
+                        </g>
+                        <!-- 140489896874064 -->
+                        <g id="node8" class="node">
+                        <title>140489896874064</title>
+                        <path fill="none" stroke="black" d="M108,-0.5C108,-0.5 144,-0.5 144,-0.5 150,-0.5 156,-6.5 156,-12.5 156,-12.5 156,-25.5 156,-25.5 156,-31.5 150,-37.5 144,-37.5 144,-37.5 108,-37.5 108,-37.5 102,-37.5 96,-31.5 96,-25.5 96,-25.5 96,-12.5 96,-12.5 96,-6.5 102,-0.5 108,-0.5"/>
+                        <text text-anchor="middle" x="126" y="-15.6" font-family="Times,serif" font-size="13.00">virfib(0)</text>
+                        </g>
+                        <!-- 140489090487536&#45;&gt;140489896874064 -->
+                        <g id="edge26" class="edge">
+                        <title>140489090487536&#45;&gt;140489896874064</title>
+                        <path fill="none" stroke="black" d="M87.71,-89.39C94.48,-77.13 103.63,-60.55 111.29,-46.67"/>
+                        <polygon fill="black" stroke="black" points="114.53,-48.03 116.3,-37.58 108.41,-44.64 114.53,-48.03"/>
+                        <text text-anchor="middle" x="112" y="-61.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#6)</text>
+                        </g>
+                        <!-- 140489090487536&#45;&gt;140489896874064 -->
+                        <g id="edge27" class="edge">
+                        <title>140489090487536&#45;&gt;140489896874064:c</title>
+                        <path fill="none" stroke="green" d="M113.96,-82.25C117.1,-78.81 119.89,-75.05 122,-71 127.28,-60.89 128.33,-48.13 128.04,-37.78"/>
+                        <polygon fill="green" stroke="green" points="111.42,-79.83 106.62,-89.28 116.26,-84.89 111.42,-79.83"/>
+                        <text text-anchor="middle" x="144" y="-59.8" font-family="Times,serif" font-size="14.00">0 (#7)</text>
+                        </g>
+                        <!-- 140489627309072 -->
+                        <g id="node13" class="node">
+                        <title>140489627309072</title>
+                        <path fill="none" stroke="black" d="M465,-89.5C465,-89.5 501,-89.5 501,-89.5 507,-89.5 513,-95.5 513,-101.5 513,-101.5 513,-114.5 513,-114.5 513,-120.5 507,-126.5 501,-126.5 501,-126.5 465,-126.5 465,-126.5 459,-126.5 453,-120.5 453,-114.5 453,-114.5 453,-101.5 453,-101.5 453,-95.5 459,-89.5 465,-89.5"/>
+                        <text text-anchor="middle" x="483" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(1)</text>
+                        </g>
+                        <!-- 140489627327024&#45;&gt;140489627309072 -->
+                        <g id="edge28" class="edge">
+                        <title>140489627327024&#45;&gt;140489627309072</title>
+                        <path fill="none" stroke="black" d="M462.29,-178.39C458.53,-168.5 455.68,-155.97 459,-145 459.98,-141.76 461.36,-138.55 462.96,-135.46"/>
+                        <polygon fill="black" stroke="black" points="466.12,-136.99 468.28,-126.62 460.13,-133.38 466.12,-136.99"/>
+                        <text text-anchor="middle" x="468" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#21)</text>
+                        </g>
+                        <!-- 140489627327024&#45;&gt;140489627309072 -->
+                        <g id="edge29" class="edge">
+                        <title>140489627327024&#45;&gt;140489627309072:c</title>
+                        <path fill="none" stroke="green" d="M475.74,-168.41C476.19,-165.57 476.62,-162.73 477,-160 478.55,-149.02 479.98,-136.7 481.06,-126.8"/>
+                        <polygon fill="green" stroke="green" points="472.26,-168.02 474.11,-178.45 479.17,-169.14 472.26,-168.02"/>
+                        <text text-anchor="middle" x="498.5" y="-148.8" font-family="Times,serif" font-size="14.00">1 (#22)</text>
+                        </g>
+                        <!-- 140489627375904 -->
+                        <g id="node14" class="node">
+                        <title>140489627375904</title>
+                        <path fill="none" stroke="black" d="M561,-89.5C561,-89.5 597,-89.5 597,-89.5 603,-89.5 609,-95.5 609,-101.5 609,-101.5 609,-114.5 609,-114.5 609,-120.5 603,-126.5 597,-126.5 597,-126.5 561,-126.5 561,-126.5 555,-126.5 549,-120.5 549,-114.5 549,-114.5 549,-101.5 549,-101.5 549,-95.5 555,-89.5 561,-89.5"/>
+                        <text text-anchor="middle" x="579" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(0)</text>
+                        </g>
+                        <!-- 140489627327024&#45;&gt;140489627375904 -->
+                        <g id="edge30" class="edge">
+                        <title>140489627327024&#45;&gt;140489627375904</title>
+                        <path fill="none" stroke="black" d="M497.95,-178.35C506.16,-172.71 515.1,-166.29 523,-160 533.29,-151.81 544.09,-142.24 553.42,-133.61"/>
+                        <polygon fill="black" stroke="black" points="555.96,-136.03 560.88,-126.64 551.18,-130.91 555.96,-136.03"/>
+                        <text text-anchor="middle" x="549" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#23)</text>
+                        </g>
+                        <!-- 140489627327024&#45;&gt;140489627375904 -->
+                        <g id="edge31" class="edge">
+                        <title>140489627327024&#45;&gt;140489627375904:c</title>
+                        <path fill="none" stroke="green" d="M511.03,-183.9C531.88,-176.89 554.56,-167.9 562,-160 570.53,-150.94 574.78,-137.53 576.9,-126.61"/>
+                        <polygon fill="green" stroke="green" points="509.74,-180.64 501.32,-187.07 511.91,-187.29 509.74,-180.64"/>
+                        <text text-anchor="middle" x="591.5" y="-148.8" font-family="Times,serif" font-size="14.00">0 (#24)</text>
+                        </g>
+                        <!-- 140489090486480 -->
+                        <g id="node15" class="node">
+                        <title>140489090486480</title>
+                        <path fill="none" stroke="black" d="M353,-356.5C353,-356.5 389,-356.5 389,-356.5 395,-356.5 401,-362.5 401,-368.5 401,-368.5 401,-381.5 401,-381.5 401,-387.5 395,-393.5 389,-393.5 389,-393.5 353,-393.5 353,-393.5 347,-393.5 341,-387.5 341,-381.5 341,-381.5 341,-368.5 341,-368.5 341,-362.5 347,-356.5 353,-356.5"/>
+                        <text text-anchor="middle" x="371" y="-371.6" font-family="Times,serif" font-size="13.00">virfib(5)</text>
+                        </g>
+                        <!-- 140489090486480&#45;&gt;140489090487008 -->
+                        <g id="edge32" class="edge">
+                        <title>140489090486480&#45;&gt;140489090487008</title>
+                        <path fill="none" stroke="black" d="M340.93,-365.87C326.87,-360.41 311.4,-351.65 303,-338 298.8,-331.18 297.45,-322.82 297.45,-314.86"/>
+                        <polygon fill="black" stroke="black" points="300.95,-314.98 298.1,-304.78 293.96,-314.53 300.95,-314.98"/>
+                        <text text-anchor="middle" x="310" y="-328.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#1)</text>
+                        </g>
+                        <!-- 140489090486480&#45;&gt;140489090487008 -->
+                        <g id="edge33" class="edge">
+                        <title>140489090486480&#45;&gt;140489090487008:c</title>
+                        <path fill="none" stroke="green" d="M348.54,-348.42C345.63,-344.96 342.71,-341.42 340,-338 331.38,-327.14 322.19,-314.6 315.01,-304.56"/>
+                        <polygon fill="green" stroke="green" points="346.11,-350.96 355.26,-356.29 351.43,-346.41 346.11,-350.96"/>
+                        <text text-anchor="middle" x="360.5" y="-326.8" font-family="Times,serif" font-size="14.00">3 (#18)</text>
+                        </g>
+                        <!-- 140489090486480&#45;&gt;140489896869120 -->
+                        <g id="edge34" class="edge">
+                        <title>140489090486480&#45;&gt;140489896869120</title>
+                        <path fill="none" stroke="black" d="M380.93,-356.2C386.99,-346.02 395.24,-333.27 404,-323 407.32,-319.1 411.06,-315.22 414.88,-311.53"/>
+                        <polygon fill="black" stroke="black" points="417.28,-314.07 422.24,-304.71 412.52,-308.94 417.28,-314.07"/>
+                        <text text-anchor="middle" x="413" y="-328.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#19)</text>
+                        </g>
+                        <!-- 140489090486480&#45;&gt;140489896869120 -->
+                        <g id="edge35" class="edge">
+                        <title>140489090486480&#45;&gt;140489896869120:c</title>
+                        <path fill="none" stroke="green" d="M409.17,-350.74C413.86,-346.86 418.3,-342.6 422,-338 429.87,-328.23 435.37,-315.23 438.9,-304.67"/>
+                        <polygon fill="green" stroke="green" points="406.96,-348.03 401.13,-356.87 411.2,-353.59 406.96,-348.03"/>
+                        <text text-anchor="middle" x="452.5" y="-326.8" font-family="Times,serif" font-size="14.00">2 (#28)</text>
+                        </g>
+                        <!-- 99999999 -->
+                        <g id="node16" class="node">
+                        <title>99999999</title>
+                        <path fill="none" stroke="black" d="M356,-445.5C356,-445.5 386,-445.5 386,-445.5 392,-445.5 398,-451.5 398,-457.5 398,-457.5 398,-470.5 398,-470.5 398,-476.5 392,-482.5 386,-482.5 386,-482.5 356,-482.5 356,-482.5 350,-482.5 344,-476.5 344,-470.5 344,-470.5 344,-457.5 344,-457.5 344,-451.5 350,-445.5 356,-445.5"/>
+                        <text text-anchor="middle" x="371" y="-460.6" font-family="Times,serif" font-size="13.00">Result</text>
+                        </g>
+                        <!-- 99999999&#45;&gt;140489090486480 -->
+                        <g id="edge36" class="edge">
+                        <title>99999999&#45;&gt;140489090486480:c</title>
+                        <path fill="none" stroke="green" d="M371,-434.99C371,-421.5 371,-405.69 371,-393.69"/>
+                        <polygon fill="green" stroke="green" points="367.5,-435.19 371,-445.19 374.5,-435.19 367.5,-435.19"/>
+                        <text text-anchor="middle" x="391.5" y="-415.8" font-family="Times,serif" font-size="14.00">5 (#29)</text>
+                        </g>
+                        </g>
+                        </svg>
+
+    
+                </section>
+
+                <section>
+                    <h3>Redundant computations</h3>
+                    <style>
+                    #virfib-redundant {
+                        margin-top: -66px;
+                    }
+                    #virfib-redundant .graph .node, #virfib-redundant .graph .edge, #virfib-redundant .graph .node text {
+                        visibility: visible;
+                    }
+                    #virfib-redundant .graph .node.redundant-node path {
+                        fill: rgb(221, 143, 143);
+                    }
+                    </style>
+                    <p class="smaller">The function is called on the same number multiple times. 🙀</p>
+                
+                    <svg id="virfib-redundant" width="620pt" height="491pt"
+                        viewBox="0.00 0.00 620.00 491.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 487)">
+                        <!-- 140489090487008 -->
+                        <g id="node1" class="node">
+                        <title>140489090487008</title>
+                        <path fill="none" stroke="black" d="M284,-267.5C284,-267.5 320,-267.5 320,-267.5 326,-267.5 332,-273.5 332,-279.5 332,-279.5 332,-292.5 332,-292.5 332,-298.5 326,-304.5 320,-304.5 320,-304.5 284,-304.5 284,-304.5 278,-304.5 272,-298.5 272,-292.5 272,-292.5 272,-279.5 272,-279.5 272,-273.5 278,-267.5 284,-267.5"/>
+                        <text text-anchor="middle" x="302" y="-282.6" font-family="Times,serif" font-size="13.00">virfib(4)</text>
+                        </g>
+                        <!-- 140489896869120 -->
+                        <g id="node2" class="node redundant-node">
+                        <title>140489896869120</title>
+                        <path fill="none" stroke="black" d="M426,-267.5C426,-267.5 462,-267.5 462,-267.5 468,-267.5 474,-273.5 474,-279.5 474,-279.5 474,-292.5 474,-292.5 474,-298.5 468,-304.5 462,-304.5 462,-304.5 426,-304.5 426,-304.5 420,-304.5 414,-298.5 414,-292.5 414,-292.5 414,-279.5 414,-279.5 414,-273.5 420,-267.5 426,-267.5"/>
+                        <text text-anchor="middle" x="444" y="-282.6" font-family="Times,serif" font-size="13.00">virfib(3)</text>
+                        </g>
+                        <!-- 140489627348624 -->
+                        <g id="node3" class="node">
+                        <title>140489627348624</title>
+                        <path fill="none" stroke="black" d="M166,-178.5C166,-178.5 202,-178.5 202,-178.5 208,-178.5 214,-184.5 214,-190.5 214,-190.5 214,-203.5 214,-203.5 214,-209.5 208,-215.5 202,-215.5 202,-215.5 166,-215.5 166,-215.5 160,-215.5 154,-209.5 154,-203.5 154,-203.5 154,-190.5 154,-190.5 154,-184.5 160,-178.5 166,-178.5"/>
+                        <text text-anchor="middle" x="184" y="-193.6" font-family="Times,serif" font-size="13.00">virfib(3)</text>
+                        </g>
+                        <!-- 140489090487008&#45;&gt;140489627348624 -->
+                        <g id="edge8" class="edge">
+                        <title>140489090487008&#45;&gt;140489627348624</title>
+                        <path fill="none" stroke="black" d="M271.86,-284.35C245.34,-282.02 207.95,-274.1 188,-249 182.87,-242.55 180.94,-234.07 180.55,-225.88"/>
+                        <polygon fill="black" stroke="black" points="184.05,-225.92 180.77,-215.85 177.05,-225.77 184.05,-225.92"/>
+                        <text text-anchor="middle" x="195" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#2)</text>
+                        </g>
+                        <!-- 140489090487008&#45;&gt;140489627348624 -->
+                        <g id="edge9" class="edge">
+                        <title>140489090487008&#45;&gt;140489627348624:c</title>
+                        <path fill="none" stroke="green" d="M263.31,-262.73C256.4,-258.38 249.38,-253.71 243,-249 229.15,-238.79 214.64,-226.04 203.48,-215.71"/>
+                        <polygon fill="green" stroke="green" points="261.58,-265.77 271.93,-268.04 265.25,-259.81 261.58,-265.77"/>
+                        <text text-anchor="middle" x="263.5" y="-237.8" font-family="Times,serif" font-size="14.00">2 (#11)</text>
+                        </g>
+                        <!-- 140489627381168 -->
+                        <g id="node4" class="node redundant-node">
+                        <title>140489627381168</title>
+                        <path fill="none" stroke="black" d="M271,-178.5C271,-178.5 307,-178.5 307,-178.5 313,-178.5 319,-184.5 319,-190.5 319,-190.5 319,-203.5 319,-203.5 319,-209.5 313,-215.5 307,-215.5 307,-215.5 271,-215.5 271,-215.5 265,-215.5 259,-209.5 259,-203.5 259,-203.5 259,-190.5 259,-190.5 259,-184.5 265,-178.5 271,-178.5"/>
+                        <text text-anchor="middle" x="289" y="-193.6" font-family="Times,serif" font-size="13.00">virfib(2)</text>
+                        </g>
+                        <!-- 140489090487008&#45;&gt;140489627381168 -->
+                        <g id="edge10" class="edge">
+                        <title>140489090487008&#45;&gt;140489627381168</title>
+                        <path fill="none" stroke="black" d="M294.26,-267.39C292.12,-261.64 290.08,-255.15 289,-249 287.69,-241.53 287.26,-233.35 287.26,-225.77"/>
+                        <polygon fill="black" stroke="black" points="290.77,-225.68 287.51,-215.6 283.77,-225.51 290.77,-225.68"/>
+                        <text text-anchor="middle" x="298" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#12)</text>
+                        </g>
+                        <!-- 140489090487008&#45;&gt;140489627381168 -->
+                        <g id="edge11" class="edge">
+                        <title>140489090487008&#45;&gt;140489627381168:c</title>
+                        <path fill="none" stroke="green" d="M307.94,-257.43C308.72,-249.78 308.73,-241.51 307,-234 305.56,-227.73 302.9,-221.3 300.07,-215.59"/>
+                        <polygon fill="green" stroke="green" points="304.47,-256.95 306.51,-267.35 311.4,-257.96 304.47,-256.95"/>
+                        <text text-anchor="middle" x="329.5" y="-237.8" font-family="Times,serif" font-size="14.00">1 (#17)</text>
+                        </g>
+                        <!-- 140489627327024 -->
+                        <g id="node11" class="node redundant-node">
+                        <title>140489627327024</title>
+                        <path fill="none" stroke="black" d="M453,-178.5C453,-178.5 489,-178.5 489,-178.5 495,-178.5 501,-184.5 501,-190.5 501,-190.5 501,-203.5 501,-203.5 501,-209.5 495,-215.5 489,-215.5 489,-215.5 453,-215.5 453,-215.5 447,-215.5 441,-209.5 441,-203.5 441,-203.5 441,-190.5 441,-190.5 441,-184.5 447,-178.5 453,-178.5"/>
+                        <text text-anchor="middle" x="471" y="-193.6" font-family="Times,serif" font-size="13.00">virfib(2)</text>
+                        </g>
+                        <!-- 140489896869120&#45;&gt;140489627327024 -->
+                        <g id="edge12" class="edge">
+                        <title>140489896869120&#45;&gt;140489627327024</title>
+                        <path fill="none" stroke="black" d="M431.4,-267.12C426,-257.15 421.96,-244.63 427,-234 428.95,-229.87 431.64,-226.07 434.73,-222.59"/>
+                        <polygon fill="black" stroke="black" points="437.26,-225.01 442,-215.53 432.39,-219.99 437.26,-225.01"/>
+                        <text text-anchor="middle" x="436" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#20)</text>
+                        </g>
+                        <!-- 140489896869120&#45;&gt;140489627327024 -->
+                        <g id="edge13" class="edge">
+                        <title>140489896869120&#45;&gt;140489627327024:c</title>
+                        <path fill="none" stroke="green" d="M452.47,-257.39C456.64,-243.82 461.55,-227.81 465.26,-215.69"/>
+                        <polygon fill="green" stroke="green" points="449.05,-256.61 449.46,-267.19 455.74,-258.66 449.05,-256.61"/>
+                        <text text-anchor="middle" x="480.5" y="-237.8" font-family="Times,serif" font-size="14.00">1 (#25)</text>
+                        </g>
+                        <!-- 140489896870176 -->
+                        <g id="node12" class="node redundant-node">
+                        <title>140489896870176</title>
+                        <path fill="none" stroke="black" d="M549,-178.5C549,-178.5 585,-178.5 585,-178.5 591,-178.5 597,-184.5 597,-190.5 597,-190.5 597,-203.5 597,-203.5 597,-209.5 591,-215.5 585,-215.5 585,-215.5 549,-215.5 549,-215.5 543,-215.5 537,-209.5 537,-203.5 537,-203.5 537,-190.5 537,-190.5 537,-184.5 543,-178.5 549,-178.5"/>
+                        <text text-anchor="middle" x="567" y="-193.6" font-family="Times,serif" font-size="13.00">virfib(1)</text>
+                        </g>
+                        <!-- 140489896869120&#45;&gt;140489896870176 -->
+                        <g id="edge14" class="edge">
+                        <title>140489896869120&#45;&gt;140489896870176</title>
+                        <path fill="none" stroke="black" d="M474.05,-268.51C484.1,-262.67 495.23,-255.84 505,-249 516.74,-240.78 529.05,-230.94 539.57,-222.11"/>
+                        <polygon fill="black" stroke="black" points="541.89,-224.73 547.24,-215.59 537.35,-219.4 541.89,-224.73"/>
+                        <text text-anchor="middle" x="533" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#26)</text>
+                        </g>
+                        <!-- 140489896869120&#45;&gt;140489896870176 -->
+                        <g id="edge15" class="edge">
+                        <title>140489896869120&#45;&gt;140489896870176:c</title>
+                        <path fill="none" stroke="green" d="M484.09,-278.96C504.81,-274.01 529.21,-265.06 546,-249 555.29,-240.12 560.58,-226.57 563.53,-215.53"/>
+                        <polygon fill="green" stroke="green" points="483.3,-275.55 474.27,-281.09 484.78,-282.4 483.3,-275.55"/>
+                        <text text-anchor="middle" x="576.5" y="-237.8" font-family="Times,serif" font-size="14.00">1 (#27)</text>
+                        </g>
+                        <!-- 140489090487536 -->
+                        <g id="node5" class="node">
+                        <title>140489090487536</title>
+                        <path fill="none" stroke="black" d="M60,-89.5C60,-89.5 96,-89.5 96,-89.5 102,-89.5 108,-95.5 108,-101.5 108,-101.5 108,-114.5 108,-114.5 108,-120.5 102,-126.5 96,-126.5 96,-126.5 60,-126.5 60,-126.5 54,-126.5 48,-120.5 48,-114.5 48,-114.5 48,-101.5 48,-101.5 48,-95.5 54,-89.5 60,-89.5"/>
+                        <text text-anchor="middle" x="78" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(2)</text>
+                        </g>
+                        <!-- 140489627348624&#45;&gt;140489090487536 -->
+                        <g id="edge16" class="edge">
+                        <title>140489627348624&#45;&gt;140489090487536</title>
+                        <path fill="none" stroke="black" d="M153.92,-191.91C119.42,-186.52 66.05,-175.84 54,-160 48.28,-152.49 50.29,-143.39 55,-134.97"/>
+                        <polygon fill="black" stroke="black" points="58,-136.79 60.68,-126.54 52.19,-132.88 58,-136.79"/>
+                        <text text-anchor="middle" x="61" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#3)</text>
+                        </g>
+                        <!-- 140489627348624&#45;&gt;140489090487536 -->
+                        <g id="edge17" class="edge">
+                        <title>140489627348624&#45;&gt;140489090487536:c</title>
+                        <path fill="none" stroke="green" d="M144.58,-182.29C132.24,-176.7 119.2,-169.32 109,-160 98.91,-150.78 91.08,-137.52 85.81,-126.69"/>
+                        <polygon fill="green" stroke="green" points="143.25,-185.52 153.82,-186.21 145.99,-179.08 143.25,-185.52"/>
+                        <text text-anchor="middle" x="126" y="-148.8" font-family="Times,serif" font-size="14.00">1 (#8)</text>
+                        </g>
+                        <!-- 140489090488912 -->
+                        <g id="node6" class="node redundant-node">
+                        <title>140489090488912</title>
+                        <path fill="none" stroke="black" d="M156,-89.5C156,-89.5 192,-89.5 192,-89.5 198,-89.5 204,-95.5 204,-101.5 204,-101.5 204,-114.5 204,-114.5 204,-120.5 198,-126.5 192,-126.5 192,-126.5 156,-126.5 156,-126.5 150,-126.5 144,-120.5 144,-114.5 144,-114.5 144,-101.5 144,-101.5 144,-95.5 150,-89.5 156,-89.5"/>
+                        <text text-anchor="middle" x="174" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(1)</text>
+                        </g>
+                        <!-- 140489627348624&#45;&gt;140489090488912 -->
+                        <g id="edge18" class="edge">
+                        <title>140489627348624&#45;&gt;140489090488912</title>
+                        <path fill="none" stroke="black" d="M160.93,-178.37C155.69,-173.09 150.84,-166.86 148,-160 144.57,-151.73 146.78,-142.96 151.08,-135.07"/>
+                        <polygon fill="black" stroke="black" points="154.07,-136.89 156.63,-126.61 148.22,-133.05 154.07,-136.89"/>
+                        <text text-anchor="middle" x="155" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#9)</text>
+                        </g>
+                        <!-- 140489627348624&#45;&gt;140489090488912 -->
+                        <g id="edge19" class="edge">
+                        <title>140489627348624&#45;&gt;140489090488912:c</title>
+                        <path fill="none" stroke="green" d="M180.82,-167.99C179.28,-154.5 177.49,-138.69 176.12,-126.69"/>
+                        <polygon fill="green" stroke="green" points="177.37,-168.65 181.98,-178.19 184.32,-167.86 177.37,-168.65"/>
+                        <text text-anchor="middle" x="200.5" y="-148.8" font-family="Times,serif" font-size="14.00">1 (#10)</text>
+                        </g>
+                        <!-- 140489090398176 -->
+                        <g id="node9" class="node redundant-node">
+                        <title>140489090398176</title>
+                        <path fill="none" stroke="black" d="M249,-89.5C249,-89.5 285,-89.5 285,-89.5 291,-89.5 297,-95.5 297,-101.5 297,-101.5 297,-114.5 297,-114.5 297,-120.5 291,-126.5 285,-126.5 285,-126.5 249,-126.5 249,-126.5 243,-126.5 237,-120.5 237,-114.5 237,-114.5 237,-101.5 237,-101.5 237,-95.5 243,-89.5 249,-89.5"/>
+                        <text text-anchor="middle" x="267" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(1)</text>
+                        </g>
+                        <!-- 140489627381168&#45;&gt;140489090398176 -->
+                        <g id="edge20" class="edge">
+                        <title>140489627381168&#45;&gt;140489090398176</title>
+                        <path fill="none" stroke="black" d="M263,-178.41C257.34,-173.21 252.12,-167 249,-160 245.58,-152.32 246.75,-143.77 249.73,-135.9"/>
+                        <polygon fill="black" stroke="black" points="252.95,-137.27 254.07,-126.74 246.62,-134.28 252.95,-137.27"/>
+                        <text text-anchor="middle" x="258" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#13)</text>
+                        </g>
+                        <!-- 140489627381168&#45;&gt;140489090398176 -->
+                        <g id="edge21" class="edge">
+                        <title>140489627381168&#45;&gt;140489090398176:c</title>
+                        <path fill="none" stroke="green" d="M282.1,-168.39C278.7,-154.82 274.7,-138.81 271.67,-126.69"/>
+                        <polygon fill="green" stroke="green" points="278.73,-169.34 284.55,-178.19 285.52,-167.64 278.73,-169.34"/>
+                        <text text-anchor="middle" x="300.5" y="-148.8" font-family="Times,serif" font-size="14.00">1 (#14)</text>
+                        </g>
+                        <!-- 140489627319936 -->
+                        <g id="node10" class="node redundant-node">
+                        <title>140489627319936</title>
+                        <path fill="none" stroke="black" d="M345,-89.5C345,-89.5 381,-89.5 381,-89.5 387,-89.5 393,-95.5 393,-101.5 393,-101.5 393,-114.5 393,-114.5 393,-120.5 387,-126.5 381,-126.5 381,-126.5 345,-126.5 345,-126.5 339,-126.5 333,-120.5 333,-114.5 333,-114.5 333,-101.5 333,-101.5 333,-95.5 339,-89.5 345,-89.5"/>
+                        <text text-anchor="middle" x="363" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(0)</text>
+                        </g>
+                        <!-- 140489627381168&#45;&gt;140489627319936 -->
+                        <g id="edge22" class="edge">
+                        <title>140489627381168&#45;&gt;140489627319936</title>
+                        <path fill="none" stroke="black" d="M307.85,-178.18C313.54,-172.53 319.68,-166.15 325,-160 331.75,-152.19 338.64,-143.28 344.67,-135.12"/>
+                        <polygon fill="black" stroke="black" points="347.55,-137.1 350.59,-126.96 341.89,-132.99 347.55,-137.1"/>
+                        <text text-anchor="middle" x="347" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#15)</text>
+                        </g>
+                        <!-- 140489627381168&#45;&gt;140489627319936 -->
+                        <g id="edge23" class="edge">
+                        <title>140489627381168&#45;&gt;140489627319936:c</title>
+                        <path fill="none" stroke="green" d="M328.63,-184.58C340.67,-179.11 352.65,-171.22 360,-160 366.34,-150.32 367.09,-137.32 366.25,-126.74"/>
+                        <polygon fill="green" stroke="green" points="326.99,-181.46 319.04,-188.46 329.62,-187.95 326.99,-181.46"/>
+                        <text text-anchor="middle" x="386.5" y="-148.8" font-family="Times,serif" font-size="14.00">0 (#16)</text>
+                        </g>
+                        <!-- 140489090488064 -->
+                        <g id="node7" class="node">
+                        <title>140489090488064</title>
+                        <path fill="none" stroke="black" d="M12,-0.5C12,-0.5 48,-0.5 48,-0.5 54,-0.5 60,-6.5 60,-12.5 60,-12.5 60,-25.5 60,-25.5 60,-31.5 54,-37.5 48,-37.5 48,-37.5 12,-37.5 12,-37.5 6,-37.5 0,-31.5 0,-25.5 0,-25.5 0,-12.5 0,-12.5 0,-6.5 6,-0.5 12,-0.5"/>
+                        <text text-anchor="middle" x="30" y="-15.6" font-family="Times,serif" font-size="13.00">virfib(1)</text>
+                        </g>
+                        <!-- 140489090487536&#45;&gt;140489090488064 -->
+                        <g id="edge24" class="edge">
+                        <title>140489090487536&#45;&gt;140489090488064</title>
+                        <path fill="none" stroke="black" d="M47.88,-97.78C35.07,-92.21 21.4,-83.66 14,-71 9.74,-63.71 10.53,-55.16 13.31,-47.16"/>
+                        <polygon fill="black" stroke="black" points="16.61,-48.37 17.5,-37.81 10.22,-45.51 16.61,-48.37"/>
+                        <text text-anchor="middle" x="21" y="-61.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#4)</text>
+                        </g>
+                        <!-- 140489090487536&#45;&gt;140489090488064 -->
+                        <g id="edge25" class="edge">
+                        <title>140489090487536&#45;&gt;140489090488064:c</title>
+                        <path fill="none" stroke="green" d="M57.26,-80.97C55.02,-77.69 52.88,-74.33 51,-71 45.07,-60.49 39.96,-47.96 36.26,-37.83"/>
+                        <polygon fill="green" stroke="green" points="54.6,-83.27 63.3,-89.31 60.27,-79.16 54.6,-83.27"/>
+                        <text text-anchor="middle" x="68" y="-59.8" font-family="Times,serif" font-size="14.00">1 (#5)</text>
+                        </g>
+                        <!-- 140489896874064 -->
+                        <g id="node8" class="node">
+                        <title>140489896874064</title>
+                        <path fill="none" stroke="black" d="M108,-0.5C108,-0.5 144,-0.5 144,-0.5 150,-0.5 156,-6.5 156,-12.5 156,-12.5 156,-25.5 156,-25.5 156,-31.5 150,-37.5 144,-37.5 144,-37.5 108,-37.5 108,-37.5 102,-37.5 96,-31.5 96,-25.5 96,-25.5 96,-12.5 96,-12.5 96,-6.5 102,-0.5 108,-0.5"/>
+                        <text text-anchor="middle" x="126" y="-15.6" font-family="Times,serif" font-size="13.00">virfib(0)</text>
+                        </g>
+                        <!-- 140489090487536&#45;&gt;140489896874064 -->
+                        <g id="edge26" class="edge">
+                        <title>140489090487536&#45;&gt;140489896874064</title>
+                        <path fill="none" stroke="black" d="M87.71,-89.39C94.48,-77.13 103.63,-60.55 111.29,-46.67"/>
+                        <polygon fill="black" stroke="black" points="114.53,-48.03 116.3,-37.58 108.41,-44.64 114.53,-48.03"/>
+                        <text text-anchor="middle" x="112" y="-61.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#6)</text>
+                        </g>
+                        <!-- 140489090487536&#45;&gt;140489896874064 -->
+                        <g id="edge27" class="edge">
+                        <title>140489090487536&#45;&gt;140489896874064:c</title>
+                        <path fill="none" stroke="green" d="M113.96,-82.25C117.1,-78.81 119.89,-75.05 122,-71 127.28,-60.89 128.33,-48.13 128.04,-37.78"/>
+                        <polygon fill="green" stroke="green" points="111.42,-79.83 106.62,-89.28 116.26,-84.89 111.42,-79.83"/>
+                        <text text-anchor="middle" x="144" y="-59.8" font-family="Times,serif" font-size="14.00">0 (#7)</text>
+                        </g>
+                        <!-- 140489627309072 -->
+                        <g id="node13" class="node redundant-node">
+                        <title>140489627309072</title>
+                        <path fill="none" stroke="black" d="M465,-89.5C465,-89.5 501,-89.5 501,-89.5 507,-89.5 513,-95.5 513,-101.5 513,-101.5 513,-114.5 513,-114.5 513,-120.5 507,-126.5 501,-126.5 501,-126.5 465,-126.5 465,-126.5 459,-126.5 453,-120.5 453,-114.5 453,-114.5 453,-101.5 453,-101.5 453,-95.5 459,-89.5 465,-89.5"/>
+                        <text text-anchor="middle" x="483" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(1)</text>
+                        </g>
+                        <!-- 140489627327024&#45;&gt;140489627309072 -->
+                        <g id="edge28" class="edge">
+                        <title>140489627327024&#45;&gt;140489627309072</title>
+                        <path fill="none" stroke="black" d="M462.29,-178.39C458.53,-168.5 455.68,-155.97 459,-145 459.98,-141.76 461.36,-138.55 462.96,-135.46"/>
+                        <polygon fill="black" stroke="black" points="466.12,-136.99 468.28,-126.62 460.13,-133.38 466.12,-136.99"/>
+                        <text text-anchor="middle" x="468" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#21)</text>
+                        </g>
+                        <!-- 140489627327024&#45;&gt;140489627309072 -->
+                        <g id="edge29" class="edge">
+                        <title>140489627327024&#45;&gt;140489627309072:c</title>
+                        <path fill="none" stroke="green" d="M475.74,-168.41C476.19,-165.57 476.62,-162.73 477,-160 478.55,-149.02 479.98,-136.7 481.06,-126.8"/>
+                        <polygon fill="green" stroke="green" points="472.26,-168.02 474.11,-178.45 479.17,-169.14 472.26,-168.02"/>
+                        <text text-anchor="middle" x="498.5" y="-148.8" font-family="Times,serif" font-size="14.00">1 (#22)</text>
+                        </g>
+                        <!-- 140489627375904 -->
+                        <g id="node14" class="node redundant-node">
+                        <title>140489627375904</title>
+                        <path fill="none" stroke="black" d="M561,-89.5C561,-89.5 597,-89.5 597,-89.5 603,-89.5 609,-95.5 609,-101.5 609,-101.5 609,-114.5 609,-114.5 609,-120.5 603,-126.5 597,-126.5 597,-126.5 561,-126.5 561,-126.5 555,-126.5 549,-120.5 549,-114.5 549,-114.5 549,-101.5 549,-101.5 549,-95.5 555,-89.5 561,-89.5"/>
+                        <text text-anchor="middle" x="579" y="-104.6" font-family="Times,serif" font-size="13.00">virfib(0)</text>
+                        </g>
+                        <!-- 140489627327024&#45;&gt;140489627375904 -->
+                        <g id="edge30" class="edge">
+                        <title>140489627327024&#45;&gt;140489627375904</title>
+                        <path fill="none" stroke="black" d="M497.95,-178.35C506.16,-172.71 515.1,-166.29 523,-160 533.29,-151.81 544.09,-142.24 553.42,-133.61"/>
+                        <polygon fill="black" stroke="black" points="555.96,-136.03 560.88,-126.64 551.18,-130.91 555.96,-136.03"/>
+                        <text text-anchor="middle" x="549" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#23)</text>
+                        </g>
+                        <!-- 140489627327024&#45;&gt;140489627375904 -->
+                        <g id="edge31" class="edge">
+                        <title>140489627327024&#45;&gt;140489627375904:c</title>
+                        <path fill="none" stroke="green" d="M511.03,-183.9C531.88,-176.89 554.56,-167.9 562,-160 570.53,-150.94 574.78,-137.53 576.9,-126.61"/>
+                        <polygon fill="green" stroke="green" points="509.74,-180.64 501.32,-187.07 511.91,-187.29 509.74,-180.64"/>
+                        <text text-anchor="middle" x="591.5" y="-148.8" font-family="Times,serif" font-size="14.00">0 (#24)</text>
+                        </g>
+                        <!-- 140489090486480 -->
+                        <g id="node15" class="node">
+                        <title>140489090486480</title>
+                        <path fill="none" stroke="black" d="M353,-356.5C353,-356.5 389,-356.5 389,-356.5 395,-356.5 401,-362.5 401,-368.5 401,-368.5 401,-381.5 401,-381.5 401,-387.5 395,-393.5 389,-393.5 389,-393.5 353,-393.5 353,-393.5 347,-393.5 341,-387.5 341,-381.5 341,-381.5 341,-368.5 341,-368.5 341,-362.5 347,-356.5 353,-356.5"/>
+                        <text text-anchor="middle" x="371" y="-371.6" font-family="Times,serif" font-size="13.00">virfib(5)</text>
+                        </g>
+                        <!-- 140489090486480&#45;&gt;140489090487008 -->
+                        <g id="edge32" class="edge">
+                        <title>140489090486480&#45;&gt;140489090487008</title>
+                        <path fill="none" stroke="black" d="M340.93,-365.87C326.87,-360.41 311.4,-351.65 303,-338 298.8,-331.18 297.45,-322.82 297.45,-314.86"/>
+                        <polygon fill="black" stroke="black" points="300.95,-314.98 298.1,-304.78 293.96,-314.53 300.95,-314.98"/>
+                        <text text-anchor="middle" x="310" y="-328.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#1)</text>
+                        </g>
+                        <!-- 140489090486480&#45;&gt;140489090487008 -->
+                        <g id="edge33" class="edge">
+                        <title>140489090486480&#45;&gt;140489090487008:c</title>
+                        <path fill="none" stroke="green" d="M348.54,-348.42C345.63,-344.96 342.71,-341.42 340,-338 331.38,-327.14 322.19,-314.6 315.01,-304.56"/>
+                        <polygon fill="green" stroke="green" points="346.11,-350.96 355.26,-356.29 351.43,-346.41 346.11,-350.96"/>
+                        <text text-anchor="middle" x="360.5" y="-326.8" font-family="Times,serif" font-size="14.00">3 (#18)</text>
+                        </g>
+                        <!-- 140489090486480&#45;&gt;140489896869120 -->
+                        <g id="edge34" class="edge">
+                        <title>140489090486480&#45;&gt;140489896869120</title>
+                        <path fill="none" stroke="black" d="M380.93,-356.2C386.99,-346.02 395.24,-333.27 404,-323 407.32,-319.1 411.06,-315.22 414.88,-311.53"/>
+                        <polygon fill="black" stroke="black" points="417.28,-314.07 422.24,-304.71 412.52,-308.94 417.28,-314.07"/>
+                        <text text-anchor="middle" x="413" y="-328.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#19)</text>
+                        </g>
+                        <!-- 140489090486480&#45;&gt;140489896869120 -->
+                        <g id="edge35" class="edge">
+                        <title>140489090486480&#45;&gt;140489896869120:c</title>
+                        <path fill="none" stroke="green" d="M409.17,-350.74C413.86,-346.86 418.3,-342.6 422,-338 429.87,-328.23 435.37,-315.23 438.9,-304.67"/>
+                        <polygon fill="green" stroke="green" points="406.96,-348.03 401.13,-356.87 411.2,-353.59 406.96,-348.03"/>
+                        <text text-anchor="middle" x="452.5" y="-326.8" font-family="Times,serif" font-size="14.00">2 (#28)</text>
+                        </g>
+                        <!-- 99999999&#45;&gt;140489090486480 -->
+                        <g id="edge36" class="edge">
+                        <title>99999999&#45;&gt;140489090486480:c</title>
+                        <path fill="none" stroke="green" d="M371,-434.99C371,-421.5 371,-405.69 371,-393.69"/>
+                        <polygon fill="green" stroke="green" points="367.5,-435.19 371,-445.19 374.5,-435.19 367.5,-435.19"/>
+                        <text text-anchor="middle" x="391.5" y="-415.8" font-family="Times,serif" font-size="14.00">5 (#29)</text>
+                        </g>
+                        </g>
+                    </svg>
+                    <p class="smaller">(We will speed up this computation dramatically in a few weeks by remembering results)</p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Counting partitions</h2>
+                </section>
+
+                <section>
+                    <h3>Counting partitions problem</h3>
+
+                    <style>
+                    table.partitions-table {
+                        border-spacing: 6px;
+                        border-collapse: separate;
+                        width: 100%;
+                        margin-top: 20px;
+                    }
+                    table.partitions-table td {
+                        border-bottom: none;
+                        font-size: 0.7em;
+                    }
+                    td.partition {
+                        background-color: #9b9b9b;
+                        border: 2px solid #c4c4c4;
+                        border-radius: 10px;
+                    }
+                    </style>
+
+                    <p class="smaller">The number of partitions of a positive integer <code>n</code>, using parts up to size <code>m</code>, is the number
+                    of ways in which <code>n</code> can be expressed as the sum of positive integer parts up to <code>m</code> in
+                    increasing order.</p>
+
+                    <code>count_partitions(6, 4) # n, m</code>
+
+                    <table class="partitions-table">
+                        <tbody>
+                            <tr><td>2 + 4 = 6                 
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr><td>1 + 1 + 4 = 6
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr><td>3 + 3 = 6 
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr><td>1 + 2 + 3 = 6
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr><td>1 + 1 + 1 + 3 = 6
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr><td>2 + 2 + 2 = 6
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr><td>1 + 1 + 2 + 2 = 6
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr><td>1 + 1 + 1 + 1 + 2 = 6
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr><td>1 + 1 + 1 + 1 + 1 + 1 = 6
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                    </table>
+
+                </section>
+
+
+                <section>
+                    <h3>Counting partitions approach</h3>
+
+                    <style>
+                    tr.with-m td.partition, tr.without-m td.partition {
+                        height: 20px;
+                    }
+                    tr.with-m td.partition, li.with-m {
+                        background-color: #626295;
+                        border: 2px solid #9a69c6;
+                        color: white;
+                    }
+                    tr.without-m td.partition, li.without-m {
+                        background-color: #2d6840;
+                        border: 2px solid #71c669;
+                        color: white;
+                    }
+                    </style>
+
+                    <p class="smaller">The number of partitions of a positive integer <code>n</code>, using parts up to size <code>m</code>, is the number
+                    of ways in which <code>n</code> can be expressed as the sum of positive integer parts up to <code>m</code> in
+                    increasing order.</p>
+
+                    <code>count_partitions(6, 4) # n, m</code>
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+
+                        <div style="grid-row: 1; grid-column: 1;">
+                            <p class="smaller">Recursive decomposition: finding
+                                simpler instances of the problem.</p>
+                            <p class="smaller">Explore two possibilities:
+                                    <ul>
+                                        <li class="with-m fragment" data-fragment-index="1">Use at least one 4
+                                        <li class="without-m fragment" data-fragment-index="2">Don't use any 4
+                                    </ul>
+                            </p>  
+                            <p class="smaller fragment">Tree recursion often involves
+                                exploring different choices. </p>
+                        </div>
+
+                        <div style="grid-row: 1; grid-column: 2;">
+                    <table class="partitions-table">
+                        <tbody>
+                            <tr class="with-m fragment" data-fragment-index="1">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr class="with-m fragment" data-fragment-index="1">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr class="without-m fragment" data-fragment-index="2">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr class="without-m fragment" data-fragment-index="2">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr class="without-m fragment" data-fragment-index="2">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr class="without-m fragment" data-fragment-index="2">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr class="without-m fragment" data-fragment-index="2">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr class="without-m fragment" data-fragment-index="2">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr class="without-m fragment" data-fragment-index="2">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                    </table>
+                        </div>
+                    </div>
+
+                </section>
+
+
+                <section>
+                    <h3>Counting partitions approach</h3>
+
+                    <p class="smaller">The number of partitions of a positive integer <code>n</code>, using parts up to size <code>m</code>, is the number
+                    of ways in which <code>n</code> can be expressed as the sum of positive integer parts up to <code>m</code> in
+                    increasing order.</p>
+
+                    <code>count_partitions(6, 4) # n, m</code>
+
+                    <p>Solve two simpler problems:</p>
+
+                    <table class="partitions-table">
+                        <tbody>
+                            <tr class="with-m" data-fragment-index="1">
+                                <td><code>count_partitions(2, 4)</code></td>
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr class="with-m">
+                                <td><code class="fragment">count_partitions(n-m, m)</code></td>
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr class="without-m">
+                                <td>
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr class="without-m">
+                                <td>
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr class="without-m">
+                                <td><code>count_partitions(6, 3)</code></td>
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr class="without-m">
+                                <td><code class="fragment">count_partitions(n, m-1)</code></td>
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr class="without-m">
+                                <td>
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr class="without-m">
+                                <td>
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="">
+                                <td class="partition">
+                                <td class="partition">
+                            <tr class="without-m">
+                                <td>
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                                <td class="">
+                                <td class="partition">
+                    </table>
+
+                </section>
+
+                <section>
+                    <h3>Counting partitions code</h3>
+
+                    <p class="smaller">The number of partitions of a positive integer <code>n</code>, using parts up to size <code>m</code>, is the number
+                    of ways in which <code>n</code> can be expressed as the sum of positive integer parts up to <code>m</code> in
+                    increasing order.</p>
+
+                    <code>count_partitions(6, 4) # n, m</code>
+
+                    <div style="display: grid; grid-template-rows: 1fr; grid-template-columns: 1fr 1fr; grid-gap: 40px;">
+
+                        <div style="grid-row: 1; grid-column: 1; font-size:0.8em">
+                            <p>Solve two simpler problems:</p>
+                            <p><strong>with</strong> parts of size <code>m</code>:</p>
+                            <code>count_partitions(2, 4)</code><br>
+                            <code>count_partitions(n-m, m)</code><br>
+
+                            <p><strong>without</strong> parts of size <code>m</code>:</p>
+                            <code>count_partitions(6, 3)</code><br>
+                            <code>count_partitions(n, m-1)</code>
+                        </div>
+
+                        <div style="grid-row: 1; grid-column: 2;">
+                            <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                            def count_partitions(n, m):
+                                """
+                                >>> count_partitions(6, 4)
+                                9
+                                """
+                                <span class="fragment" data-fragment-index="2">if n == 0:
+                                    return 1
+                                elif n &lt; 0:
+                                    return 0
+                                elif m == 0:
+                                    return 0</span>
+                                <span class="fragment" data-fragment-index="1">else:
+                                    with_m = count_partitions(n-m, m)
+                                    without_m = count_partitions(n, m-1)
+                                    return with_m + without_m</span>
+                            </code></pre>
+                        </div>
+                    </div>
+
+                </section>
+
+                <section>
+                    <h3>Count partitions call graph</h3>
+                    <style>
+                        #countpartitions-svg {
+                            margin-top: -40px;
+                        }
+                        #countpartitions-svg + .svg-controls {
+                            margin-top: 80px;
+                            left: 0px;
+                        }
+                    </style>
+                    <svg id="countpartitions-svg" width="650pt" height="500pt"
+                    viewBox="0.00 0.00 703.00 580.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                   <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 576)">
+                   <polygon fill="white" stroke="transparent" points="-4,4 -4,-576 699,-576 699,4 -4,4"/>
+                   <!-- 140192484755264 -->
+                   <g id="node1" class="node">
+                   <title>140192484755264</title>
+                   <path fill="none" stroke="black" d="M228,-356.5C228,-356.5 333,-356.5 333,-356.5 339,-356.5 345,-362.5 345,-368.5 345,-368.5 345,-381.5 345,-381.5 345,-387.5 339,-393.5 333,-393.5 333,-393.5 228,-393.5 228,-393.5 222,-393.5 216,-387.5 216,-381.5 216,-381.5 216,-368.5 216,-368.5 216,-362.5 222,-356.5 228,-356.5"/>
+                   <text text-anchor="middle" x="280.5" y="-371.6" font-family="Times,serif" font-size="13.00">count_partitions(2, 2)</text>
+                   </g>
+                   <!-- 140192485705712 -->
+                   <g id="node2" class="node">
+                   <title>140192485705712</title>
+                   <path fill="none" stroke="black" d="M393,-356.5C393,-356.5 498,-356.5 498,-356.5 504,-356.5 510,-362.5 510,-368.5 510,-368.5 510,-381.5 510,-381.5 510,-387.5 504,-393.5 498,-393.5 498,-393.5 393,-393.5 393,-393.5 387,-393.5 381,-387.5 381,-381.5 381,-381.5 381,-368.5 381,-368.5 381,-362.5 387,-356.5 393,-356.5"/>
+                   <text text-anchor="middle" x="445.5" y="-371.6" font-family="Times,serif" font-size="13.00">count_partitions(4, 1)</text>
+                   </g>
+                   <!-- 140192485703680 -->
+                   <g id="node3" class="node">
+                   <title>140192485703680</title>
+                   <path fill="none" stroke="black" d="M74,-267.5C74,-267.5 179,-267.5 179,-267.5 185,-267.5 191,-273.5 191,-279.5 191,-279.5 191,-292.5 191,-292.5 191,-298.5 185,-304.5 179,-304.5 179,-304.5 74,-304.5 74,-304.5 68,-304.5 62,-298.5 62,-292.5 62,-292.5 62,-279.5 62,-279.5 62,-273.5 68,-267.5 74,-267.5"/>
+                   <text text-anchor="middle" x="126.5" y="-282.6" font-family="Times,serif" font-size="13.00">count_partitions(0, 2)</text>
+                   </g>
+                   <!-- 140192484755264&#45;&gt;140192485703680 -->
+                   <g id="edge9" class="edge">
+                   <title>140192484755264&#45;&gt;140192485703680</title>
+                   <path fill="none" stroke="black" d="M215.98,-365.35C195.05,-360.09 172.8,-351.62 155.5,-338 147.63,-331.8 141.52,-322.83 136.99,-314.14"/>
+                   <polygon fill="black" stroke="black" points="140.09,-312.52 132.68,-304.95 133.76,-315.49 140.09,-312.52"/>
+                   <text text-anchor="middle" x="162.5" y="-328.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#2)</text>
+                   </g>
+                   <!-- 140192484755264&#45;&gt;140192485703680 -->
+                   <g id="edge10" class="edge">
+                   <title>140192484755264&#45;&gt;140192485703680:c</title>
+                   <path fill="none" stroke="green" d="M240.72,-351.27C215.36,-336.78 182.93,-318.24 159.1,-304.63"/>
+                   <polygon fill="green" stroke="green" points="239.29,-354.48 249.71,-356.4 242.76,-348.4 239.29,-354.48"/>
+                   <text text-anchor="middle" x="234.5" y="-326.8" font-family="Times,serif" font-size="14.00">1 (#3)</text>
+                   </g>
+                   <!-- 140192485704208 -->
+                   <g id="node4" class="node">
+                   <title>140192485704208</title>
+                   <path fill="none" stroke="black" d="M239,-267.5C239,-267.5 344,-267.5 344,-267.5 350,-267.5 356,-273.5 356,-279.5 356,-279.5 356,-292.5 356,-292.5 356,-298.5 350,-304.5 344,-304.5 344,-304.5 239,-304.5 239,-304.5 233,-304.5 227,-298.5 227,-292.5 227,-292.5 227,-279.5 227,-279.5 227,-273.5 233,-267.5 239,-267.5"/>
+                   <text text-anchor="middle" x="291.5" y="-282.6" font-family="Times,serif" font-size="13.00">count_partitions(2, 1)</text>
+                   </g>
+                   <!-- 140192484755264&#45;&gt;140192485704208 -->
+                   <g id="edge11" class="edge">
+                   <title>140192484755264&#45;&gt;140192485704208</title>
+                   <path fill="none" stroke="black" d="M264.91,-356.23C258.31,-346.51 253.05,-334.19 257.5,-323 258.92,-319.44 260.87,-316.02 263.14,-312.81"/>
+                   <polygon fill="black" stroke="black" points="266.05,-314.78 269.69,-304.83 260.64,-310.33 266.05,-314.78"/>
+                   <text text-anchor="middle" x="264.5" y="-328.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#4)</text>
+                   </g>
+                   <!-- 140192484755264&#45;&gt;140192485704208 -->
+                   <g id="edge12" class="edge">
+                   <title>140192484755264&#45;&gt;140192485704208:c</title>
+                   <path fill="none" stroke="green" d="M284,-345.99C285.69,-332.5 287.66,-316.69 289.16,-304.69"/>
+                   <polygon fill="green" stroke="green" points="280.49,-345.83 282.73,-356.19 287.44,-346.7 280.49,-345.83"/>
+                   <text text-anchor="middle" x="308" y="-326.8" font-family="Times,serif" font-size="14.00">1 (#13)</text>
+                   </g>
+                   <!-- 140192485706240 -->
+                   <g id="node9" class="node">
+                   <title>140192485706240</title>
+                   <path fill="none" stroke="black" d="M410,-267.5C410,-267.5 515,-267.5 515,-267.5 521,-267.5 527,-273.5 527,-279.5 527,-279.5 527,-292.5 527,-292.5 527,-298.5 521,-304.5 515,-304.5 515,-304.5 410,-304.5 410,-304.5 404,-304.5 398,-298.5 398,-292.5 398,-292.5 398,-279.5 398,-279.5 398,-273.5 404,-267.5 410,-267.5"/>
+                   <text text-anchor="middle" x="462.5" y="-282.6" font-family="Times,serif" font-size="13.00">count_partitions(3, 1)</text>
+                   </g>
+                   <!-- 140192485705712&#45;&gt;140192485706240 -->
+                   <g id="edge13" class="edge">
+                   <title>140192485705712&#45;&gt;140192485706240</title>
+                   <path fill="none" stroke="black" d="M434.03,-356.33C429.07,-346.42 425.26,-333.9 429.5,-323 430.95,-319.28 432.97,-315.72 435.32,-312.37"/>
+                   <polygon fill="black" stroke="black" points="438.08,-314.52 441.67,-304.55 432.65,-310.11 438.08,-314.52"/>
+                   <text text-anchor="middle" x="438.5" y="-328.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#16)</text>
+                   </g>
+                   <!-- 140192485705712&#45;&gt;140192485706240 -->
+                   <g id="edge14" class="edge">
+                   <title>140192485705712&#45;&gt;140192485706240:c</title>
+                   <path fill="none" stroke="green" d="M450.91,-345.99C453.52,-332.5 456.57,-316.69 458.89,-304.69"/>
+                   <polygon fill="green" stroke="green" points="447.4,-345.71 448.94,-356.19 454.27,-347.04 447.4,-345.71"/>
+                   <text text-anchor="middle" x="476" y="-326.8" font-family="Times,serif" font-size="14.00">1 (#29)</text>
+                   </g>
+                   <!-- 140192485707296 -->
+                   <g id="node10" class="node">
+                   <title>140192485707296</title>
+                   <path fill="none" stroke="black" d="M575,-267.5C575,-267.5 680,-267.5 680,-267.5 686,-267.5 692,-273.5 692,-279.5 692,-279.5 692,-292.5 692,-292.5 692,-298.5 686,-304.5 680,-304.5 680,-304.5 575,-304.5 575,-304.5 569,-304.5 563,-298.5 563,-292.5 563,-292.5 563,-279.5 563,-279.5 563,-273.5 569,-267.5 575,-267.5"/>
+                   <text text-anchor="middle" x="627.5" y="-282.6" font-family="Times,serif" font-size="13.00">count_partitions(4, 0)</text>
+                   </g>
+                   <!-- 140192485705712&#45;&gt;140192485707296 -->
+                   <g id="edge15" class="edge">
+                   <title>140192485705712&#45;&gt;140192485707296</title>
+                   <path fill="none" stroke="black" d="M482.33,-356.39C510.95,-342.72 550.8,-323.67 581.51,-308.98"/>
+                   <polygon fill="black" stroke="black" points="583.21,-312.05 590.72,-304.58 580.19,-305.73 583.21,-312.05"/>
+                   <text text-anchor="middle" x="555.5" y="-328.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#30)</text>
+                   </g>
+                   <!-- 140192485705712&#45;&gt;140192485707296 -->
+                   <g id="edge16" class="edge">
+                   <title>140192485705712&#45;&gt;140192485707296:c</title>
+                   <path fill="none" stroke="green" d="M519.86,-357.92C536.43,-352.8 553.51,-346.26 568.5,-338 584.29,-329.3 599.48,-315.75 610.49,-304.66"/>
+                   <polygon fill="green" stroke="green" points="518.79,-354.59 510.19,-360.77 520.77,-361.3 518.79,-354.59"/>
+                   <text text-anchor="middle" x="610" y="-326.8" font-family="Times,serif" font-size="14.00">0 (#31)</text>
+                   </g>
+                   <!-- 140191948186192 -->
+                   <g id="node5" class="node">
+                   <title>140191948186192</title>
+                   <path fill="none" stroke="black" d="M101,-178.5C101,-178.5 206,-178.5 206,-178.5 212,-178.5 218,-184.5 218,-190.5 218,-190.5 218,-203.5 218,-203.5 218,-209.5 212,-215.5 206,-215.5 206,-215.5 101,-215.5 101,-215.5 95,-215.5 89,-209.5 89,-203.5 89,-203.5 89,-190.5 89,-190.5 89,-184.5 95,-178.5 101,-178.5"/>
+                   <text text-anchor="middle" x="153.5" y="-193.6" font-family="Times,serif" font-size="13.00">count_partitions(1, 1)</text>
+                   </g>
+                   <!-- 140192485704208&#45;&gt;140191948186192 -->
+                   <g id="edge17" class="edge">
+                   <title>140192485704208&#45;&gt;140191948186192</title>
+                   <path fill="none" stroke="black" d="M226.92,-274.97C208.99,-269.65 190.59,-261.49 176.5,-249 169.42,-242.73 164.4,-233.85 160.9,-225.25"/>
+                   <polygon fill="black" stroke="black" points="164.2,-224.08 157.56,-215.83 157.6,-226.42 164.2,-224.08"/>
+                   <text text-anchor="middle" x="183.5" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#5)</text>
+                   </g>
+                   <!-- 140192485704208&#45;&gt;140191948186192 -->
+                   <g id="edge18" class="edge">
+                   <title>140192485704208&#45;&gt;140191948186192:c</title>
+                   <path fill="none" stroke="green" d="M255.28,-261.9C232.73,-247.53 204.1,-229.27 182.96,-215.78"/>
+                   <polygon fill="green" stroke="green" points="253.59,-264.98 263.91,-267.4 257.36,-259.08 253.59,-264.98"/>
+                   <text text-anchor="middle" x="256" y="-237.8" font-family="Times,serif" font-size="14.00">1 (#10)</text>
+                   </g>
+                   <!-- 140192485705184 -->
+                   <g id="node6" class="node">
+                   <title>140192485705184</title>
+                   <path fill="none" stroke="black" d="M266,-178.5C266,-178.5 371,-178.5 371,-178.5 377,-178.5 383,-184.5 383,-190.5 383,-190.5 383,-203.5 383,-203.5 383,-209.5 377,-215.5 371,-215.5 371,-215.5 266,-215.5 266,-215.5 260,-215.5 254,-209.5 254,-203.5 254,-203.5 254,-190.5 254,-190.5 254,-184.5 260,-178.5 266,-178.5"/>
+                   <text text-anchor="middle" x="318.5" y="-193.6" font-family="Times,serif" font-size="13.00">count_partitions(2, 0)</text>
+                   </g>
+                   <!-- 140192485704208&#45;&gt;140192485705184 -->
+                   <g id="edge19" class="edge">
+                   <title>140192485704208&#45;&gt;140192485705184</title>
+                   <path fill="none" stroke="black" d="M284.26,-267.47C281.18,-257.38 279.18,-244.63 283.5,-234 285.01,-230.29 287.1,-226.75 289.52,-223.44"/>
+                   <polygon fill="black" stroke="black" points="292.26,-225.62 296.06,-215.73 286.93,-221.09 292.26,-225.62"/>
+                   <text text-anchor="middle" x="292.5" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#11)</text>
+                   </g>
+                   <!-- 140192485704208&#45;&gt;140192485705184 -->
+                   <g id="edge20" class="edge">
+                   <title>140192485704208&#45;&gt;140192485705184:c</title>
+                   <path fill="none" stroke="green" d="M299.97,-257.39C304.14,-243.82 309.05,-227.81 312.76,-215.69"/>
+                   <polygon fill="green" stroke="green" points="296.55,-256.61 296.96,-267.19 303.24,-258.66 296.55,-256.61"/>
+                   <text text-anchor="middle" x="328" y="-237.8" font-family="Times,serif" font-size="14.00">0 (#12)</text>
+                   </g>
+                   <!-- 140191948186720 -->
+                   <g id="node7" class="node">
+                   <title>140191948186720</title>
+                   <path fill="none" stroke="black" d="M12,-89.5C12,-89.5 117,-89.5 117,-89.5 123,-89.5 129,-95.5 129,-101.5 129,-101.5 129,-114.5 129,-114.5 129,-120.5 123,-126.5 117,-126.5 117,-126.5 12,-126.5 12,-126.5 6,-126.5 0,-120.5 0,-114.5 0,-114.5 0,-101.5 0,-101.5 0,-95.5 6,-89.5 12,-89.5"/>
+                   <text text-anchor="middle" x="64.5" y="-104.6" font-family="Times,serif" font-size="13.00">count_partitions(0, 1)</text>
+                   </g>
+                   <!-- 140191948186192&#45;&gt;140191948186720 -->
+                   <g id="edge21" class="edge">
+                   <title>140191948186192&#45;&gt;140191948186720</title>
+                   <path fill="none" stroke="black" d="M104.86,-178.31C96.2,-173.43 87.91,-167.39 81.5,-160 75.76,-153.38 71.95,-144.76 69.41,-136.5"/>
+                   <polygon fill="black" stroke="black" points="72.79,-135.57 66.92,-126.75 66.01,-137.31 72.79,-135.57"/>
+                   <text text-anchor="middle" x="88.5" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#6)</text>
+                   </g>
+                   <!-- 140191948186192&#45;&gt;140191948186720 -->
+                   <g id="edge22" class="edge">
+                   <title>140191948186192&#45;&gt;140191948186720:c</title>
+                   <path fill="none" stroke="green" d="M128.37,-171.15C114.09,-157.03 96.5,-139.65 83.41,-126.69"/>
+                   <polygon fill="green" stroke="green" points="125.92,-173.65 135.49,-178.19 130.84,-168.67 125.92,-173.65"/>
+                   <text text-anchor="middle" x="134.5" y="-148.8" font-family="Times,serif" font-size="14.00">1 (#7)</text>
+                   </g>
+                   <!-- 140191948187360 -->
+                   <g id="node8" class="node">
+                   <title>140191948187360</title>
+                   <path fill="none" stroke="black" d="M177,-89.5C177,-89.5 282,-89.5 282,-89.5 288,-89.5 294,-95.5 294,-101.5 294,-101.5 294,-114.5 294,-114.5 294,-120.5 288,-126.5 282,-126.5 282,-126.5 177,-126.5 177,-126.5 171,-126.5 165,-120.5 165,-114.5 165,-114.5 165,-101.5 165,-101.5 165,-95.5 171,-89.5 177,-89.5"/>
+                   <text text-anchor="middle" x="229.5" y="-104.6" font-family="Times,serif" font-size="13.00">count_partitions(1, 0)</text>
+                   </g>
+                   <!-- 140191948186192&#45;&gt;140191948187360 -->
+                   <g id="edge23" class="edge">
+                   <title>140191948186192&#45;&gt;140191948187360</title>
+                   <path fill="none" stroke="black" d="M161.34,-178.35C166.46,-167.98 173.8,-154.98 182.5,-145 186.13,-140.84 190.31,-136.83 194.64,-133.11"/>
+                   <polygon fill="black" stroke="black" points="196.96,-135.74 202.53,-126.73 192.56,-130.29 196.96,-135.74"/>
+                   <text text-anchor="middle" x="189.5" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#8)</text>
+                   </g>
+                   <!-- 140191948186192&#45;&gt;140191948187360 -->
+                   <g id="edge24" class="edge">
+                   <title>140191948186192&#45;&gt;140191948187360:c</title>
+                   <path fill="none" stroke="green" d="M185.18,-171.44C189.17,-167.79 193.06,-163.93 196.5,-160 205.38,-149.87 213.51,-137.11 219.48,-126.77"/>
+                   <polygon fill="green" stroke="green" points="182.7,-168.96 177.45,-178.16 187.29,-174.24 182.7,-168.96"/>
+                   <text text-anchor="middle" x="225.5" y="-148.8" font-family="Times,serif" font-size="14.00">0 (#9)</text>
+                   </g>
+                   <!-- 140192487102560 -->
+                   <g id="node11" class="node">
+                   <title>140192487102560</title>
+                   <path fill="none" stroke="black" d="M413,-178.5C413,-178.5 518,-178.5 518,-178.5 524,-178.5 530,-184.5 530,-190.5 530,-190.5 530,-203.5 530,-203.5 530,-209.5 524,-215.5 518,-215.5 518,-215.5 413,-215.5 413,-215.5 407,-215.5 401,-209.5 401,-203.5 401,-203.5 401,-190.5 401,-190.5 401,-184.5 407,-178.5 413,-178.5"/>
+                   <text text-anchor="middle" x="465.5" y="-193.6" font-family="Times,serif" font-size="13.00">count_partitions(2, 1)</text>
+                   </g>
+                   <!-- 140192485706240&#45;&gt;140192487102560 -->
+                   <g id="edge25" class="edge">
+                   <title>140192485706240&#45;&gt;140192487102560</title>
+                   <path fill="none" stroke="black" d="M442.71,-267.31C434.56,-257.81 427.96,-245.68 432.5,-234 433.95,-230.28 435.97,-226.72 438.32,-223.37"/>
+                   <polygon fill="black" stroke="black" points="441.08,-225.52 444.67,-215.55 435.65,-221.11 441.08,-225.52"/>
+                   <text text-anchor="middle" x="441.5" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#17)</text>
+                   </g>
+                   <!-- 140192485706240&#45;&gt;140192487102560 -->
+                   <g id="edge26" class="edge">
+                   <title>140192485706240&#45;&gt;140192487102560:c</title>
+                   <path fill="none" stroke="green" d="M463.45,-256.99C463.91,-243.5 464.45,-227.69 464.86,-215.69"/>
+                   <polygon fill="green" stroke="green" points="459.95,-257.08 463.11,-267.19 466.95,-257.32 459.95,-257.08"/>
+                   <text text-anchor="middle" x="485" y="-237.8" font-family="Times,serif" font-size="14.00">1 (#26)</text>
+                   </g>
+                   <!-- 140192485706768 -->
+                   <g id="node12" class="node">
+                   <title>140192485706768</title>
+                   <path fill="none" stroke="black" d="M578,-178.5C578,-178.5 683,-178.5 683,-178.5 689,-178.5 695,-184.5 695,-190.5 695,-190.5 695,-203.5 695,-203.5 695,-209.5 689,-215.5 683,-215.5 683,-215.5 578,-215.5 578,-215.5 572,-215.5 566,-209.5 566,-203.5 566,-203.5 566,-190.5 566,-190.5 566,-184.5 572,-178.5 578,-178.5"/>
+                   <text text-anchor="middle" x="630.5" y="-193.6" font-family="Times,serif" font-size="13.00">count_partitions(3, 0)</text>
+                   </g>
+                   <!-- 140192485706240&#45;&gt;140192485706768 -->
+                   <g id="edge27" class="edge">
+                   <title>140192485706240&#45;&gt;140192485706768</title>
+                   <path fill="none" stroke="black" d="M496.5,-267.39C522.68,-253.83 559.07,-234.99 587.31,-220.37"/>
+                   <polygon fill="black" stroke="black" points="589.28,-223.29 596.55,-215.58 586.06,-217.07 589.28,-223.29"/>
+                   <text text-anchor="middle" x="565.5" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#27)</text>
+                   </g>
+                   <!-- 140192485706240&#45;&gt;140192485706768 -->
+                   <g id="edge28" class="edge">
+                   <title>140192485706240&#45;&gt;140192485706768:c</title>
+                   <path fill="none" stroke="green" d="M537.04,-267.74C551.35,-262.83 565.81,-256.66 578.5,-249 592.93,-240.29 606.3,-226.74 615.87,-215.65"/>
+                   <polygon fill="green" stroke="green" points="535.61,-264.53 527.18,-270.95 537.78,-271.19 535.61,-264.53"/>
+                   <text text-anchor="middle" x="618" y="-237.8" font-family="Times,serif" font-size="14.00">0 (#28)</text>
+                   </g>
+                   <!-- 140192487107616 -->
+                   <g id="node13" class="node">
+                   <title>140192487107616</title>
+                   <path fill="none" stroke="black" d="M330,-89.5C330,-89.5 435,-89.5 435,-89.5 441,-89.5 447,-95.5 447,-101.5 447,-101.5 447,-114.5 447,-114.5 447,-120.5 441,-126.5 435,-126.5 435,-126.5 330,-126.5 330,-126.5 324,-126.5 318,-120.5 318,-114.5 318,-114.5 318,-101.5 318,-101.5 318,-95.5 324,-89.5 330,-89.5"/>
+                   <text text-anchor="middle" x="382.5" y="-104.6" font-family="Times,serif" font-size="13.00">count_partitions(1, 1)</text>
+                   </g>
+                   <!-- 140192487102560&#45;&gt;140192487107616 -->
+                   <g id="edge29" class="edge">
+                   <title>140192487102560&#45;&gt;140192487107616</title>
+                   <path fill="none" stroke="black" d="M409.47,-178.32C401.37,-173.55 393.94,-167.54 388.5,-160 383.71,-153.37 381.58,-144.93 380.83,-136.84"/>
+                   <polygon fill="black" stroke="black" points="384.32,-136.48 380.51,-126.59 377.32,-136.69 384.32,-136.48"/>
+                   <text text-anchor="middle" x="397.5" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#18)</text>
+                   </g>
+                   <!-- 140192487102560&#45;&gt;140192487107616 -->
+                   <g id="edge30" class="edge">
+                   <title>140192487102560&#45;&gt;140192487107616:c</title>
+                   <path fill="none" stroke="green" d="M441.69,-170.76C428.44,-156.71 412.23,-139.53 400.13,-126.69"/>
+                   <polygon fill="green" stroke="green" points="439.3,-173.32 448.7,-178.19 444.39,-168.52 439.3,-173.32"/>
+                   <text text-anchor="middle" x="452" y="-148.8" font-family="Times,serif" font-size="14.00">1 (#23)</text>
+                   </g>
+                   <!-- 140192487108672 -->
+                   <g id="node14" class="node">
+                   <title>140192487108672</title>
+                   <path fill="none" stroke="black" d="M495,-89.5C495,-89.5 600,-89.5 600,-89.5 606,-89.5 612,-95.5 612,-101.5 612,-101.5 612,-114.5 612,-114.5 612,-120.5 606,-126.5 600,-126.5 600,-126.5 495,-126.5 495,-126.5 489,-126.5 483,-120.5 483,-114.5 483,-114.5 483,-101.5 483,-101.5 483,-95.5 489,-89.5 495,-89.5"/>
+                   <text text-anchor="middle" x="547.5" y="-104.6" font-family="Times,serif" font-size="13.00">count_partitions(2, 0)</text>
+                   </g>
+                   <!-- 140192487102560&#45;&gt;140192487108672 -->
+                   <g id="edge31" class="edge">
+                   <title>140192487102560&#45;&gt;140192487108672</title>
+                   <path fill="none" stroke="black" d="M476.75,-178.1C483.59,-167.88 492.84,-155.13 502.5,-145 506.38,-140.93 510.73,-136.91 515.16,-133.11"/>
+                   <polygon fill="black" stroke="black" points="517.62,-135.62 523.11,-126.56 513.17,-130.22 517.62,-135.62"/>
+                   <text text-anchor="middle" x="511.5" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#24)</text>
+                   </g>
+                   <!-- 140192487102560&#45;&gt;140192487108672 -->
+                   <g id="edge32" class="edge">
+                   <title>140192487102560&#45;&gt;140192487108672:c</title>
+                   <path fill="none" stroke="green" d="M506.88,-172.35C511.79,-168.58 516.48,-164.45 520.5,-160 529.23,-150.34 535.98,-137.34 540.55,-126.76"/>
+                   <polygon fill="green" stroke="green" points="504.6,-169.68 498.49,-178.34 508.66,-175.38 504.6,-169.68"/>
+                   <text text-anchor="middle" x="551" y="-148.8" font-family="Times,serif" font-size="14.00">0 (#25)</text>
+                   </g>
+                   <!-- 140192488196016 -->
+                   <g id="node15" class="node">
+                   <title>140192488196016</title>
+                   <path fill="none" stroke="black" d="M242,-0.5C242,-0.5 347,-0.5 347,-0.5 353,-0.5 359,-6.5 359,-12.5 359,-12.5 359,-25.5 359,-25.5 359,-31.5 353,-37.5 347,-37.5 347,-37.5 242,-37.5 242,-37.5 236,-37.5 230,-31.5 230,-25.5 230,-25.5 230,-12.5 230,-12.5 230,-6.5 236,-0.5 242,-0.5"/>
+                   <text text-anchor="middle" x="294.5" y="-15.6" font-family="Times,serif" font-size="13.00">count_partitions(0, 1)</text>
+                   </g>
+                   <!-- 140192487107616&#45;&gt;140192488196016 -->
+                   <g id="edge33" class="edge">
+                   <title>140192487107616&#45;&gt;140192488196016</title>
+                   <path fill="none" stroke="black" d="M332.6,-89.38C323.97,-84.52 315.78,-78.46 309.5,-71 303.99,-64.44 300.5,-55.94 298.29,-47.76"/>
+                   <polygon fill="black" stroke="black" points="301.66,-46.78 296.13,-37.74 294.82,-48.26 301.66,-46.78"/>
+                   <text text-anchor="middle" x="318.5" y="-61.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#19)</text>
+                   </g>
+                   <!-- 140192487107616&#45;&gt;140192488196016 -->
+                   <g id="edge34" class="edge">
+                   <title>140192487107616&#45;&gt;140192488196016:c</title>
+                   <path fill="none" stroke="green" d="M357.26,-81.76C343.21,-67.71 326.03,-50.53 313.19,-37.69"/>
+                   <polygon fill="green" stroke="green" points="355.15,-84.6 364.69,-89.19 360.1,-79.65 355.15,-84.6"/>
+                   <text text-anchor="middle" x="367" y="-59.8" font-family="Times,serif" font-size="14.00">1 (#20)</text>
+                   </g>
+                   <!-- 140192487108144 -->
+                   <g id="node16" class="node">
+                   <title>140192487108144</title>
+                   <path fill="none" stroke="black" d="M407,-0.5C407,-0.5 512,-0.5 512,-0.5 518,-0.5 524,-6.5 524,-12.5 524,-12.5 524,-25.5 524,-25.5 524,-31.5 518,-37.5 512,-37.5 512,-37.5 407,-37.5 407,-37.5 401,-37.5 395,-31.5 395,-25.5 395,-25.5 395,-12.5 395,-12.5 395,-6.5 401,-0.5 407,-0.5"/>
+                   <text text-anchor="middle" x="459.5" y="-15.6" font-family="Times,serif" font-size="13.00">count_partitions(1, 0)</text>
+                   </g>
+                   <!-- 140192487107616&#45;&gt;140192487108144 -->
+                   <g id="edge35" class="edge">
+                   <title>140192487107616&#45;&gt;140192487108144</title>
+                   <path fill="none" stroke="black" d="M393.11,-89.17C399.57,-78.98 408.32,-66.23 417.5,-56 421.02,-52.08 424.96,-48.19 428.98,-44.49"/>
+                   <polygon fill="black" stroke="black" points="431.53,-46.91 436.71,-37.67 426.89,-41.66 431.53,-46.91"/>
+                   <text text-anchor="middle" x="426.5" y="-61.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#21)</text>
+                   </g>
+                   <!-- 140192487107616&#45;&gt;140192487108144 -->
+                   <g id="edge36" class="edge">
+                   <title>140192487107616&#45;&gt;140192487108144:c</title>
+                   <path fill="none" stroke="green" d="M422.56,-83.37C427.26,-79.6 431.72,-75.46 435.5,-71 443.73,-61.29 449.73,-48.29 453.67,-37.72"/>
+                   <polygon fill="green" stroke="green" points="420.44,-80.59 414.49,-89.36 424.61,-86.21 420.44,-80.59"/>
+                   <text text-anchor="middle" x="466" y="-59.8" font-family="Times,serif" font-size="14.00">0 (#22)</text>
+                   </g>
+                   <!-- 140192488194912 -->
+                   <g id="node17" class="node">
+                   <title>140192488194912</title>
+                   <path fill="none" stroke="black" d="M315,-445.5C315,-445.5 420,-445.5 420,-445.5 426,-445.5 432,-451.5 432,-457.5 432,-457.5 432,-470.5 432,-470.5 432,-476.5 426,-482.5 420,-482.5 420,-482.5 315,-482.5 315,-482.5 309,-482.5 303,-476.5 303,-470.5 303,-470.5 303,-457.5 303,-457.5 303,-451.5 309,-445.5 315,-445.5"/>
+                   <text text-anchor="middle" x="367.5" y="-460.6" font-family="Times,serif" font-size="13.00">count_partitions(4, 2)</text>
+                   </g>
+                   <!-- 140192488194912&#45;&gt;140192484755264 -->
+                   <g id="edge37" class="edge">
+                   <title>140192488194912&#45;&gt;140192484755264</title>
+                   <path fill="none" stroke="black" d="M321.68,-445.33C313.12,-440.41 304.88,-434.35 298.5,-427 292.73,-420.34 288.77,-411.71 286.07,-403.45"/>
+                   <polygon fill="black" stroke="black" points="289.41,-402.41 283.36,-393.72 282.67,-404.29 289.41,-402.41"/>
+                   <text text-anchor="middle" x="305.5" y="-417.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#1)</text>
+                   </g>
+                   <!-- 140192488194912&#45;&gt;140192484755264 -->
+                   <g id="edge38" class="edge">
+                   <title>140192488194912&#45;&gt;140192484755264:c</title>
+                   <path fill="none" stroke="green" d="M342.55,-437.76C328.66,-423.71 311.67,-406.53 298.98,-393.69"/>
+                   <polygon fill="green" stroke="green" points="340.37,-440.54 349.89,-445.19 345.35,-435.62 340.37,-440.54"/>
+                   <text text-anchor="middle" x="353" y="-415.8" font-family="Times,serif" font-size="14.00">2 (#14)</text>
+                   </g>
+                   <!-- 140192488194912&#45;&gt;140192485705712 -->
+                   <g id="edge39" class="edge">
+                   <title>140192488194912&#45;&gt;140192485705712</title>
+                   <path fill="none" stroke="black" d="M378.5,-445.19C385.16,-435.01 394.16,-422.26 403.5,-412 407.05,-408.1 411,-404.23 415.02,-400.54"/>
+                   <polygon fill="black" stroke="black" points="417.57,-402.95 422.76,-393.72 412.95,-397.7 417.57,-402.95"/>
+                   <text text-anchor="middle" x="412.5" y="-417.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#15)</text>
+                   </g>
+                   <!-- 140192488194912&#45;&gt;140192485705712 -->
+                   <g id="edge40" class="edge">
+                   <title>140192488194912&#45;&gt;140192485705712:c</title>
+                   <path fill="none" stroke="green" d="M408.32,-439.45C413.11,-435.67 417.65,-431.5 421.5,-427 429.77,-417.33 435.77,-404.33 439.7,-393.75"/>
+                   <polygon fill="green" stroke="green" points="406.12,-436.72 400.1,-445.45 410.25,-442.38 406.12,-436.72"/>
+                   <text text-anchor="middle" x="452" y="-415.8" font-family="Times,serif" font-size="14.00">1 (#32)</text>
+                   </g>
+                   <!-- 99999999 -->
+                   <g id="node18" class="node">
+                   <title>99999999</title>
+                   <path fill="none" stroke="black" d="M352.5,-534.5C352.5,-534.5 382.5,-534.5 382.5,-534.5 388.5,-534.5 394.5,-540.5 394.5,-546.5 394.5,-546.5 394.5,-559.5 394.5,-559.5 394.5,-565.5 388.5,-571.5 382.5,-571.5 382.5,-571.5 352.5,-571.5 352.5,-571.5 346.5,-571.5 340.5,-565.5 340.5,-559.5 340.5,-559.5 340.5,-546.5 340.5,-546.5 340.5,-540.5 346.5,-534.5 352.5,-534.5"/>
+                   <text text-anchor="middle" x="367.5" y="-549.6" font-family="Times,serif" font-size="13.00">Result</text>
+                   </g>
+                   <!-- 99999999&#45;&gt;140192488194912 -->
+                   <g id="edge41" class="edge">
+                   <title>99999999&#45;&gt;140192488194912:c</title>
+                   <path fill="none" stroke="green" d="M367.5,-523.99C367.5,-510.5 367.5,-494.69 367.5,-482.69"/>
+                   <polygon fill="green" stroke="green" points="364,-524.19 367.5,-534.19 371,-524.19 364,-524.19"/>
+                   <text text-anchor="middle" x="388" y="-504.8" font-family="Times,serif" font-size="14.00">3 (#33)</text>
+                   </g>
+                   </g>
+                   </svg>
+            </section>
+
+            <section>
+                <h3>Count partitions variant</h3>
+                <p>To save on unneeded calls, we can cap <code>m</code>, the maximum partition size, based on <code>n</code>.
+                We can also add a base case for <code>m</code> of size 1.
+                </p>
+
+                <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                def count_partitions(n, m):
+                    <strong>if m == 1 or n == 0:</strong>
+                        return 1
+                    elif n < 0:
+                        return 0
+                    else:
+                        # Number of partitions using a partition of size M
+                        <strong>leftover = n - m</strong>
+                        <strong>with_m = count_partitions(leftover, min(leftover, m))</strong>
+                        # Number of partitions using size up to M-1
+                        without_m = count_partitions(n, m-1)
+                        return with_m + without_m
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>Variant call graph</h3>
+
+                <style>
+                    #countpartitionsvariant-svg {
+                        margin-top: -40px;
+                    }
+                    #countpartitionsvariant-svg + .svg-controls {
+                        margin-top: 80px;
+                        left: 0px;
+                    }
+                </style>
+                <svg id="countpartitionsvariant-svg" width="680pt" height="500pt"
+                    viewBox="0.00 0.00 779.00 580.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 576)">
+                    <polygon fill="white" stroke="transparent" points="-4,4 -4,-576 775,-576 775,4 -4,4"/>
+                    <!-- 140548255138000 -->
+                    <g id="node1" class="node">
+                    <title>140548255138000</title>
+                    <path fill="none" stroke="black" d="M154,-356.5C154,-356.5 259,-356.5 259,-356.5 265,-356.5 271,-362.5 271,-368.5 271,-368.5 271,-381.5 271,-381.5 271,-387.5 265,-393.5 259,-393.5 259,-393.5 154,-393.5 154,-393.5 148,-393.5 142,-387.5 142,-381.5 142,-381.5 142,-368.5 142,-368.5 142,-362.5 148,-356.5 154,-356.5"/>
+                    <text text-anchor="middle" x="206.5" y="-371.6" font-family="Times,serif" font-size="13.00">count_partitions(2, 2)</text>
+                    </g>
+                    <!-- 140548255134320 -->
+                    <g id="node2" class="node">
+                    <title>140548255134320</title>
+                    <path fill="none" stroke="black" d="M319,-356.5C319,-356.5 424,-356.5 424,-356.5 430,-356.5 436,-362.5 436,-368.5 436,-368.5 436,-381.5 436,-381.5 436,-387.5 430,-393.5 424,-393.5 424,-393.5 319,-393.5 319,-393.5 313,-393.5 307,-387.5 307,-381.5 307,-381.5 307,-368.5 307,-368.5 307,-362.5 313,-356.5 319,-356.5"/>
+                    <text text-anchor="middle" x="371.5" y="-371.6" font-family="Times,serif" font-size="13.00">count_partitions(6, 3)</text>
+                    </g>
+                    <!-- 140548255138528 -->
+                    <g id="node3" class="node">
+                    <title>140548255138528</title>
+                    <path fill="none" stroke="black" d="M12,-267.5C12,-267.5 117,-267.5 117,-267.5 123,-267.5 129,-273.5 129,-279.5 129,-279.5 129,-292.5 129,-292.5 129,-298.5 123,-304.5 117,-304.5 117,-304.5 12,-304.5 12,-304.5 6,-304.5 0,-298.5 0,-292.5 0,-292.5 0,-279.5 0,-279.5 0,-273.5 6,-267.5 12,-267.5"/>
+                    <text text-anchor="middle" x="64.5" y="-282.6" font-family="Times,serif" font-size="13.00">count_partitions(0, 0)</text>
+                    </g>
+                    <!-- 140548255138000&#45;&gt;140548255138528 -->
+                    <g id="edge9" class="edge">
+                    <title>140548255138000&#45;&gt;140548255138528</title>
+                    <path fill="none" stroke="black" d="M141.98,-361.06C126.02,-355.75 109.72,-348.33 96.5,-338 88.31,-331.6 81.65,-322.47 76.57,-313.71"/>
+                    <polygon fill="black" stroke="black" points="79.64,-312.02 71.86,-304.83 73.46,-315.3 79.64,-312.02"/>
+                    <text text-anchor="middle" x="103.5" y="-328.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#2)</text>
+                    </g>
+                    <!-- 140548255138000&#45;&gt;140548255138528 -->
+                    <g id="edge10" class="edge">
+                    <title>140548255138000&#45;&gt;140548255138528:c</title>
+                    <path fill="none" stroke="green" d="M169.54,-351.09C146.29,-336.69 116.67,-318.33 94.81,-304.78"/>
+                    <polygon fill="green" stroke="green" points="167.76,-354.11 178.11,-356.4 171.45,-348.16 167.76,-354.11"/>
+                    <text text-anchor="middle" x="165.5" y="-326.8" font-family="Times,serif" font-size="14.00">1 (#3)</text>
+                    </g>
+                    <!-- 140548255133792 -->
+                    <g id="node4" class="node">
+                    <title>140548255133792</title>
+                    <path fill="none" stroke="black" d="M177,-267.5C177,-267.5 282,-267.5 282,-267.5 288,-267.5 294,-273.5 294,-279.5 294,-279.5 294,-292.5 294,-292.5 294,-298.5 288,-304.5 282,-304.5 282,-304.5 177,-304.5 177,-304.5 171,-304.5 165,-298.5 165,-292.5 165,-292.5 165,-279.5 165,-279.5 165,-273.5 171,-267.5 177,-267.5"/>
+                    <text text-anchor="middle" x="229.5" y="-282.6" font-family="Times,serif" font-size="13.00">count_partitions(2, 1)</text>
+                    </g>
+                    <!-- 140548255138000&#45;&gt;140548255133792 -->
+                    <g id="edge11" class="edge">
+                    <title>140548255138000&#45;&gt;140548255133792</title>
+                    <path fill="none" stroke="black" d="M199.37,-356.09C196.45,-346.11 194.57,-333.59 198.5,-323 199.81,-319.47 201.64,-316.05 203.76,-312.82"/>
+                    <polygon fill="black" stroke="black" points="206.64,-314.82 209.91,-304.74 201.07,-310.58 206.64,-314.82"/>
+                    <text text-anchor="middle" x="205.5" y="-328.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#4)</text>
+                    </g>
+                    <!-- 140548255138000&#45;&gt;140548255133792 -->
+                    <g id="edge12" class="edge">
+                    <title>140548255138000&#45;&gt;140548255133792:c</title>
+                    <path fill="none" stroke="green" d="M213.72,-346.39C217.26,-332.82 221.45,-316.81 224.61,-304.69"/>
+                    <polygon fill="green" stroke="green" points="210.3,-345.63 211.15,-356.19 217.07,-347.4 210.3,-345.63"/>
+                    <text text-anchor="middle" x="236.5" y="-326.8" font-family="Times,serif" font-size="14.00">1 (#5)</text>
+                    </g>
+                    <!-- 140548255129776 -->
+                    <g id="node5" class="node">
+                    <title>140548255129776</title>
+                    <path fill="none" stroke="black" d="M324,-267.5C324,-267.5 429,-267.5 429,-267.5 435,-267.5 441,-273.5 441,-279.5 441,-279.5 441,-292.5 441,-292.5 441,-298.5 435,-304.5 429,-304.5 429,-304.5 324,-304.5 324,-304.5 318,-304.5 312,-298.5 312,-292.5 312,-292.5 312,-279.5 312,-279.5 312,-273.5 318,-267.5 324,-267.5"/>
+                    <text text-anchor="middle" x="376.5" y="-282.6" font-family="Times,serif" font-size="13.00">count_partitions(3, 3)</text>
+                    </g>
+                    <!-- 140548255134320&#45;&gt;140548255129776 -->
+                    <g id="edge13" class="edge">
+                    <title>140548255134320&#45;&gt;140548255129776</title>
+                    <path fill="none" stroke="black" d="M355.72,-356.43C348.97,-346.77 343.46,-334.44 347.5,-323 348.75,-319.46 350.51,-316.02 352.55,-312.74"/>
+                    <polygon fill="black" stroke="black" points="355.44,-314.71 358.46,-304.56 349.77,-310.62 355.44,-314.71"/>
+                    <text text-anchor="middle" x="354.5" y="-328.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#8)</text>
+                    </g>
+                    <!-- 140548255134320&#45;&gt;140548255129776 -->
+                    <g id="edge14" class="edge">
+                    <title>140548255134320&#45;&gt;140548255129776:c</title>
+                    <path fill="none" stroke="green" d="M373.09,-345.99C373.86,-332.5 374.76,-316.69 375.44,-304.69"/>
+                    <polygon fill="green" stroke="green" points="369.58,-346.01 372.51,-356.19 376.57,-346.41 369.58,-346.01"/>
+                    <text text-anchor="middle" x="395" y="-326.8" font-family="Times,serif" font-size="14.00">3 (#17)</text>
+                    </g>
+                    <!-- 140548255101520 -->
+                    <g id="node6" class="node">
+                    <title>140548255101520</title>
+                    <path fill="none" stroke="black" d="M489,-267.5C489,-267.5 594,-267.5 594,-267.5 600,-267.5 606,-273.5 606,-279.5 606,-279.5 606,-292.5 606,-292.5 606,-298.5 600,-304.5 594,-304.5 594,-304.5 489,-304.5 489,-304.5 483,-304.5 477,-298.5 477,-292.5 477,-292.5 477,-279.5 477,-279.5 477,-273.5 483,-267.5 489,-267.5"/>
+                    <text text-anchor="middle" x="541.5" y="-282.6" font-family="Times,serif" font-size="13.00">count_partitions(6, 2)</text>
+                    </g>
+                    <!-- 140548255134320&#45;&gt;140548255101520 -->
+                    <g id="edge15" class="edge">
+                    <title>140548255134320&#45;&gt;140548255101520</title>
+                    <path fill="none" stroke="black" d="M405.9,-356.39C432.52,-342.77 469.54,-323.83 498.17,-309.17"/>
+                    <polygon fill="black" stroke="black" points="499.84,-312.25 507.15,-304.58 496.65,-306.02 499.84,-312.25"/>
+                    <text text-anchor="middle" x="475.5" y="-328.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#18)</text>
+                    </g>
+                    <!-- 140548255134320&#45;&gt;140548255101520 -->
+                    <g id="edge16" class="edge">
+                    <title>140548255134320&#45;&gt;140548255101520:c</title>
+                    <path fill="none" stroke="green" d="M445.7,-357.03C460.44,-352.06 475.39,-345.81 488.5,-338 503.12,-329.29 516.75,-315.74 526.53,-304.65"/>
+                    <polygon fill="green" stroke="green" points="444.53,-353.73 436.07,-360.11 446.66,-360.4 444.53,-353.73"/>
+                    <text text-anchor="middle" x="528" y="-326.8" font-family="Times,serif" font-size="14.00">4 (#31)</text>
+                    </g>
+                    <!-- 140548792219360 -->
+                    <g id="node7" class="node">
+                    <title>140548792219360</title>
+                    <path fill="none" stroke="black" d="M167,-178.5C167,-178.5 272,-178.5 272,-178.5 278,-178.5 284,-184.5 284,-190.5 284,-190.5 284,-203.5 284,-203.5 284,-209.5 278,-215.5 272,-215.5 272,-215.5 167,-215.5 167,-215.5 161,-215.5 155,-209.5 155,-203.5 155,-203.5 155,-190.5 155,-190.5 155,-184.5 161,-178.5 167,-178.5"/>
+                    <text text-anchor="middle" x="219.5" y="-193.6" font-family="Times,serif" font-size="13.00">count_partitions(0, 0)</text>
+                    </g>
+                    <!-- 140548255129776&#45;&gt;140548792219360 -->
+                    <g id="edge17" class="edge">
+                    <title>140548255129776&#45;&gt;140548792219360</title>
+                    <path fill="none" stroke="black" d="M311.68,-268.48C284.02,-261.04 256.84,-253.02 251.5,-249 243.2,-242.75 236.51,-233.65 231.45,-224.87"/>
+                    <polygon fill="black" stroke="black" points="234.51,-223.18 226.75,-215.97 228.32,-226.45 234.51,-223.18"/>
+                    <text text-anchor="middle" x="258.5" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#9)</text>
+                    </g>
+                    <!-- 140548255129776&#45;&gt;140548792219360 -->
+                    <g id="edge18" class="edge">
+                    <title>140548255129776&#45;&gt;140548792219360:c</title>
+                    <path fill="none" stroke="green" d="M336.28,-262.46C310.39,-247.94 277.13,-229.3 252.74,-215.63"/>
+                    <polygon fill="green" stroke="green" points="334.67,-265.57 345.11,-267.4 338.09,-259.46 334.67,-265.57"/>
+                    <text text-anchor="middle" x="333" y="-237.8" font-family="Times,serif" font-size="14.00">1 (#10)</text>
+                    </g>
+                    <!-- 140548792219888 -->
+                    <g id="node8" class="node">
+                    <title>140548792219888</title>
+                    <path fill="none" stroke="black" d="M332,-178.5C332,-178.5 437,-178.5 437,-178.5 443,-178.5 449,-184.5 449,-190.5 449,-190.5 449,-203.5 449,-203.5 449,-209.5 443,-215.5 437,-215.5 437,-215.5 332,-215.5 332,-215.5 326,-215.5 320,-209.5 320,-203.5 320,-203.5 320,-190.5 320,-190.5 320,-184.5 326,-178.5 332,-178.5"/>
+                    <text text-anchor="middle" x="384.5" y="-193.6" font-family="Times,serif" font-size="13.00">count_partitions(3, 2)</text>
+                    </g>
+                    <!-- 140548255129776&#45;&gt;140548792219888 -->
+                    <g id="edge19" class="edge">
+                    <title>140548255129776&#45;&gt;140548792219888</title>
+                    <path fill="none" stroke="black" d="M364.22,-267.14C359.03,-257.39 354.92,-245.08 358.5,-234 359.58,-230.67 361.09,-227.39 362.85,-224.25"/>
+                    <polygon fill="black" stroke="black" points="365.8,-226.12 368.3,-215.82 359.93,-222.31 365.8,-226.12"/>
+                    <text text-anchor="middle" x="367.5" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#11)</text>
+                    </g>
+                    <!-- 140548255129776&#45;&gt;140548792219888 -->
+                    <g id="edge20" class="edge">
+                    <title>140548255129776&#45;&gt;140548792219888:c</title>
+                    <path fill="none" stroke="green" d="M379.05,-256.99C380.27,-243.5 381.71,-227.69 382.8,-215.69"/>
+                    <polygon fill="green" stroke="green" points="375.54,-256.92 378.12,-267.19 382.51,-257.55 375.54,-256.92"/>
+                    <text text-anchor="middle" x="402" y="-237.8" font-family="Times,serif" font-size="14.00">2 (#16)</text>
+                    </g>
+                    <!-- 140548793414128 -->
+                    <g id="node11" class="node">
+                    <title>140548793414128</title>
+                    <path fill="none" stroke="black" d="M489,-178.5C489,-178.5 594,-178.5 594,-178.5 600,-178.5 606,-184.5 606,-190.5 606,-190.5 606,-203.5 606,-203.5 606,-209.5 600,-215.5 594,-215.5 594,-215.5 489,-215.5 489,-215.5 483,-215.5 477,-209.5 477,-203.5 477,-203.5 477,-190.5 477,-190.5 477,-184.5 483,-178.5 489,-178.5"/>
+                    <text text-anchor="middle" x="541.5" y="-193.6" font-family="Times,serif" font-size="13.00">count_partitions(4, 2)</text>
+                    </g>
+                    <!-- 140548255101520&#45;&gt;140548793414128 -->
+                    <g id="edge21" class="edge">
+                    <title>140548255101520&#45;&gt;140548793414128</title>
+                    <path fill="none" stroke="black" d="M519.57,-267.1C510.88,-257.74 503.91,-245.79 508.5,-234 509.95,-230.28 511.97,-226.72 514.32,-223.37"/>
+                    <polygon fill="black" stroke="black" points="517.08,-225.52 520.67,-215.55 511.65,-221.11 517.08,-225.52"/>
+                    <text text-anchor="middle" x="517.5" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#19)</text>
+                    </g>
+                    <!-- 140548255101520&#45;&gt;140548793414128 -->
+                    <g id="edge22" class="edge">
+                    <title>140548255101520&#45;&gt;140548793414128:c</title>
+                    <path fill="none" stroke="green" d="M541.5,-256.99C541.5,-243.5 541.5,-227.69 541.5,-215.69"/>
+                    <polygon fill="green" stroke="green" points="538,-257.19 541.5,-267.19 545,-257.19 538,-257.19"/>
+                    <text text-anchor="middle" x="562" y="-237.8" font-family="Times,serif" font-size="14.00">3 (#28)</text>
+                    </g>
+                    <!-- 140548255152304 -->
+                    <g id="node12" class="node">
+                    <title>140548255152304</title>
+                    <path fill="none" stroke="black" d="M654,-178.5C654,-178.5 759,-178.5 759,-178.5 765,-178.5 771,-184.5 771,-190.5 771,-190.5 771,-203.5 771,-203.5 771,-209.5 765,-215.5 759,-215.5 759,-215.5 654,-215.5 654,-215.5 648,-215.5 642,-209.5 642,-203.5 642,-203.5 642,-190.5 642,-190.5 642,-184.5 648,-178.5 654,-178.5"/>
+                    <text text-anchor="middle" x="706.5" y="-193.6" font-family="Times,serif" font-size="13.00">count_partitions(6, 1)</text>
+                    </g>
+                    <!-- 140548255101520&#45;&gt;140548255152304 -->
+                    <g id="edge23" class="edge">
+                    <title>140548255101520&#45;&gt;140548255152304</title>
+                    <path fill="none" stroke="black" d="M574.89,-267.39C600.61,-253.83 636.34,-234.99 664.08,-220.37"/>
+                    <polygon fill="black" stroke="black" points="665.95,-223.34 673.16,-215.58 662.68,-217.15 665.95,-223.34"/>
+                    <text text-anchor="middle" x="642.5" y="-239.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#29)</text>
+                    </g>
+                    <!-- 140548255101520&#45;&gt;140548255152304 -->
+                    <g id="edge24" class="edge">
+                    <title>140548255101520&#45;&gt;140548255152304:c</title>
+                    <path fill="none" stroke="green" d="M615.54,-267.44C629.36,-262.57 643.28,-256.5 655.5,-249 669.73,-240.27 682.84,-226.72 692.21,-215.64"/>
+                    <polygon fill="green" stroke="green" points="614.39,-264.14 606.02,-270.62 616.61,-270.78 614.39,-264.14"/>
+                    <text text-anchor="middle" x="694" y="-237.8" font-family="Times,serif" font-size="14.00">1 (#30)</text>
+                    </g>
+                    <!-- 140548792220416 -->
+                    <g id="node9" class="node">
+                    <title>140548792220416</title>
+                    <path fill="none" stroke="black" d="M172,-89.5C172,-89.5 277,-89.5 277,-89.5 283,-89.5 289,-95.5 289,-101.5 289,-101.5 289,-114.5 289,-114.5 289,-120.5 283,-126.5 277,-126.5 277,-126.5 172,-126.5 172,-126.5 166,-126.5 160,-120.5 160,-114.5 160,-114.5 160,-101.5 160,-101.5 160,-95.5 166,-89.5 172,-89.5"/>
+                    <text text-anchor="middle" x="224.5" y="-104.6" font-family="Times,serif" font-size="13.00">count_partitions(1, 1)</text>
+                    </g>
+                    <!-- 140548792219888&#45;&gt;140548792220416 -->
+                    <g id="edge25" class="edge">
+                    <title>140548792219888&#45;&gt;140548792220416</title>
+                    <path fill="none" stroke="black" d="M319.7,-182.32C285.59,-174.62 249.58,-165.47 243.5,-160 236.73,-153.92 232.37,-145.19 229.55,-136.68"/>
+                    <polygon fill="black" stroke="black" points="232.91,-135.68 226.92,-126.94 226.15,-137.51 232.91,-135.68"/>
+                    <text text-anchor="middle" x="252.5" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#12)</text>
+                    </g>
+                    <!-- 140548792219888&#45;&gt;140548792220416 -->
+                    <g id="edge26" class="edge">
+                    <title>140548792219888&#45;&gt;140548792220416:c</title>
+                    <path fill="none" stroke="green" d="M335.27,-174.08C325.95,-169.62 316.35,-164.82 307.5,-160 288.68,-149.76 268.28,-137 252.41,-126.68"/>
+                    <polygon fill="green" stroke="green" points="333.93,-177.32 344.47,-178.41 336.92,-170.99 333.93,-177.32"/>
+                    <text text-anchor="middle" x="328" y="-148.8" font-family="Times,serif" font-size="14.00">1 (#13)</text>
+                    </g>
+                    <!-- 140548275380304 -->
+                    <g id="node10" class="node">
+                    <title>140548275380304</title>
+                    <path fill="none" stroke="black" d="M337,-89.5C337,-89.5 442,-89.5 442,-89.5 448,-89.5 454,-95.5 454,-101.5 454,-101.5 454,-114.5 454,-114.5 454,-120.5 448,-126.5 442,-126.5 442,-126.5 337,-126.5 337,-126.5 331,-126.5 325,-120.5 325,-114.5 325,-114.5 325,-101.5 325,-101.5 325,-95.5 331,-89.5 337,-89.5"/>
+                    <text text-anchor="middle" x="389.5" y="-104.6" font-family="Times,serif" font-size="13.00">count_partitions(3, 1)</text>
+                    </g>
+                    <!-- 140548792219888&#45;&gt;140548275380304 -->
+                    <g id="edge27" class="edge">
+                    <title>140548792219888&#45;&gt;140548275380304</title>
+                    <path fill="none" stroke="black" d="M363.93,-178.31C355.48,-168.81 348.66,-156.68 353.5,-145 355.05,-141.25 357.21,-137.68 359.7,-134.36"/>
+                    <polygon fill="black" stroke="black" points="362.51,-136.47 366.43,-126.63 357.23,-131.87 362.51,-136.47"/>
+                    <text text-anchor="middle" x="362.5" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#14)</text>
+                    </g>
+                    <!-- 140548792219888&#45;&gt;140548275380304 -->
+                    <g id="edge28" class="edge">
+                    <title>140548792219888&#45;&gt;140548275380304:c</title>
+                    <path fill="none" stroke="green" d="M386.09,-167.99C386.86,-154.5 387.76,-138.69 388.44,-126.69"/>
+                    <polygon fill="green" stroke="green" points="382.58,-168.01 385.51,-178.19 389.57,-168.41 382.58,-168.01"/>
+                    <text text-anchor="middle" x="408" y="-148.8" font-family="Times,serif" font-size="14.00">1 (#15)</text>
+                    </g>
+                    <!-- 140548275435392 -->
+                    <g id="node13" class="node">
+                    <title>140548275435392</title>
+                    <path fill="none" stroke="black" d="M484,-89.5C484,-89.5 589,-89.5 589,-89.5 595,-89.5 601,-95.5 601,-101.5 601,-101.5 601,-114.5 601,-114.5 601,-120.5 595,-126.5 589,-126.5 589,-126.5 484,-126.5 484,-126.5 478,-126.5 472,-120.5 472,-114.5 472,-114.5 472,-101.5 472,-101.5 472,-95.5 478,-89.5 484,-89.5"/>
+                    <text text-anchor="middle" x="536.5" y="-104.6" font-family="Times,serif" font-size="13.00">count_partitions(2, 2)</text>
+                    </g>
+                    <!-- 140548793414128&#45;&gt;140548275435392 -->
+                    <g id="edge29" class="edge">
+                    <title>140548793414128&#45;&gt;140548275435392</title>
+                    <path fill="none" stroke="black" d="M516.78,-178.2C511.4,-173 506.44,-166.85 503.5,-160 499.73,-151.23 502.75,-142.28 508.24,-134.38"/>
+                    <polygon fill="black" stroke="black" points="511.01,-136.52 514.66,-126.58 505.6,-132.07 511.01,-136.52"/>
+                    <text text-anchor="middle" x="512.5" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#20)</text>
+                    </g>
+                    <!-- 140548793414128&#45;&gt;140548275435392 -->
+                    <g id="edge30" class="edge">
+                    <title>140548793414128&#45;&gt;140548275435392:c</title>
+                    <path fill="none" stroke="green" d="M539.91,-167.99C539.14,-154.5 538.24,-138.69 537.56,-126.69"/>
+                    <polygon fill="green" stroke="green" points="536.43,-168.41 540.49,-178.19 543.42,-168.01 536.43,-168.41"/>
+                    <text text-anchor="middle" x="559" y="-148.8" font-family="Times,serif" font-size="14.00">2 (#25)</text>
+                    </g>
+                    <!-- 140548255151776 -->
+                    <g id="node14" class="node">
+                    <title>140548255151776</title>
+                    <path fill="none" stroke="black" d="M649,-89.5C649,-89.5 754,-89.5 754,-89.5 760,-89.5 766,-95.5 766,-101.5 766,-101.5 766,-114.5 766,-114.5 766,-120.5 760,-126.5 754,-126.5 754,-126.5 649,-126.5 649,-126.5 643,-126.5 637,-120.5 637,-114.5 637,-114.5 637,-101.5 637,-101.5 637,-95.5 643,-89.5 649,-89.5"/>
+                    <text text-anchor="middle" x="701.5" y="-104.6" font-family="Times,serif" font-size="13.00">count_partitions(4, 1)</text>
+                    </g>
+                    <!-- 140548793414128&#45;&gt;140548255151776 -->
+                    <g id="edge31" class="edge">
+                    <title>140548793414128&#45;&gt;140548255151776</title>
+                    <path fill="none" stroke="black" d="M573.88,-178.39C598.82,-164.83 633.47,-145.99 660.37,-131.37"/>
+                    <polygon fill="black" stroke="black" points="662.06,-134.43 669.17,-126.58 658.71,-128.28 662.06,-134.43"/>
+                    <text text-anchor="middle" x="639.5" y="-150.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#26)</text>
+                    </g>
+                    <!-- 140548793414128&#45;&gt;140548255151776 -->
+                    <g id="edge32" class="edge">
+                    <title>140548793414128&#45;&gt;140548255151776:c</title>
+                    <path fill="none" stroke="green" d="M615.88,-177.62C628.61,-172.89 641.31,-167.08 652.5,-160 666.33,-151.24 678.93,-137.69 687.89,-126.62"/>
+                    <polygon fill="green" stroke="green" points="614.45,-174.41 606.18,-181.03 616.77,-181.02 614.45,-174.41"/>
+                    <text text-anchor="middle" x="691" y="-148.8" font-family="Times,serif" font-size="14.00">1 (#27)</text>
+                    </g>
+                    <!-- 140548792216672 -->
+                    <g id="node15" class="node">
+                    <title>140548792216672</title>
+                    <path fill="none" stroke="black" d="M396,-0.5C396,-0.5 501,-0.5 501,-0.5 507,-0.5 513,-6.5 513,-12.5 513,-12.5 513,-25.5 513,-25.5 513,-31.5 507,-37.5 501,-37.5 501,-37.5 396,-37.5 396,-37.5 390,-37.5 384,-31.5 384,-25.5 384,-25.5 384,-12.5 384,-12.5 384,-6.5 390,-0.5 396,-0.5"/>
+                    <text text-anchor="middle" x="448.5" y="-15.6" font-family="Times,serif" font-size="13.00">count_partitions(0, 0)</text>
+                    </g>
+                    <!-- 140548275435392&#45;&gt;140548792216672 -->
+                    <g id="edge33" class="edge">
+                    <title>140548275435392&#45;&gt;140548792216672</title>
+                    <path fill="none" stroke="black" d="M486.6,-89.38C477.97,-84.52 469.78,-78.46 463.5,-71 457.99,-64.44 454.5,-55.94 452.29,-47.76"/>
+                    <polygon fill="black" stroke="black" points="455.66,-46.78 450.13,-37.74 448.82,-48.26 455.66,-46.78"/>
+                    <text text-anchor="middle" x="472.5" y="-61.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#21)</text>
+                    </g>
+                    <!-- 140548275435392&#45;&gt;140548792216672 -->
+                    <g id="edge34" class="edge">
+                    <title>140548275435392&#45;&gt;140548792216672:c</title>
+                    <path fill="none" stroke="green" d="M511.26,-81.76C497.21,-67.71 480.03,-50.53 467.19,-37.69"/>
+                    <polygon fill="green" stroke="green" points="509.15,-84.6 518.69,-89.19 514.1,-79.65 509.15,-84.6"/>
+                    <text text-anchor="middle" x="520" y="-59.8" font-family="Times,serif" font-size="14.00">1 (#22)</text>
+                    </g>
+                    <!-- 140548255130304 -->
+                    <g id="node16" class="node">
+                    <title>140548255130304</title>
+                    <path fill="none" stroke="black" d="M561,-0.5C561,-0.5 666,-0.5 666,-0.5 672,-0.5 678,-6.5 678,-12.5 678,-12.5 678,-25.5 678,-25.5 678,-31.5 672,-37.5 666,-37.5 666,-37.5 561,-37.5 561,-37.5 555,-37.5 549,-31.5 549,-25.5 549,-25.5 549,-12.5 549,-12.5 549,-6.5 555,-0.5 561,-0.5"/>
+                    <text text-anchor="middle" x="613.5" y="-15.6" font-family="Times,serif" font-size="13.00">count_partitions(2, 1)</text>
+                    </g>
+                    <!-- 140548275435392&#45;&gt;140548255130304 -->
+                    <g id="edge35" class="edge">
+                    <title>140548275435392&#45;&gt;140548255130304</title>
+                    <path fill="none" stroke="black" d="M547.11,-89.17C553.57,-78.98 562.32,-66.23 571.5,-56 575.02,-52.08 578.96,-48.19 582.98,-44.49"/>
+                    <polygon fill="black" stroke="black" points="585.53,-46.91 590.71,-37.67 580.89,-41.66 585.53,-46.91"/>
+                    <text text-anchor="middle" x="580.5" y="-61.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#23)</text>
+                    </g>
+                    <!-- 140548275435392&#45;&gt;140548255130304 -->
+                    <g id="edge36" class="edge">
+                    <title>140548275435392&#45;&gt;140548255130304:c</title>
+                    <path fill="none" stroke="green" d="M576.56,-83.37C581.26,-79.6 585.72,-75.46 589.5,-71 597.73,-61.29 603.73,-48.29 607.67,-37.72"/>
+                    <polygon fill="green" stroke="green" points="574.44,-80.59 568.49,-89.36 578.61,-86.21 574.44,-80.59"/>
+                    <text text-anchor="middle" x="619" y="-59.8" font-family="Times,serif" font-size="14.00">1 (#24)</text>
+                    </g>
+                    <!-- 140548257142464 -->
+                    <g id="node17" class="node">
+                    <title>140548257142464</title>
+                    <path fill="none" stroke="black" d="M246,-445.5C246,-445.5 351,-445.5 351,-445.5 357,-445.5 363,-451.5 363,-457.5 363,-457.5 363,-470.5 363,-470.5 363,-476.5 357,-482.5 351,-482.5 351,-482.5 246,-482.5 246,-482.5 240,-482.5 234,-476.5 234,-470.5 234,-470.5 234,-457.5 234,-457.5 234,-451.5 240,-445.5 246,-445.5"/>
+                    <text text-anchor="middle" x="298.5" y="-460.6" font-family="Times,serif" font-size="13.00">count_partitions(6, 4)</text>
+                    </g>
+                    <!-- 140548257142464&#45;&gt;140548255138000 -->
+                    <g id="edge37" class="edge">
+                    <title>140548257142464&#45;&gt;140548255138000</title>
+                    <path fill="none" stroke="black" d="M257.1,-445.38C248.27,-440.33 239.51,-434.2 232.5,-427 225.85,-420.17 220.54,-411.3 216.49,-402.87"/>
+                    <polygon fill="black" stroke="black" points="219.68,-401.43 212.45,-393.69 213.27,-404.25 219.68,-401.43"/>
+                    <text text-anchor="middle" x="239.5" y="-417.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#1)</text>
+                    </g>
+                    <!-- 140548257142464&#45;&gt;140548255138000 -->
+                    <g id="edge38" class="edge">
+                    <title>140548257142464&#45;&gt;140548255138000:c</title>
+                    <path fill="none" stroke="green" d="M273.64,-438.32C265.09,-429.92 255.42,-420.5 246.5,-412 240.2,-406 233.26,-399.53 226.96,-393.71"/>
+                    <polygon fill="green" stroke="green" points="271.24,-440.87 280.82,-445.4 276.15,-435.89 271.24,-440.87"/>
+                    <text text-anchor="middle" x="278.5" y="-415.8" font-family="Times,serif" font-size="14.00">2 (#6)</text>
+                    </g>
+                    <!-- 140548257142464&#45;&gt;140548255134320 -->
+                    <g id="edge39" class="edge">
+                    <title>140548257142464&#45;&gt;140548255134320</title>
+                    <path fill="none" stroke="black" d="M308.87,-445.27C315.16,-435.11 323.66,-422.36 332.5,-412 335.7,-408.26 339.26,-404.51 342.89,-400.92"/>
+                    <polygon fill="black" stroke="black" points="345.52,-403.25 350.36,-393.82 340.7,-398.17 345.52,-403.25"/>
+                    <text text-anchor="middle" x="339.5" y="-417.6" font-family="Times,serif" font-size="8.00" fill="#999999">(#7)</text>
+                    </g>
+                    <!-- 140548257142464&#45;&gt;140548255134320 -->
+                    <g id="edge40" class="edge">
+                    <title>140548257142464&#45;&gt;140548255134320:c</title>
+                    <path fill="none" stroke="green" d="M334.54,-439.06C338.87,-435.33 342.99,-431.28 346.5,-427 354.64,-417.09 360.89,-404.09 365.1,-393.57"/>
+                    <polygon fill="green" stroke="green" points="332.22,-436.44 326.62,-445.43 336.6,-441.89 332.22,-436.44"/>
+                    <text text-anchor="middle" x="377" y="-415.8" font-family="Times,serif" font-size="14.00">7 (#32)</text>
+                    </g>
+                    <!-- 99999999 -->
+                    <g id="node18" class="node">
+                    <title>99999999</title>
+                    <path fill="none" stroke="black" d="M283.5,-534.5C283.5,-534.5 313.5,-534.5 313.5,-534.5 319.5,-534.5 325.5,-540.5 325.5,-546.5 325.5,-546.5 325.5,-559.5 325.5,-559.5 325.5,-565.5 319.5,-571.5 313.5,-571.5 313.5,-571.5 283.5,-571.5 283.5,-571.5 277.5,-571.5 271.5,-565.5 271.5,-559.5 271.5,-559.5 271.5,-546.5 271.5,-546.5 271.5,-540.5 277.5,-534.5 283.5,-534.5"/>
+                    <text text-anchor="middle" x="298.5" y="-549.6" font-family="Times,serif" font-size="13.00">Result</text>
+                    </g>
+                    <!-- 99999999&#45;&gt;140548257142464 -->
+                    <g id="edge41" class="edge">
+                    <title>99999999&#45;&gt;140548257142464:c</title>
+                    <path fill="none" stroke="green" d="M298.5,-523.99C298.5,-510.5 298.5,-494.69 298.5,-482.69"/>
+                    <polygon fill="green" stroke="green" points="295,-524.19 298.5,-534.19 302,-524.19 295,-524.19"/>
+                    <text text-anchor="middle" x="319" y="-504.8" font-family="Times,serif" font-size="14.00">9 (#33)</text>
+                    </g>
+                    </g>
+                    </svg>
+            </section>
+
+            <section>
+                <h3>Variant visualization</h3>
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="920.53" height="623.45" viewBox="0 0 971.53 653.45">
+                    <defs>
+                      <style>
+                        .cls-1 {
+                          fill: #9797cc;
+                        }
+                  
+                        .cls-2 {
+                          font-size: 18.26px;
+                        }
+                  
+                        .cls-3 {
+                          fill: none;
+                          stroke: #000;
+                          stroke-miterlimit: 10;
+                        }
+                  
+                        .cls-4 {
+                          font-size: 40px;
+                        }
+                      </style>
+                    </defs>
+                    <g id="base">
+                      <g>
+                        <rect class="cls-1" x="173.11" y="13.6" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="246.15" y="13.6" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="684.41" y="13.6" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="757.45" y="13.6" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="830.49" y="13.6" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="903.53" y="13.6" width="53.32" height="53.32" rx="20.2"/>
+                      </g>
+                      <g>
+                        <rect class="cls-1" x="173.11" y="84.91" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="319.19" y="84.91" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="684.41" y="84.91" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="757.45" y="84.91" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="830.49" y="84.91" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="903.53" y="84.91" width="53.32" height="53.32" rx="20.2"/>
+                      </g>
+                      <g>
+                        <rect class="cls-1" x="173.11" y="156.22" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="246.15" y="156.22" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="319.19" y="156.22" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="757.45" y="156.22" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="830.49" y="156.22" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="903.53" y="156.22" width="53.32" height="53.32" rx="20.2"/>
+                      </g>
+                      <g>
+                        <rect class="cls-1" x="173.11" y="227.53" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="319.19" y="227.53" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="392.24" y="227.53" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="757.45" y="227.53" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="830.49" y="227.53" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="903.53" y="227.53" width="53.32" height="53.32" rx="20.2"/>
+                      </g>
+                      <g>
+                        <rect class="cls-1" x="173.11" y="298.83" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="319.19" y="298.83" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="465.28" y="298.83" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="757.45" y="298.83" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="830.49" y="298.83" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="903.53" y="298.83" width="53.32" height="53.32" rx="20.2"/>
+                      </g>
+                      <g>
+                        <rect class="cls-1" x="173.11" y="370.14" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="246.15" y="370.14" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="538.32" y="370.14" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="611.36" y="370.14" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="830.49" y="370.14" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="903.53" y="370.14" width="53.32" height="53.32" rx="20.2"/>
+                      </g>
+                      <g>
+                        <rect class="cls-1" x="173.11" y="441.45" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="319.19" y="441.45" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="538.32" y="441.45" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="611.36" y="441.45" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="830.49" y="441.45" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="903.53" y="441.45" width="53.32" height="53.32" rx="20.2"/>
+                      </g>
+                      <g>
+                        <rect class="cls-1" x="173.11" y="512.76" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="319.19" y="512.76" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="465.28" y="512.76" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="611.36" y="512.76" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="830.49" y="512.76" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="903.53" y="512.76" width="53.32" height="53.32" rx="20.2"/>
+                      </g>
+                      <g>
+                        <rect class="cls-1" x="173.11" y="584.06" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="319.19" y="584.06" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="465.28" y="584.06" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="611.36" y="584.06" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="757.45" y="584.06" width="53.32" height="53.32" rx="20.2"/>
+                        <rect class="cls-1" x="903.53" y="584.06" width="53.32" height="53.32" rx="20.2"/>
+                      </g>
+                    </g>
+                    <g id="_2_2_and_6_3" data-name="2,2 and 6,3" class="fragment fade-in-then-out">
+                      <text class="cls-2" transform="translate(113.12 170.1)">(6, 3)</text>
+                      <path d="M970.73,150.92v501.8H159.23V150.92h811.5m.73-.73h-813V653.45h813V150.19Z"/>
+                      <g>
+                        <line class="cls-3" x1="650.37" y1="0.46" x2="969.94" y2="147.27"/>
+                        <line class="cls-3" x1="971.33" y1="0.46" x2="648.98" y2="147.27"/>
+                      </g>
+                      <text class="cls-2" transform="translate(113.12 20.98)">(2, 2)</text>
+                      <path d="M970.86.85V150.06H158.7V.85H970.86m.4-.39h-813v150h813V.46Z"/>
+                      <text class="cls-4" transform="translate(0 84.81)">(6, 4)</text>
+                    </g>
+                    <g id="_0_0_and_2_1" data-name="0,0 and 2,1" class="fragment fade-in-then-out">
+                      <text class="cls-2" transform="translate(113.12 95.04)">(2, 1)</text>
+                      <text class="cls-2" transform="translate(113.12 48.43)">(0, 0)</text>
+                      <path d="M385.88,74.74v72H159v-72H385.88m.51-.51H158.5v73H386.39v-73Z"/>
+                      <g>
+                        <line class="cls-3" x1="173.48" y1="13.68" x2="305.47" y2="66.92"/>
+                        <line class="cls-3" x1="306.05" y1="13.68" x2="172.91" y2="66.92"/>
+                      </g>
+                      <path d="M385.66,1.19V146.54H159.23V1.19H385.66m.73-.73H158.5V147.27H386.39V.46Z"/>
+                      <text class="cls-4" transform="translate(0 77.51)">(2, 2)</text>
+                    </g>
+                    <g id="_3_3_and_6_2" data-name="3,3 and 6,2" class="fragment fade-in-then-out">
+                      <text class="cls-2" transform="translate(113.12 171.1)">(3, 3)</text>
+                      <text class="cls-2" transform="translate(113.12 381.1)">(6, 2)</text>
+                      <path d="M970.85,151.36V361h-812V151.36H970.85m.48-.47h-813V361.45h813V150.89Z"/>
+                      <g>
+                        <line class="cls-3" x1="756.35" y1="156.46" x2="960.44" y2="352.46"/>
+                        <line class="cls-3" x1="961.33" y1="156.46" x2="755.46" y2="352.46"/>
+                      </g>
+                      <path d="M970.23,363.46v287h-811v-287h811m1-1h-813v289h813v-289Z"/>
+                      <text class="cls-4" transform="translate(0 270.51)">(6, 3)</text>
+                    </g>
+                    <g id="_0_0_and_3_2" data-name="0,0 and 3, 2" class="fragment fade-in-then-out">
+                      <text class="cls-2" transform="translate(113.12 173.1)">(0, 0)</text>
+                      <g>
+                        <line class="cls-3" x1="173.68" y1="160.9" x2="385.41" y2="214.15"/>
+                        <line class="cls-3" x1="386.33" y1="160.9" x2="172.76" y2="214.15"/>
+                      </g>
+                      <path d="M530.68,152.1v68.71H159.83V152.1H530.68m.65-.64H159.19v70H531.33v-70Z"/>
+                      <path d="M530.41,222.37V360.54H159.3V222.37H530.41m.92-.91h-373v140h373v-140Z"/>
+                      <text class="cls-4" transform="translate(0 210.04)">(3, 3)</text>
+                      <text class="cls-2" transform="translate(113.12 249.1)">(3, 2)</text>
+                    </g>
+                    <g id="_1_1_and_3_1" data-name="1,1 and 3, 1" class="fragment fade-in-then-out">
+                      <path d="M530.46,287.12v73.67H158.86V287.12h371.6m.67-.66H158.19v75H531.13v-75Z"/>
+                      <text class="cls-2" transform="translate(113.12 308.1)">(3, 1)</text>
+                      <path d="M531.5,220.09v65.73H159.82V220.09H531.5m.63-.63H159.19v67H532.13v-67Z"/>
+                      <g>
+                        <line class="cls-3" x1="313.96" y1="223.46" x2="459.69" y2="282.46"/>
+                        <line class="cls-3" x1="460.33" y1="223.46" x2="313.33" y2="282.46"/>
+                      </g>
+                      <text class="cls-2" transform="translate(113.12 239.1)">(1, 1)</text>
+                      <text class="cls-4" transform="translate(0 272.83)">(3, 2)</text>
+                    </g>
+                    <g id="_4_2_and_6_1" data-name="4,2 and 6,1" class="fragment fade-in-then-out">
+                      <path d="M970.76,362.93V575h-812v-212H970.76m.47-.47h-813v213h813v-213Z"/>
+                      <path d="M970.33,576.46v70h-811v-70h811m1-1h-813v72h813v-72Z"/>
+                      <text class="cls-2" transform="translate(113.12 596.1)">(6, 1)</text>
+                      <text class="cls-2" transform="translate(113.12 379.1)">(4, 2)</text>
+                      <text class="cls-4" transform="translate(0 412.83)">(6, 2)</text>
+                      <g>
+                        <line class="cls-3" x1="822.99" y1="370.24" x2="968.73" y2="566.46"/>
+                        <line class="cls-3" x1="969.36" y1="370.24" x2="822.36" y2="566.46"/>
+                      </g>
+                    </g>
+                    <g id="_2_2_and_4_1" data-name="2,2 and 4,1" class="fragment fade-in-then-out">
+                      <path d="M683.33,363.46v138H159.23v-138h524.1m1-1H158.23v140h526.1v-140Z"/>
+                      <path d="M684.1,502.68v72.55H158.46V502.68H684.1m.23-.22H158.23v73h526.1v-73Z"/>
+                      <g>
+                        <line class="cls-3" x1="531.99" y1="370.24" x2="677.73" y2="494.46"/>
+                        <line class="cls-3" x1="678.36" y1="370.24" x2="531.36" y2="494.46"/>
+                      </g>
+                      <text class="cls-2" transform="translate(113.12 520.6)">(4, 1)</text>
+                      <text class="cls-2" transform="translate(113.12 385.6)">(2, 2)</text>
+                      <text class="cls-4" transform="translate(0 419.34)">(4, 2)</text>
+                    </g>
+                    <g id="_0_0_and_2_1-2" data-name="0,0 and 2,1" class="fragment fade-in-then-out">
+                      <text class="cls-2" transform="translate(113.12 453.91)">(2, 1)</text>
+                      <text class="cls-2" transform="translate(113.12 407.3)">(0, 0)</text>
+                      <path d="M384.62,433.6V502H157.73V433.6H384.62m.5-.5H157.23v69.36H385.12V433.1Z"/>
+                      <g>
+                        <line class="cls-3" x1="172.2" y1="372.55" x2="304.2" y2="425.8"/>
+                        <line class="cls-3" x1="304.77" y1="372.55" x2="171.63" y2="425.8"/>
+                      </g>
+                      <path d="M384.4,360.05V501.73H158V360.05H384.4m.72-.72H157.23V502.46H385.12V359.33Z"/>
+                      <text class="cls-4" transform="translate(0 432.38)">(2, 2)</text>
+                    </g>
+                  </svg>
+            </section>                  
+
+
+            </div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <!-- The loading of KaTeX is deferred to speed up page rendering -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.js" integrity="sha384-31El76TwmbHj4rF9DyLsygbq6xoIobG0W+jqXim+a3dU9W53tdH3A/ngRPxOzzaB" crossorigin="anonymous"></script>
+        <!-- To automatically render math in text elements, include the auto-render extension: -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"
+            onload="renderMathInElement(document.body, {fleqn: true});"></script>
+		<script>
+			const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+			Reveal.initialize({
+				hash: true,
+				center: false,
+				slideNumber: true,
+				showNotes: false,
+				margin: 0.1,
+				preloadIframes: true,
+				plugins: [ RevealHighlight ],
+				pdfSeparateFragments: true
+			});
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge(options);
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+
+		</script>
+
+    <script>
+    
+    
+    class RecursiveTreeViz {
+          
+          constructor(svg, options) {
+            this.svg = svg;
+            options = options || {};
+            this.startStep = options.startStep;
+            this.steps = [];
+            this.frames = {};
+          }
+          
+          draw() {
+            // Store all the frames
+            const frames = this.svg.querySelectorAll(".node");
+            for (var i = 0; i < frames.length; i++) {
+              const frame = frames[i];
+              const frameId = frame.getElementsByTagName("title")[0].textContent;
+              this.frames[frameId] = frame;
+            }
+        
+            // Determine number of steps
+            const edges = this.svg.querySelectorAll(".edge");
+            for (let i = 0; i < edges.length; i++) {
+              const edge = edges[i];
+              const edgeTitle = edge.getElementsByTagName("title")[0].textContent;
+              const edgeText = edge.getElementsByTagName("text")[0].textContent;
+
+              let stepNum, isReturn;
+              stepNum = parseInt(edgeText.split("(#")[1], 10); 
+              if (edgeTitle.endsWith(":c")) {
+                isReturn = true;
+                edge.getElementsByTagName("text")[0].textContent = edgeText.split("(#")[0];
+              } else {
+                edge.getElementsByTagName("text")[0].textContent = "";
+                isReturn = false;
+              }
+              const edgeFrames = edgeTitle.split(":c")[0];
+              const parentFrameId = edgeFrames.split("->")[0];
+              const childFrameId = edgeFrames.split("->")[1];
+              this.steps[stepNum] = {
+                parentFrame: this.frames[parentFrameId],
+                childFrame: this.frames[childFrameId],
+                edge: edge,
+                isReturn: isReturn
+              };
+            }
+              
+            if (this.startStep == null || isNaN(this.startStep)) {
+              this.currentStep = this.steps.length - 1;
+            } else {
+              this.currentStep = this.startStep;
+            }
+            this.drawControls();
+            this.toggleSteps();
+          }
+          
+          
+          drawControls() {
+            var controlsDiv = document.createElement("div");
+            controlsDiv.classList.add("svg-controls");
+            
+            this.prevButton = document.createElement("button");
+            this.prevButton.innerText = "< Prev";
+            if (this.currentStep <= 0) {
+              this.prevButton.setAttribute("disabled", "disabled");
+            }
+            this.prevButton.addEventListener("click", this.onPrevClick.bind(this));
+            document.addEventListener("keypress", (e) => {
+                if (e.key == "p" || e.key == "ArrowLeft") {
+                  this.onPrevClick();
+                } else if (e.key == "n" || e.key == "ArrowRight") {
+                  this.onNextClick();
+                }
+            }); 
+            
+            this.nextButton = document.createElement("button");
+            this.nextButton.innerText = "> Next";
+            if (this.currentStep >= this.steps.length - 1) {
+              this.nextButton.setAttribute("disabled", "disabled");
+            }
+            this.nextButton.addEventListener("click", this.onNextClick.bind(this));
+        
+            this.slider = document.createElement("input");
+            this.slider.setAttribute("type", "range");
+            this.slider.setAttribute("min", 0);
+            this.slider.setAttribute("max", this.steps.length - 1);
+            this.slider.setAttribute("value", this.currentStep);
+            this.slider.addEventListener("change", this.onSliderChange.bind(this));
+        
+            controlsDiv.appendChild(this.prevButton);
+            controlsDiv.appendChild(this.slider);
+            controlsDiv.appendChild(this.nextButton);
+        
+            this.svg.after(controlsDiv);
+          }
+        
+          toggleSteps() {
+            this.steps.forEach((step, stepI) => {
+              if (stepI == 1) {
+                 step.parentFrame && step.parentFrame.classList.add("activated");
+              }
+              if (stepI <= this.currentStep) {
+                 step.edge.classList.add("activated");
+                 step.childFrame.classList.add("activated");
+              } else {
+                 step.edge.classList.remove("activated");
+                 !step.isReturn && step.childFrame.classList.remove("activated");
+              }
+            })
+          }
+          
+          onSliderChange(event) {
+            this.currentStep = parseInt(event.target.value, 10);
+            this.fixButtons();
+            this.toggleSteps();
+          }
+        
+          onPrevClick(event) {
+            this.currentStep--;
+            this.fixButtons();
+            this.slider.value = this.currentStep;
+            this.toggleSteps();
+          }
+
+          onNextClick(event) {
+            this.currentStep++;
+            this.fixButtons();
+            this.slider.value = this.currentStep;
+            this.toggleSteps();
+          }
+          
+          fixButtons() {
+            if (this.currentStep === 0) {
+              this.prevButton.setAttribute("disabled", "disabled");
+            }
+            if (this.currentStep < this.steps.length - 1) {
+              this.nextButton.removeAttribute("disabled");
+            }
+            if (this.currentStep > 0) {
+              this.prevButton.removeAttribute("disabled");
+            }
+            if (this.currentStep === this.steps.length - 1) {
+              this.nextButton.setAttribute("disabled", "disabled");
+            }
+          }
+        }
+        
+        new RecursiveTreeViz(document.getElementById("virfib5-svg")).draw()
+        new RecursiveTreeViz(document.getElementById("countpartitions-svg")).draw()
+        new RecursiveTreeViz(document.getElementById("countpartitionsvariant-svg")).draw()
+
+
+        </script>
+	</body>
+</html>

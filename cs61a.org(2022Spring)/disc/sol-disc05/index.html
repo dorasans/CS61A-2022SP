@@ -1,0 +1,864 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS" />
+    <meta name="author" content ="Pamela Fox" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="../../assets/css/disc.css">
+
+
+    <title>
+Discussion 5 | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="../../assets/images/logo.png"/>
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../../weekly">Weekly Schedule</a></li>
+                <li><a href="../../office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../../instructor">Instructors</a></li>
+                <li><a href="../../TAs">TAs</a></li>
+                <li><a href="../../tutors">Tutors</a></li>
+                <li><a href="../../academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../../resources/index.html">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="../../articles/campus-res/index.html">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="../../articles/about">Syllabus</a></li>
+            <li><a href="../../contact/index.html">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>
+        
+Discussion 5: Sequences, Mutability, Object-Oriented Programming
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="disc05.pdf" class="label label-outline">disc05.pdf</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<div class="alert storable-login-status"></div>
+
+This is an online worksheet that you can work on during discussions.
+Your work is not graded and you do not need to submit anything.
+
+
+    
+<div class="sol-highlight">
+
+<h2 id="walkthrough-videos">Walkthrough Videos</h2>
+
+
+<p>Feel free to try these problems on the worksheet in discussion or on
+your own, and then come back to reference these walkthrough videos
+as you study.</p>
+
+<blockquote><p>To see these videos, you should be logged into your berkeley.edu email.</p></blockquote>
+
+
+            <iframe width="560" height="315" src="https://youtube.com/embed/watch?v=BZl73ko7ucg&list=PLx38hZJ5RLZd8OMR9svrGe5nT0-Ycf9v4"
+                frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe><p><a href='https://youtu.be/watch?v=BZl73ko7ucg&list=PLx38hZJ5RLZd8OMR9svrGe5nT0-Ycf9v4'> YouTube link </a></p>
+</div>
+
+
+
+
+<h1 id="sequences">Sequences</h1>
+
+
+<p>Sequences are ordered collections of values that support
+element-selection and have length.
+We've worked with lists, but other Python types are also sequences,
+including strings.</p>
+
+
+<h3 id="q1-map-filter-reduce">Q1: Map, Filter, Reduce</h3>
+
+
+<p>Many languages provide <code>map</code>, <code>filter</code>, <code>reduce</code> functions for sequences.
+Python also provides these functions
+(and we'll formally introduce them later on in the course),
+but to help you better understand how they work,
+you'll be implementing these functions in the following problems.</p>
+
+<blockquote><p>In Python, the <code>map</code> and <code>filter</code> built-ins have slightly different
+behavior than the <code>my_map</code> and <code>my_filter</code> functions we are defining here.</p></blockquote>
+
+<p><code>my_map</code> takes in a one argument function <code>fn</code> and a sequence <code>seq</code> and returns a
+list containing <code>fn</code> applied to each element in <code>seq</code>.</p>
+
+
+            
+            <b>Your Answer</b>
+            
+            <div class="monaco-storable" id="map-input" style="height:216px;"></div>
+            <a href="javascript:void" id="modal-link-map-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-map-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-map-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def my_map(fn, seq):\n    &quot;&quot;&quot;Applies fn onto each element in seq and returns a list.\n    &gt;&gt;&gt; my_map(lambda x: x*x, [1, 2, 3])\n    [1, 4, 9]\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\n', "python", "map-input"));
+            </script>
+        
+            <div class="sol-highlight">
+                <b>Solution</b>
+                
+<pre><code>def my_map(fn, seq):
+    &quot;&quot;&quot;Applies fn onto each element in seq and returns a list.
+    &gt;&gt;&gt; my_map(lambda x: x*x, [1, 2, 3])
+    [1, 4, 9]
+    &quot;&quot;&quot;
+    result = []
+    for elem in seq:
+        result += [fn(elem)]
+    return result
+</code></pre>
+
+            </div>
+        
+
+<p><code>my_filter</code> takes in a predicate function <code>pred</code> and a sequence <code>seq</code> and returns a
+list containing all elements in <code>seq</code> for which <code>pred</code> returns True.</p>
+
+
+            
+            <b>Your Answer</b>
+            
+            <div class="monaco-storable" id="filter-input" style="height:234px;"></div>
+            <a href="javascript:void" id="modal-link-filter-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-filter-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-filter-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def my_filter(pred, seq):\n    &quot;&quot;&quot;Keeps elements in seq only if they satisfy pred.\n    &gt;&gt;&gt; my_filter(lambda x: x % 2 == 0, [1, 2, 3, 4])  # new list has only even&#x2d;valued elements\n    [2, 4]\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\n', "python", "filter-input"));
+            </script>
+        
+            <div class="sol-highlight">
+                <b>Solution</b>
+                
+<pre><code>def my_filter(pred, seq):
+    &quot;&quot;&quot;Keeps elements in seq only if they satisfy pred.
+    &gt;&gt;&gt; my_filter(lambda x: x % 2 == 0, [1, 2, 3, 4])  # new list has only even&#x2d;valued elements
+    [2, 4]
+    &quot;&quot;&quot;
+    result = []
+    for elem in seq:
+        if pred(elem):
+            result += [elem]
+    return result
+</code></pre>
+
+            </div>
+        
+
+<div class="page-break"></div>
+
+<p><code>my_reduce</code> takes in a two argument function <code>combiner</code> and a non-empty sequence
+<code>seq</code> and combines the elements in <code>seq</code> into one value using <code>combiner</code>.</p>
+
+
+            
+            <b>Your Answer</b>
+            
+            <div class="monaco-storable" id="reduce-input" style="height:342px;"></div>
+            <a href="javascript:void" id="modal-link-reduce-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-reduce-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-reduce-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def my_reduce(combiner, seq):\n    &quot;&quot;&quot;Combines elements in seq using combiner.\n    seq will have at least one element.\n    &gt;&gt;&gt; my_reduce(lambda x, y: x + y, [1, 2, 3, 4])  # 1 + 2 + 3 + 4\n    10\n    &gt;&gt;&gt; my_reduce(lambda x, y: x * y, [1, 2, 3, 4])  # 1 * 2 * 3 * 4\n    24\n    &gt;&gt;&gt; my_reduce(lambda x, y: x * y, [4])\n    4\n    &gt;&gt;&gt; my_reduce(lambda x, y: x + 2 * y, [1, 2, 3]) # (1 + 2 * 2) + 2 * 3\n    11\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\n', "python", "reduce-input"));
+            </script>
+        
+            <div class="sol-highlight">
+                <b>Solution</b>
+                
+<pre><code>def my_reduce(combiner, seq):
+    &quot;&quot;&quot;Combines elements in seq using combiner.
+    seq will have at least one element.
+    &gt;&gt;&gt; my_reduce(lambda x, y: x + y, [1, 2, 3, 4])  # 1 + 2 + 3 + 4
+    10
+    &gt;&gt;&gt; my_reduce(lambda x, y: x * y, [1, 2, 3, 4])  # 1 * 2 * 3 * 4
+    24
+    &gt;&gt;&gt; my_reduce(lambda x, y: x * y, [4])
+    4
+    &gt;&gt;&gt; my_reduce(lambda x, y: x + 2 * y, [1, 2, 3]) # (1 + 2 * 2) + 2 * 3
+    11
+    &quot;&quot;&quot;
+    total = seq[0]
+    for elem in seq[1:]:
+        total = combiner(total, elem)
+    return total
+</code></pre>
+
+            </div>
+        
+
+<div class="page-break"></div>
+
+
+<h1 id="mutability">Mutability</h1>
+
+</p>
+
+<p>Some objects in Python, such as lists and dictionaries, are <strong>mutable</strong>,
+meaning that their contents or state can be changed.
+Other objects, such as numeric types, tuples, and strings, are <strong>immutable</strong>,
+meaning they cannot be changed once they are created.</p>
+
+<p>Let's imagine you order a mushroom and cheese pizza from La Val's,
+and they represent your order as a list:</p>
+
+<pre><code>&gt;&gt;&gt; pizza = [&#x27;cheese&#x27;, &#x27;mushrooms&#x27;]</code></pre>
+
+<p>With list mutation, they can update your order by mutate <code>pizza</code> directly
+rather than having to create a new list:</p>
+
+<pre><code>&gt;&gt;&gt; pizza.append(&#x27;onions&#x27;)
+&gt;&gt;&gt; pizza
+[&#x27;cheese&#x27;, &#x27;mushrooms&#x27;, &#x27;onions&#x27;]</code></pre>
+
+<p>Aside from <code>append</code>, there are various other list mutation methods:</p>
+
+<ul>
+  <li><code>append(el)</code>:
+  Add <code>el</code> to the end of the list. Return <code>None</code>.</li>
+  <li><code>extend(lst)</code>:
+  Extend the list by concatenating it with <code>lst</code>. Return <code>None</code>.</li>
+  <li><code>insert(i, el)</code>:
+  Insert <code>el</code> at index <code>i</code>. This does not replace any existing elements,
+  but only adds the new element <code>el</code>. Return <code>None</code>.</li>
+  <li><code>remove(el)</code>:
+  Remove the first occurrence of <code>el</code> in list.
+  Errors if <code>el</code> is not in the list. Return <code>None</code> otherwise.</li>
+  <li><code>pop(i)</code>:
+  Remove and return the element at index <code>i</code>.</li>
+</ul>
+
+<p>We can also use list indexing with an assignment statement
+to change an existing element in a list.
+For example:</p>
+
+<pre><code>&gt;&gt;&gt; pizza[1] = &#x27;tomatoes&#x27;
+&gt;&gt;&gt; pizza
+[&#x27;cheese&#x27;, &#x27;tomatoes&#x27;, &#x27;onions&#x27;]</code></pre>
+
+<div class="page-break"></div>
+
+
+<h3 id="q2-wwpd-mutability">Q2: WWPD: Mutability</h3>
+
+<p>What would Python display? In addition to giving the output, draw the box and pointer diagrams for each list to the right.</p>
+
+<pre><code>&gt;&gt;&gt; s1 = [1, 2, 3]
+&gt;&gt;&gt; s2 = s1
+&gt;&gt;&gt; s1 is s2</code></pre>
+
+
+
+            <label class="sr-only" for="list-wwpd-1-input">Your Answer:</label>
+            <input class="form-control storable" id="list-wwpd-1-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight"> True </div>
+
+<pre><code>&gt;&gt;&gt; s2.extend([5, 6])
+&gt;&gt;&gt; s1[4]</code></pre>
+
+
+
+            <label class="sr-only" for="list-wwpd-2-input">Your Answer:</label>
+            <input class="form-control storable" id="list-wwpd-2-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight"> 6 </div>
+
+<pre><code>&gt;&gt;&gt; s1.append([&#x2d;1, 0, 1])
+&gt;&gt;&gt; s2[5]</code></pre>
+
+
+
+            <label class="sr-only" for="list-wwpd-3-input">Your Answer:</label>
+            <input class="form-control storable" id="list-wwpd-3-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight"> [-1, 0, 1] </div>
+
+<pre><code>&gt;&gt;&gt; s3 = s2[:]
+&gt;&gt;&gt; s3.insert(3, s2.pop(3))
+&gt;&gt;&gt; len(s1)</code></pre>
+
+
+
+            <label class="sr-only" for="list-wwpd-4-input">Your Answer:</label>
+            <input class="form-control storable" id="list-wwpd-4-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight"> 5 </div>
+
+<pre><code>&gt;&gt;&gt; s1[4] is s3[6]</code></pre>
+
+
+
+            <label class="sr-only" for="list-wwpd-5-input">Your Answer:</label>
+            <input class="form-control storable" id="list-wwpd-5-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight"> True </div>
+
+<pre><code>&gt;&gt;&gt; s3[s2[4][1]]</code></pre>
+
+
+
+            <label class="sr-only" for="list-wwpd-6-input">Your Answer:</label>
+            <input class="form-control storable" id="list-wwpd-6-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight"> 1 </div>
+
+<pre><code>&gt;&gt;&gt; s1[:3] is s2[:3]</code></pre>
+
+
+
+            <label class="sr-only" for="list-wwpd-7-input">Your Answer:</label>
+            <input class="form-control storable" id="list-wwpd-7-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight"> False </div>
+
+<pre><code>&gt;&gt;&gt; s1[:3] == s2[:3]</code></pre>
+
+
+
+            <label class="sr-only" for="list-wwpd-8-input">Your Answer:</label>
+            <input class="form-control storable" id="list-wwpd-8-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight"> True </div>
+
+<pre><code>&gt;&gt;&gt; s1[4].append(2)
+&gt;&gt;&gt; s3[6][3]</code></pre>
+
+
+
+            <label class="sr-only" for="list-wwpd-8-input">Your Answer:</label>
+            <input class="form-control storable" id="list-wwpd-8-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight"> 2 </div>
+
+<div class="page-break"></div>
+
+
+<h1 id="oop">OOP</h1>
+
+
+<p><strong>Object-oriented programming</strong> (OOP) is a programming paradigm that
+allows us to treat data as objects, like we do in real life.</p>
+
+<p>For example, consider the <strong>class</strong> <code>Student</code>.
+Each of you as individuals is an <strong>instance</strong> of this class.</p>
+
+<p>Details that all CS 61A students have, such as <code>name</code>,
+are called <strong>instance variables</strong>.
+Every student has these variables, but their values differ from student to student.
+A variable that is shared among all instances of <code>Student</code>
+is known as a <strong>class variable</strong>.
+For example, the <code>max_slip_days</code> attribute is a class variable
+as it is a property of all students.</p>
+
+<p>All students are able to do homework, attend lecture, and go to office hours.
+When functions belong to a specific object, they are called <strong>methods</strong>.
+In this case, these actions would be methods of <code>Student</code> objects.</p>
+
+<p>Here is a recap of what we discussed above:</p>
+
+<ul>
+  <li><strong>class</strong>: a template for creating objects</li>
+  <li><strong>instance</strong>: a single object created from a class</li>
+  <li><strong>instance variable</strong>: a data attribute of an object, specific to an instance</li>
+  <li><strong>class variable</strong>: a data attribute of an object, shared by all instances of a class</li>
+  <li><strong>method</strong>: a bound function that may be called on all instances of a class</li>
+</ul>
+
+<p>Instance variables, class variables, and methods
+are all considered <strong>attributes</strong> of an object.</p>
+
+
+
+<div class="page-break"></div>
+
+
+<h3 id="q3-wwpd-student-oop">Q3: WWPD: Student OOP</h3>
+
+<p>Below we have defined the classes <code>Professor</code> and <code>Student</code>, implementing some of what was described above.
+Remember that Python passes the <code>self</code> argument implicitly to methods when calling the method directly on an object.</p>
+
+</p>
+
+<pre><code>class Student:
+
+    max_slip_days = 3 # this is a class variable
+
+    def __init__(self, name, staff):
+        self.name = name # this is an instance variable
+        self.understanding = 0
+        staff.add_student(self)
+        print(&quot;Added&quot;, self.name)
+
+    def visit_office_hours(self, staff):
+        staff.assist(self)
+        print(&quot;Thanks, &quot; + staff.name)
+
+class Professor:
+
+    def __init__(self, name):
+        self.name = name
+        self.students = {}
+
+    def add_student(self, student):
+        self.students[student.name] = student
+
+    def assist(self, student):
+        student.understanding += 1
+
+    def grant_more_slip_days(self, student, days):
+        student.max_slip_days = days</code></pre>
+
+
+
+<p>What will the following lines output?</p>
+
+<pre><code>&gt;&gt;&gt; callahan = Professor(&quot;Callahan&quot;)
+&gt;&gt;&gt; elle = Student(&quot;Elle&quot;, callahan)</code></pre>
+
+
+
+            <label class="sr-only" for="oop-wwpd-1-input">Your Answer:</label>
+            <input class="form-control storable" id="oop-wwpd-1-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight">Added Elle</div>
+
+<pre><code>&gt;&gt;&gt; elle.visit_office_hours(callahan)</code></pre>
+
+
+
+            <label class="sr-only" for="oop-wwpd-2-input">Your Answer:</label>
+            <input class="form-control storable" id="oop-wwpd-2-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight">Thanks, Callahan</div>
+
+<pre><code>&gt;&gt;&gt; elle.visit_office_hours(Professor(&quot;Paulette&quot;))</code></pre>
+
+
+
+            <label class="sr-only" for="oop-wwpd-3-input">Your Answer:</label>
+            <input class="form-control storable" id="oop-wwpd-3-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight">Thanks, Paulette</div>
+
+<pre><code>&gt;&gt;&gt; elle.understanding</code></pre>
+
+
+
+            <label class="sr-only" for="oop-wwpd-4-input">Your Answer:</label>
+            <input class="form-control storable" id="oop-wwpd-4-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight">2</div>
+
+<pre><code>&gt;&gt;&gt; [name for name in callahan.students]</code></pre>
+
+
+
+            <label class="sr-only" for="oop-wwpd-5-input">Your Answer:</label>
+            <input class="form-control storable" id="oop-wwpd-5-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight"> ['Elle'] </div>
+
+<pre><code>&gt;&gt;&gt; x = Student(&quot;Vivian&quot;, Professor(&quot;Stromwell&quot;)).name</code></pre>
+
+
+
+            <label class="sr-only" for="oop-wwpd-6-input">Your Answer:</label>
+            <input class="form-control storable" id="oop-wwpd-6-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight">Added Vivian</div>
+
+<pre><code>&gt;&gt;&gt; x</code></pre>
+
+
+
+            <label class="sr-only" for="oop-wwpd-7-input">Your Answer:</label>
+            <input class="form-control storable" id="oop-wwpd-7-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight">'Vivian'</div>
+
+<pre><code>&gt;&gt;&gt; [name for name in callahan.students]</code></pre>
+
+
+
+            <label class="sr-only" for="oop-wwpd-8-input">Your Answer:</label>
+            <input class="form-control storable" id="oop-wwpd-8-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight">['Elle']</div>
+
+<pre><code>&gt;&gt;&gt; elle.max_slip_days</code></pre>
+
+
+
+            <label class="sr-only" for="oop-wwpd-2-input">Your Answer:</label>
+            <input class="form-control storable" id="oop-wwpd-2-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight">3</div>
+
+<pre><code>&gt;&gt;&gt; callahan.grant_more_slip_days(elle, 7)
+&gt;&gt;&gt; elle.max_slip_days</code></pre>
+
+
+
+            <label class="sr-only" for="oop-wwpd-2-input">Your Answer:</label>
+            <input class="form-control storable" id="oop-wwpd-2-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight">7</div>
+
+<pre><code>&gt;&gt;&gt; Student.max_slip_days</code></pre>
+
+
+
+            <label class="sr-only" for="oop-wwpd-2-input">Your Answer:</label>
+            <input class="form-control storable" id="oop-wwpd-2-input" type="text">
+            <div class="storable-status"></div>
+        
+<div class="sol-highlight">3</div>
+
+
+<h3 id="q4-keyboard">Q4: Keyboard</h3>
+
+
+<p>We'd like to create a <code>Keyboard</code> class that takes in an arbitrary
+number of <code>Button</code>s and stores these <code>Button</code>s in a dictionary. The
+keys in the dictionary will be ints that represent the postition on the
+<code>Keyboard</code>, and the values will be the respective <code>Button</code>. Fill out
+the methods in the <code>Keyboard</code> class according to each description,
+using the doctests as a reference for the behavior of a <code>Keyboard</code>.</p>
+
+
+            
+            <b>Your Answer</b>
+            
+            <div class="monaco-storable" id="keyboard-input" style="height:918px;"></div>
+            <a href="javascript:void" id="modal-link-keyboard-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-keyboard-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-keyboard-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('class Button:\n    def __init__(self, pos, key):\n        self.pos = pos\n        self.key = key\n        self.times_pressed = 0\n\nclass Keyboard:\n    &quot;&quot;&quot;A Keyboard takes in an arbitrary amount of buttons, and has a\n    dictionary of positions as keys, and values as Buttons.\n    &gt;&gt;&gt; b1 = Button(0, &quot;H&quot;)\n    &gt;&gt;&gt; b2 = Button(1, &quot;I&quot;)\n    &gt;&gt;&gt; k = Keyboard(b1, b2)\n    &gt;&gt;&gt; k.buttons[0].key\n    &#x27;H&#x27;\n    &gt;&gt;&gt; k.press(1)\n    &#x27;I&#x27;\n    &gt;&gt;&gt; k.press(2) # No button at this position\n    &#x27;&#x27;\n    &gt;&gt;&gt; k.typing([0, 1])\n    &#x27;HI&#x27;\n    &gt;&gt;&gt; k.typing([1, 0])\n    &#x27;IH&#x27;\n    &gt;&gt;&gt; b1.times_pressed\n    2\n    &gt;&gt;&gt; b2.times_pressed\n    3\n    &quot;&quot;&quot;\n    def __init__(self, *args):\n        ________________\n        for _________ in ________________:\n            ________________\n\n    def press(self, info):\n        &quot;&quot;&quot;Takes in a position of the button pressed, and\n        returns that button&#x27;s output.&quot;&quot;&quot;\n        if ____________________:\n            ________________\n            ________________\n            ________________\n        ________________\n\n    def typing(self, typing_input):\n        &quot;&quot;&quot;Takes in a list of positions of buttons pressed, and\n        returns the total output.&quot;&quot;&quot;\n        ________________\n        for ________ in ____________________:\n            ________________\n        ________________\n\n', "python", "keyboard-input"));
+            </script>
+        
+            <div class="sol-highlight">
+                <b>Solution</b>
+                
+<pre><code>class Button:
+    def __init__(self, pos, key):
+        self.pos = pos
+        self.key = key
+        self.times_pressed = 0
+
+class Keyboard:
+    &quot;&quot;&quot;A Keyboard takes in an arbitrary amount of buttons, and has a
+    dictionary of positions as keys, and values as Buttons.
+    &gt;&gt;&gt; b1 = Button(0, &quot;H&quot;)
+    &gt;&gt;&gt; b2 = Button(1, &quot;I&quot;)
+    &gt;&gt;&gt; k = Keyboard(b1, b2)
+    &gt;&gt;&gt; k.buttons[0].key
+    &#x27;H&#x27;
+    &gt;&gt;&gt; k.press(1)
+    &#x27;I&#x27;
+    &gt;&gt;&gt; k.press(2) # No button at this position
+    &#x27;&#x27;
+    &gt;&gt;&gt; k.typing([0, 1])
+    &#x27;HI&#x27;
+    &gt;&gt;&gt; k.typing([1, 0])
+    &#x27;IH&#x27;
+    &gt;&gt;&gt; b1.times_pressed
+    2
+    &gt;&gt;&gt; b2.times_pressed
+    3
+    &quot;&quot;&quot;
+    def __init__(self, *args):
+        self.buttons = {}
+        for button in args:
+            self.buttons[button.pos] = button
+
+    def press(self, info):
+        &quot;&quot;&quot;Takes in a position of the button pressed, and
+        returns that button&#x27;s output.&quot;&quot;&quot;
+        if info in self.buttons.keys():
+            b = self.buttons[info]
+            b.times_pressed += 1
+            return b.key
+        return &#x27;&#x27;
+
+    def typing(self, typing_input):
+        &quot;&quot;&quot;Takes in a list of positions of buttons pressed, and
+        returns the total output.&quot;&quot;&quot;
+        accumulate = &#x27;&#x27;
+        for pos in typing_input:
+            accumulate+=self.press(pos)
+        return accumulate
+</code></pre>
+
+            </div>
+        
+
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#walkthrough-videos">Walkthrough Videos</a></li>
+  <li><a href="index.html#sequences">Sequences</a></li>
+  <ul>
+    <li><a href="index.html#q1-map-filter-reduce">Q1: Map, Filter, Reduce</a></li>
+  </ul>
+  <li><a href="index.html#mutability">Mutability</a></li>
+  <ul>
+    <li><a href="index.html#q2-wwpd-mutability">Q2: WWPD: Mutability</a></li>
+  </ul>
+  <li><a href="index.html#oop">OOP</a></li>
+  <ul>
+    <li><a href="index.html#q3-wwpd-student-oop">Q3: WWPD: Student OOP</a></li>
+    <li><a href="index.html#q4-keyboard">Q4: Keyboard</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="../../index.html">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="../../weekly">Weekly Schedule</a></li>
+            <li><a href="../../office-hours">Office Hours</a></li>
+            <li><a href="../../staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="../../articles/studying">Studying Guide</a></li>
+            <li><a href="../../articles/debugging">Debugging Guide</a></li>
+            <li><a href="../../articles/composition">Composition Guide</a></li>
+            <li><a href="../../articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="../../articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="../../articles/about#assignments">Assignments</a></li>
+            <li><a href="../../articles/about#exams">Exams</a></li>
+            <li><a href="../../articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<script src="../../assets/js/sketchy.js"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,55 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="1843" height="893.33" viewBox="0 0 1843 893.33">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #ddd;
+      }
+
+      .cls-2, .cls-3 {
+        font-family: monospace;
+        font-size: 40px;
+      }
+
+      .cls-4 {
+        fill: none;
+        stroke: #000;
+        stroke-miterlimit: 10;
+        stroke-width: 4px;
+      }
+    </style>
+  </defs>
+  <g>
+    <rect class="cls-1" x="343.46" y="568.78" width="1023.09" height="324.09"/>
+    <path d="M1366.09,569.24V892.42H343.91V569.24H1366.09m.91-.91H343v325H1367v-325Z"/>
+  </g>
+  <text class="cls-2" transform="translate(343.15 529.23)">gui.py</text>
+  <text class="cls-3"><tspan x="466.88" y="683.66">GUI</tspan></text>
+  <text/>  <text class="cls-3"><tspan x="701.94" y="680.62">HttpHandler</tspan></text>
+  <text/>  <text class="cls-3"><tspan x="1154.39" y="680.62">run</tspan></text>
+  <text/>  <text class="cls-3" transform="translate(421.04 810.67)">Runs a browser-based game server.</text>
+  <text class="cls-2" transform="translate(7.32 50.22)">ants.py</text>
+  <g>
+    <rect class="cls-1" x="0.48" y="89.8" width="1122.05" height="320.05"/>
+    <path d="M1122.05,90.28v319.1H1V90.28h1121.1m1-1H0v321H1123v-321Z"/>
+  </g>
+  <text class="cls-3" transform="translate(34.14 188.65)">Place</text>
+  <text class="cls-3" transform="translate(240.2 188.93)">Insect</text>
+  <text class="cls-3" transform="translate(460.34 187.93)">GameState</text>
+  <text class="cls-3" transform="translate(784.2 189.93)">AssaultPlan</text>
+  <text class="cls-2" transform="translate(1201.17 50.22)">ants_strategies.py</text>
+  <text class="cls-3" transform="translate(114.74 320.97)">Defines classes for all game entities.</text>
+  <g>
+    <rect class="cls-1" x="1201.74" y="89.69" width="640.9" height="320.28"/>
+    <path d="M1842.28,90.05V409.61H1202.1V90.05h640.18m.72-.72H1201.38v321H1843v-321Z"/>
+  </g>
+  <text class="cls-3" transform="translate(1282.5 187.93)">start_with_strategy</text>
+  <text class="cls-3" transform="translate(1319.19 321.23)">A simple strategy.</text>
+  <g>
+    <line class="cls-4" x1="1306" y1="410.33" x2="1306" y2="544.45"/>
+    <polygon points="1291.19 533.22 1306 539.51 1320.81 533.22 1306 568.33 1291.19 533.22"/>
+  </g>
+  <g>
+    <line class="cls-4" x1="963" y1="409.33" x2="963" y2="543.45"/>
+    <polygon points="948.19 532.22 963 538.51 977.81 532.22 963 567.33 948.19 532.22"/>
+  </g>
+</svg>

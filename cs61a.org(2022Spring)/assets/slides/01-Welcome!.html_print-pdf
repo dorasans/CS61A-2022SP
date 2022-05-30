@@ -1,0 +1,1013 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Welcome to CS61A</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .column .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Welcome to CS61A!</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="01-Welcome!.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+					</div>
+                    <!-- Zoom poll- where are you watching from? -->
+				</section>
+
+                <section>
+                    <h2>What we'll discuss today...</h2>
+
+                    <ul>
+                        <li>Introductions</li>
+                        <li>What is CS?</li>
+                        <li>About the course</li>
+                        <li>Demo!</li>
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Introductions</h2>
+                </section>
+
+                <section>
+                    <h3>Instructors</h3>
+
+                    <p>For this semester...</p>
+                    <p style="clear:left;"><img src="https://www2.eecs.berkeley.edu/Faculty/Photos/Homepages/pamelafox.jpg" alt="photo of Pamela Fox" style="float:left; margin-right:10px; margin-bottom: 10px;">
+                        <strong>Pamela Fox</strong>: Started teaching last spring! Previously created the Khan Academy computing courses,
+                        and worked for Coursera, Google, and Woebot.
+                    </p>
+
+                    <div class="fragment" style="clear:left;">
+                    <p>But you may also see a bit of...</p>
+                    <p><img src="https://www2.eecs.berkeley.edu/Faculty/Photos/Homepages/denero.jpg" alt="photo of John DeNero" style="float:left; margin-right:10px; margin-bottom: 10px;">
+
+                        <strong>John DeNero</strong>: Started teaching at UCB in 2014.
+                        Created the Python version of CS 61A and co-created Data 8. Associate Dean of the CDSS.
+                        Previously worked as a research scientist at Google.
+                    </p>
+                    </div>
+
+                </section>
+
+                <section>
+                    <h3><a target="_blank" href="../../TAs">TAs</a></h3>
+                    
+                    <style>
+                    .staff-gallery  {
+                        display: flex;
+                        flex-wrap: wrap;
+                    }
+
+                    .staff-gallery div {
+                        flex-grow: 1;
+                        position: relative;
+                        border: 2px solid white;
+                    }
+
+                    #tas-gallery.staff-gallery div {
+                        height: 130px;
+                    }
+
+                    #tutors-gallery.staff-gallery div {
+                        height: 110px;
+                    }
+
+
+                    .staff-gallery::after {
+                        content:'';
+                        display:block;
+                        flex-grow: 10;
+                    }
+
+                    .staff-gallery img {
+                        max-height: 100%;
+                        min-width: 100%;
+                        margin: 0;
+                        object-fit: cover;
+                        vertical-align: bottom;
+                    }
+
+                    .staff-gallery div p {
+                        position:absolute;
+                        bottom:0px;
+                        left: 6px;
+                        visibility:hidden;
+                        font-size: 10px;
+                        margin: 0px;
+                        padding: 3px;
+                        background: white;
+                    }
+
+                    .staff-gallery div:hover {
+                        border: 2px solid gold;
+                    }
+
+                    .staff-gallery div:hover p {
+                        visibility:visible;
+                    }
+                    </style>
+                    <div id="tas-gallery" class="staff-gallery"></div>
+                    <p><a target="_blank" href="../../TAs">Learn more on TAs page.</a></p>
+                    <script>
+/*
+var staffDeets = []
+document.querySelectorAll('.staffer').forEach((div) => {
+    var img = div.querySelector('img');
+    var url = img.src;
+    var name = img.alt;
+    staffDeets.push({'imgSrc': url, 'name': name});
+});
+*/
+var staffDeets = [
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/cooper-bedin.jpg",
+        "name": "Cooper Bedin"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/vanshaj-singhania.jpg",
+        "name": "Vanshaj Singhania"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/melanie-cooray.jpg",
+        "name": "Melanie Cooray"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/timothy-tu.jpg",
+        "name": "Timothy Tu"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/addison-chan.jpg",
+        "name": "Addison Chan"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/animesh-agrawal.jpg",
+        "name": "Animesh Agrawal"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/azad-salam.jpg",
+        "name": "Azad Salam"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/ben-cuan.jpg",
+        "name": "Ben Cuan"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/catherine-gee.jpg",
+        "name": "Catherine Gee"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/charlotte-le.jpg",
+        "name": "Charlotte Le"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/connie-shi.jpg",
+        "name": "Connie Shi"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/daphne-pan.jpg",
+        "name": "Daphne Pan"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/grace-yi.jpg",
+        "name": "Grace Yi"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/jamie-hong.jpg",
+        "name": "Jamie Hong"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/john-so.jpg",
+        "name": "John So"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/jordan-schwartz.jpg",
+        "name": "Jordan Schwartz"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/joshua-baum.jpg",
+        "name": "Joshua Baum"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/laryn-qi.jpg",
+        "name": "Laryn Qi"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/marie-chorpita.jpg",
+        "name": "Marie Chorpita"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/mathilde-mckeever.jpg",
+        "name": "Mathilde McKeever"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/michelle-chen.jpg",
+        "name": "Michelle Chen"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/molly-nicholas.jpg",
+        "name": "Molly Nicholas"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/patrick-wang.jpg",
+        "name": "Patrick Wang"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/richard-roggenkemper.jpg",
+        "name": "Richard Roggenkemper"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/ruslana-yurtyn.png",
+        "name": "Ruslana Yurtyn"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/shaun-diem-lane.jpg",
+        "name": "Shaun Diem-Lane"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/yersultan-sapar.jpg",
+        "name": "Yersultan Sapar"
+    }
+];
+
+function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+shuffle(staffDeets).forEach(function(staffDeet) {
+    var item = document.createElement("div");
+    var img = document.createElement("img");
+    img.src = staffDeet.imgSrc
+    img.alt = staffDeet.name
+    item.appendChild(img);
+    var p = document.createElement("p");
+    p.innerText  = staffDeet.name;
+    item.appendChild(p);
+    document.getElementById("tas-gallery").appendChild(item)
+});
+                    </script>
+                </section>
+
+
+                <section>
+                    <h3><a target="_blank" href="../../tutors">Tutors</a></h3>
+                    <div id="tutors-gallery" class="staff-gallery"></div>
+                    <p><a target="_blank" href="../../tutors">Learn more on tutors page.</a></p>
+
+                    <script>
+var tutorsDeets = [
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/amritansh-saraf.jpg",
+        "name": "Amritansh Saraf"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/andrew-wang.jpg",
+        "name": "Andrew Wang"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/aneesh-konda.jpg",
+        "name": "Aneesh Konda"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/ashwin-gopalan.jpg",
+        "name": "Ashwin Gopalan"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/ayda-nayeb-nazar.jpg",
+        "name": "Ayda Nayeb Nazar"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/brandon-tran.jpg",
+        "name": "Brandon Tran"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/bryce-wong.jpg",
+        "name": "Bryce Wong"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/chris-liu.jpg",
+        "name": "Chris Liu"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/irene-yang.jpg",
+        "name": "Irene Yang"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/jackie-pei.jpg",
+        "name": "Jackie Pei"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/jessica-dong.jpg",
+        "name": "Jessica Dong"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/jonathan-lu.jpg",
+        "name": "Jonathan Lu"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/kendrick-sharpe.png",
+        "name": "Kendrick Sharpe"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/kevin-han.jpg",
+        "name": "Kevin Han"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/kotryna-vismante.jpg",
+        "name": "Kotryna Vismante"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/laura-pei.jpg",
+        "name": "Laura Pei"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/lily-yang.jpg",
+        "name": "Lily Yang"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/lucy-meng.jpg",
+        "name": "Lucy Meng"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/maanav-khaitan.jpg",
+        "name": "Maanav Khaitan"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/mialy-rasetarinera.jpg",
+        "name": "Mialy Rasetarinera"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/mingxiao-wei.jpg",
+        "name": "Mingxiao Wei"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/noor-haq.jpg",
+        "name": "Noor Haq"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/peter-zhang.png",
+        "name": "Peter Zhang"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/rachel-kim.jpg",
+        "name": "Rachel Kim"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/rahul-kaparaboyna.jpg",
+        "name": "Rahul Kaparaboyna"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/raymond-tan.jpg",
+        "name": "Raymond Tan"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/steven-christopher.jpg",
+        "name": "Steven Christopher"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/tiffany-wang.png",
+        "name": "Tiffany Wang"
+    },
+    {
+        "imgSrc": "https://github.com/Cal-CS-61A-Staff/staff-images/raw/master/sp22/vikram-deepak.png",
+        "name": "Vikram Deepak"
+    }
+];
+
+shuffle(tutorsDeets).forEach(function(staffDeet) {
+    var item = document.createElement("div");
+    var img = document.createElement("img");
+    img.src = staffDeet.imgSrc
+    img.alt = staffDeet.name
+    item.appendChild(img);
+    var p = document.createElement("p");
+    p.innerText  = staffDeet.name;
+    item.appendChild(p);
+    document.getElementById("tutors-gallery").appendChild(item)
+});
+/*
+var div = document.createElement("div");
+div.innerText = "...and many more!";
+div.style.padding = "30px";
+document.getElementById("tutors-gallery").appendChild(div);
+*/
+                    </script>
+                </section>
+
+                <section class="heading-only">
+                    <h2>A Very Brief Introduction to Computer Science</h2>
+                </section>
+
+                <section>
+
+                    <h3>What is Computer Science?</h3>
+                                    
+                    <svg id="study-diagram" xmlns="http://www.w3.org/2000/svg" style="width: 800px; height: 150px;">
+                        <style id="stylesheet">text {
+                    text-anchor: middle;
+                    font-size: 14px;
+                    font-weight: bold;
+                }
+                
+                rect {
+                    fill: lightblue;
+                    opacity: 0.5;
+                }
+                
+                line {
+                    stroke: black;
+                    opacity: 0.5;
+                    stroke-width: 1.5;
+                }
+                    </style>
+                        <defs>
+                        <marker id="arrowHead" viewBox="-10 -5 10 10" markerUnits="strokeWidth" markerWidth="6" markerHeight="5" orient="auto">
+                            <path d="M -10 -5 L 0 0 L -10 5 z"></path>
+                        </marker>
+                        </defs>
+                        <g id="diagramGroup"><rect y="51px" x="0px" height="46px" width="363px"></rect><text y="51px" x="0px"><tspan x="181" dy="28.791925465838506">The study of...</tspan></text><rect y="0px" x="436px" height="46px" width="363px"></rect><text y="0px" x="436px"><tspan x="618" dy="28.791925465838506">What problems can be solved using computation</tspan></text><line y1="63px" x1="363px" y2="23px" x2="436px" marker-end="url(#arrowHead)"></line><rect y="51px" x="436px" height="46px" width="363px"></rect><text y="51px" x="436px"><tspan x="618" dy="28.791925465838506">How to solve these problems</tspan></text><line y1="75px" x1="363px" y2="75px" x2="436px" marker-end="url(#arrowHead)"></line><rect y="103px" x="436px" height="46px" width="363px"></rect><text y="103px" x="436px"><tspan x="618" dy="28.791925465838506">What techniques lead to effective solutions</tspan></text><line y1="86px" x1="363px" y2="126px" x2="436px" marker-end="url(#arrowHead)"></line></g>
+                    </svg>
+                    
+                <div class="fragment" style="margin-top: 36px;">
+                    <svg id="topics-diagram" xmlns="http://www.w3.org/2000/svg" style="width: 800px; height: 380px;">
+                        <style id="stylesheet">text {
+                    text-anchor: middle;
+                    font-weight: bold;
+                }
+                
+                rect {
+                    fill: lightblue;
+                    opacity: 0.5;
+                }
+                
+                line {
+                    stroke: black;
+                    opacity: 0.5;
+                    stroke-width: 1.5;
+                }
+                    </style>
+                        <defs>
+                        <marker id="arrowHead" viewBox="-10 -5 10 10" markerUnits="strokeWidth" markerWidth="6" markerHeight="5" orient="auto">
+                            <path d="M -10 -5 L 0 0 L -10 5 z"></path>
+                        </marker>
+                        </defs>
+                        <g id="diagramGroup"><rect y="0px" x="0px" height="26px" width="235px"></rect><text y="0px" x="0px"><tspan x="117" dy="18.60344827586207">Systems</tspan></text><rect y="39px" x="0px" height="26px" width="235px"></rect><text y="39px" x="0px"><tspan x="117" dy="18.60344827586207">Artificial Intelligence</tspan></text><rect y="78px" x="0px" height="26px" width="235px"></rect><text y="78px" x="0px"><tspan x="117" dy="18.60344827586207">Graphics</tspan></text><rect y="117px" x="0px" height="26px" width="235px"></rect><text y="117px" x="0px"><tspan x="117" dy="18.60344827586207">Security</tspan></text><rect y="157px" x="0px" height="26px" width="235px"></rect><text y="157px" x="0px"><tspan x="117" dy="18.60344827586207">Networking</tspan></text><rect y="196px" x="0px" height="26px" width="235px"></rect><text y="196px" x="0px"><tspan x="117" dy="18.60344827586207">Programming Languages</tspan></text><rect y="235px" x="0px" height="26px" width="235px"></rect><text y="235px" x="0px"><tspan x="117" dy="18.60344827586207">Theory</tspan></text><rect y="275px" x="0px" height="26px" width="235px"></rect><text y="275px" x="0px"><tspan x="117" dy="18.60344827586207">Scientific Computing</tspan></text><rect y="314px" x="0px" height="26px" width="235px"></rect><text y="314px" x="0px"><tspan x="117" dy="18.60344827586207">Human Computer Interaction</tspan></text><rect y="353px" x="0px" height="26px" width="235px"></rect><text y="353px" x="0px"><tspan x="117" dy="18.60344827586207">...</tspan></text><rect y="0px" x="282px" height="26px" width="235px"></rect><text y="0px" x="282px"><tspan x="400" dy="18.60344827586207">Decision Making</tspan></text><line y1="43px" x1="235px" y2="13px" x2="282px" marker-end="url(#arrowHead)"></line><rect y="29px" x="282px" height="26px" width="235px"></rect><text y="29px" x="282px"><tspan x="400" dy="18.60344827586207">Robotics</tspan></text><line y1="48px" x1="235px" y2="42px" x2="282px" marker-end="url(#arrowHead)"></line><rect y="58px" x="282px" height="26px" width="235px"></rect><text y="58px" x="282px"><tspan x="400" dy="18.60344827586207">Ethics &amp; Safety</tspan></text><line y1="52px" x1="235px" y2="71px" x2="282px" marker-end="url(#arrowHead)"></line><rect y="87px" x="282px" height="26px" width="235px"></rect><text y="87px" x="282px"><tspan x="400" dy="18.60344827586207">Natural Language Processing</tspan></text><line y1="56px" x1="235px" y2="100px" x2="282px" marker-end="url(#arrowHead)"></line><rect y="116px" x="282px" height="26px" width="235px"></rect><text y="116px" x="282px"><tspan x="400" dy="18.60344827586207">...</tspan></text><line y1="61px" x1="235px" y2="129px" x2="282px" marker-end="url(#arrowHead)"></line><rect y="53px" x="564px" height="26px" width="235px"></rect><text y="53px" x="564px"><tspan x="682" dy="18.60344827586207">Answering Questions</tspan></text><line y1="93px" x1="517px" y2="66px" x2="564px" marker-end="url(#arrowHead)"></line><rect y="87px" x="564px" height="26px" width="235px"></rect><text y="87px" x="564px"><tspan x="682" dy="18.60344827586207">Translation</tspan></text><line y1="100px" x1="517px" y2="100px" x2="564px" marker-end="url(#arrowHead)"></line><rect y="121px" x="564px" height="26px" width="235px"></rect><text y="121px" x="564px"><tspan x="682" dy="18.60344827586207">...</tspan></text><line y1="106px" x1="517px" y2="134px" x2="564px" marker-end="url(#arrowHead)"></line></g>
+                    </svg>
+                    
+                        
+                    </div>     
+    
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>About this course</h2>
+                </section>
+
+                <section>
+                    <h3>Course topics</h3>
+
+
+                    <ul>
+                        <li>Managing complexity in programs (procedural abstractions, data abstractions, programming paradigms)</li>
+                        <li><img src="https://www.python.org/static/community_logos/python-logo.png" alt="Python logo" style="float:right;">
+                          Deep understanding of programming concepts (using Python)</li>
+                        <li>Problem solving techniques (both iterative and recursive approaches)</li>
+                        <li>How computers interpret computer programs</li>
+                        <li>Different types of languages (Scheme, Regular expressions, BNF) </li>
+                    </ul>
+
+                    <p>This course is challenging and often mind-blowing! 🤯</p>
+                </section>
+
+                <section>
+                    <h3>Course prerequisites</h3>
+
+                    <p>This is <strong>not</strong> an introductory programming class.</p>
+
+                    <p>Prerequisites from the <a target="_blank" href="https://www2.eecs.berkeley.edu/Courses/CS61A/">official description:</a></p>
+                    <blockquote>
+                    "MATH 1A (may be taken concurrently); programming experience equivalent to that gained from a score of 3 or above
+                    on the Advanced Placement Computer Science A exam."</blockquote>
+
+                    <p>If you are a data science major, also consider <strong>CS 88</strong>, which goes at a slightly slower pace (and covers SQL!).</p>
+                    <p>If you don't think you have enough programming experience, consider taking <strong>CS 10</strong> and joining us in summer/fall.</p>
+                </section>
+
+                <section>
+                    <h3>CS 10: The Beauty and Joy of Computing</h3>
+
+                    <ul>
+                        <li>Designed for students without prior coding experience</li>
+                        <li><img src="https://bjc.edc.org/March2019/bjc-r/img/slideshow/slideshow_02.jpg" alt="Screenshot of BJC Snap interface" style="float:right; width:200px;">
+                            Starts off in Snap!, a programming environment created by Berkeley and now used in classrooms globally. </li>
+                        <li>Introduces higher-order functions and recursion, two of the traditionally challenging CS61A topics.</li>
+                        <li><img src="https://www.python.org/static/community_logos/python-logo.png" alt="Python logo" style="float:right;"> 
+                            Also teaches Python fundamentals. 
+                        </li>
+                    </ul>
+
+                    <p>More info: <a target="_blank" href="https://cs10.org/su21/">cs10.org</a></p>
+                    <p>The sooner you sign up for the waitlist, the better your chance of getting in!</p>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Course format</h2>
+                </section>
+
+                <section>
+                    <h3>Course components</h3>
+
+                    <ul>
+                        <li>Lectures</li>
+                        <li>Labs</li>
+                        <li>Discussions</li>
+                        <li>Homeworks</li>
+                        <li>Projects</li>
+                        <li>Exams 😱</li>
+                        <li>Textbook (<a target="_blank" href="http://composingprograms.org">composingprograms.org</a>)</li>
+                        <li>Office hours</li>
+                    </ul>
+
+                    <p>Everything is linked from <a target="_blank" href="../../index.html">https://cs61a.org</a></p>
+                </section>
+
+                <section>
+                    <h3>Weekly schedule</h3>
+
+                    <style>
+                        .bordered-cell {
+                          border: 1px solid #111;
+                          padding: 8px;
+                        }
+                      </style>
+                      <table style="font-size:smaller">
+                        <thead>
+                          <tr>
+                            <th></th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Morning</td>
+                            <td></td>
+                            <td rowspan="3" class="bordered-cell"  style="background:lightgreen">Complete Lab</td>
+                            <td class="bordered-cell" style="background:lightgreen">Complete Lab</td>
+                            <td rowspan="2" class="bordered-cell" style="background:lightblue">Attend Discussion</td>
+                            <td class="bordered-cell" style="background:lightblue">Attend Discussion</td>
+                          </tr>
+                          <tr>
+                            <td>2pm</td>
+                            <td class="bordered-cell" style="background:#ddd">Lecture</td>
+                            <td class="bordered-cell" style="background:#ddd">Lecture
+                            <td class="bordered-cell" style="background:#ddd">Lecture
+                          </tr>
+                          <tr>
+                            <td>After</td>
+                            <td class="bordered-cell" style="background:lightgreen">Complete Lab</td>
+                            <td class="bordered-cell" style="background:lightblue">Attend Discussion</td>
+                            <td class="bordered-cell" style="background:pink">Submit homework or project</td>
+                        </td>
+                        </tbody>
+                      </table>
+
+                      <p>"Free time": Work on current homework or project.</p>
+                </section>
+
+                <section>
+                    <h3>Lectures</h3>
+                    <p>Three ways for you to watch lectures:</p>
+
+                    <ul>
+                        <li><strong>Pamela's live lectures</strong> <br>(MWF 2:10-3pm)</li>
+                        
+                        <li class="fragment">Recordings of the live lectures <br>(Available at night)</li>
+                        <li class="fragment">John's pre-recorded lectures <br>(Posted at 2:10 or earlier)
+                            <br><em>⚠️ The content may differ slightly. Please at least
+                            skim through Pamela's slides if you rely on these lectures.
+                            And make sure to read the weekly announcements.
+                            </em>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Labs & Discussions</h3>
+
+                    <p>Sign up for sections at <a target="_blank" href="https://sections.cs61a.org">sections.cs61a.org</a></p>
+
+                    <p>You'll have the same TA for both lab and discussion. Community! ❤️</p>
+
+                    <p>Section types:</p>
+                    <ul>
+                        <li>Regular</li>
+                        <li>Remote</li>
+                        <li>Transfer/Grad</li>
+                        <li>No-MiniLecture</li>
+                        <li>CS 10 Bridge</li>
+                        <li>CS Scholars</li>
+                    </ul>
+                    <p>All sections are over Zoom for first two weeks,
+                        and then regular sections resume to in-person.
+                    </p>
+
+                </section>
+
+                <section>
+                    <h3>Homeworks & Projects</h3>
+
+                    <p>Homeworks and projects are typically due Thursdays (but not the same Thursday!). <strong>Start early, code often!</strong></p>
+
+                    <p>Come to <a target="_blank" href="../../office-hours">OH parties</a> so you can be around other students working on the homeworks and projects. 🎉
+                      <br>
+                    You can discuss the assignments at a high-level, but don't copy anyone else's code (unless it's your project partner).
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Exams 😱</h3>
+
+                    <ul>
+                        <li>Midterm 1: Monday, Feb 7, 8-10pm</li>
+                        <li>Midterm 2: Thursday, March 17th, 7-9pm</li>
+                        <li>Final Exam: Tuesday, May 10th, 11:30am-2:30pm</li>
+                    </ul>
+
+                    <p>All past exams are available on <a href="../../resources/index.html" target="_blank">the resources page</a>.<br><strong>Study early, study often!</strong></p>
+
+                    <p>Exam Prep sections will be Fridays 10-11am, starting next week.</p>
+
+                </section>
+
+                <section>
+                    <h3>Office hours</h3>
+
+                    <p>We offer OH parties, scheduled appointments, and advising OH.</p>
+
+                    <p>Check out the calendar:
+                        <a target="_blank" href="../../office-hours">cs61a.org/office-hours/</a>
+                    </p>
+
+                    <p>I will also hold office hours, probably 3-4 Mon/Wed,
+                        starting next week.
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Asking questions</h3>
+
+                    <p>Post questions on <a target="_blank" href="https://piazza.com/class/kxj8vcku7037li">Piazza</a>. If you're debugging assignment code, follow the <a target="_blank" href="https://piazza.com/class/kxj8vcku7037li?cid=7">debugging template</a>.</li>
+                    </p>
+
+                    <p>Check out our <a target="_blank" href="https://cs61a.org/contact">contact page</a> for more ways to get in touch.</p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Course policies</h2>
+                </section>
+
+                <section>
+                    <h3>Course policies</h3>
+
+                    <p>Read the <a target="_blank" href="../../articles/about">syllabus</a>.</p>
+                    
+                    <p>For real! There will be a quiz on Homework 1!</p>
+
+                </section>
+
+                <section>
+                    <h3>Accomodations & Extensions</h3>
+
+                    <ul>
+                        <li>Cooper manages DSP accomodations for assignments (and the class generally)
+                        <li>Vanshaj manages DSP accomodations for exams
+                        <li>Accomodations appointments are available for those without DSP
+                        <li>All students may request extensions via <a target="_blank" href="https://go.cs61a.org/extensions">this form</a>
+                    </ul>
+
+                    <p>Learn more in the <a target="_blank" href="../../articles/about#accommodations-dsp-and-otherwise">syllabus section on Accomodations</a></p>
+
+                </section>
+
+                <section>
+                    <h3>Collaboration vs. Misconduct</h3>
+
+                    <p><strong>Asking questions is highly encouraged:</strong></p>
+                    <ul class="smaller">
+                        <li>Discuss everything with each other; learn from your fellow students!</li>
+                        <li>Some projects can be completed with a partner</li>
+                        <li>Choose a partner from your section</li>
+                    </ul>
+
+                    <p><strong>When collaboration becomes misconduct:</strong></p>
+                    <ul class="smaller">
+                        <li><em>Please</em> don’t look at someone else's code!<br>
+                            Exceptions: lab, your project partner, or after you already solved the problem </li>
+                        <li><em>Please</em> don't tell other people the answers! You can point them to what is wrong and 
+                            describe how to fix it, but don't tell them what to type, and don't type for them </li>
+                        <li>Copying project solutions causes people to fail the course</li>
+                        <li>We really do catch people who violate the rules, and we're getting better at it.</li>
+                    </ul>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Class climate</h2>
+                </section>
+
+                <section>
+                    <h3>Sexual harassment</h3>
+
+                    <p><strong>What is it?</strong> 
+                        Often, people don't realize they are sexually harassing someone. The behavior still has the same impact, however, and <strong>impact is what matters</strong>.</p>
+                    <div class="fragment">
+                    <ul style="font-size:smaller">
+                        <li>Touching someone without their consent
+                        <li>Trying to kiss someone who you are not dating
+                        <li>Commenting on someone's physical appearance
+                        <li>Staring at someone's body parts
+                        <li>Repeatedly asking someone out
+                    </ul>
+                    <p>See a full list in the <a target="_blank" href="https://policy.ucop.edu/doc/4000385/SVSH">UCOP policy on SVSH</a>.</p>
+                    </div>
+                    <p class="fragment">While a semester is happening, you should maintain professional boundaries with course staff (AIs/Tutors/TAs).
+                        Don't message them on social networks or dating apps, don't give them physical compliments, don't flirt in any way.
+                        Just let them do their job.
+                    </p>
+                </section>
+
+                <section>
+                    <h3>What to do if you're sexually harassed?</h3>
+
+                    <p style="font-size:smaller">⚠️ All faculty and staff members are Mandated Reporters. If we ever receive an incident report, we will need to make a report to the OPHD.
+                    Two goals to reporting:
+                    </p>
+                    <ul style="font-size:smaller">
+                        <li>Getting you the support you need
+                        <li>Increasing our awareness of incidents so that we can try to make improvements
+                    </ul>
+                    <p>Where to report:</p>
+                    <ul style="font-size:smaller;">
+                        <li><a target="_blank" href="https://ophd.berkeley.edu/">Office for the Prevention of Harassment & Discrimination</a>: Includes online reporting form.
+                        <li><a target="_blank" href="https://care.berkeley.edu/">Path to Care</a>: Includes 24/7 care line and advocate appointments.
+                        <li><a target="_blank" href="https://go.cs61a.org/feedback">CS61A Anonymous feedback form</a>: If you want to stay anonymous but make us aware of something happening in section.
+                        <li><a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSc4NYHdUJ8IzYA1SoiTinWBybGWkj0mfmdnHAeygAxkZajelQ/viewform">EECS Anonymous Climate Form</a>: This will make the EECS department aware of any issues. You can also contact Susanne Kauer (skauer@berkeley.edu) directly.
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Racism</h3>
+
+                    <p>Last semester, students reported that other 
+                        students made racist comments suggesting that they 
+                        did not belong in CS. 
+                    </p>
+                    <p>
+                        We live in a country/society with a long history
+                        of racism and need to actively combat that
+                        in both our actions and language.
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Community values</h3>
+
+                    <p>
+                    From the <a target="_blank" href="https://diversity.berkeley.edu/principles-community">Berkeley Principles of Community</a>:
+                    <blockquote style="font-size:smaller; width: 100%;">"We affirm the dignity of all individuals and strive to uphold a just community in which discrimination and hate are not tolerated."
+                    </blockquote>
+                    </p>
+
+                    <p>From the EECS mission:</p>
+                    <blockquote style="font-size:smaller; width: 100%;">
+                    "Diversity, equity, and inclusion are core values in the Department of Electrical Engineering and Computer Sciences. Our excellence can only be fully realized by faculty, students, and staff who share our commitment to these values. EECS's mission is to serve the communities to which we belong, at local, national, and international levels, with a deep awareness of our ethical responsibilities to our profession and to society."
+                    </blockquote>
+                    </p>
+
+                    <p>We need to bring more people into CS, so that tech can create a better future for all, not just those that have traditionally had the most access to computers.</p>
+                </section>
+
+                <section>
+                    <h3>What to do if you experience racism</h3>
+
+                    <ul>
+                    <li><a target="_blank" href="https://cejce.berkeley.edu/">Centers for Educational Justice & Community Engagement</a>: Includes an incident report form and specific centers for various communities (African American, Asian Pacific, Chicanx Latinx, Gender Equity, Multicultural).
+                    <li><a target="_blank" href="https://rjcenterberkeley.org/">Restorative Justice Center</a>: Includes services like restorative conversations, community circles, workshops, and trainings.
+                    <li><a target="_blank" href="https://go.cs61a.org/feedback">CS61A Anonymous feedback form</a>: If you want to leave your name out of it but want to make us aware of something happening in 61A sections.
+                    <li><a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSc4NYHdUJ8IzYA1SoiTinWBybGWkj0mfmdnHAeygAxkZajelQ/viewform">EECS Anonymous Climate Form</a>: This will make the EECS department aware of any issues.
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>More resources</h3>
+
+                    <p>Our staff has put together a great set of <a target="_blank" href="../../articles/campus-res/index.html">campus resources</a>
+                    that includes those links and many other helpful links.
+
+
+                    </p>
+
+                </section>
+
+                <section>
+                    <h3>Behaviors we want to see</h3>
+
+                    <ul style="font-size:smaller;">
+                        <li><strong>Helping each other</strong> understand concepts in the class, whether in section, Piazza, or study groups, without expectation of anything in return.
+                        <li><strong>Saying "congratulations" to classmates</strong> when they finish an assignment, receive a job offer, get into a club, etc. 
+                        <li><strong>Being a great partner while pair programming.</strong> If you're driving (typing), listen to what your partner suggests and consider their suggestions. If you're navigating, brainstorm ideas for how to tackle the problem, re-read the project description, check Piazza, etc.
+                        <li><strong>Recognizing that we're all a valuable member of the CS community!</strong> Our CS major might be limited due to lack of faculty/funding, but even for those who don't become CS/EECS majors, I hope you all continue in CS/software if you enjoy it.
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Demo!</h2>
+                </section>
+
+                <section>
+                    <h2>What's next?</h2>
+
+                    <ul>
+                        <li>Discussions will meet this week, starting today (<a target="_blank" href="https://section.cs61a.org">sections.cs61a.org</a>)</li>
+                        <li>Optional Lab 0 to get your computer setup</li>
+                        <li>Next lecture is on Friday, Zoom you there!</li>
+                    </ul>
+                </section>
+
+                <!--<section>For Lecture 2
+                    <h3>The Rules of the Zoom</h3>
+
+                    <ul>
+                        <li>Chat will always be enabled. Please hide it if distracting.</li>
+                        <li>Chat is for questions and comments about the current topic.</li>
+                        <li>If the chat goes too off-topic, we'll ask you to focus back in.</li>
+                        <li>If you're uncomfortable asking a question in the public chat,
+                            you can DM a staff member or post anonymously in the Piazza thread.
+                        </li>
+                    </ul>
+                </section>-->
+
+
+
+			</div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+		<script>
+			const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+			Reveal.initialize({
+				hash: true,
+				center: false,
+				slideNumber: true,
+				showNotes: false,
+				margin: 0.1,
+				preloadIframes: true,
+				plugins: [ RevealHighlight ],
+				pdfSeparateFragments: true
+			});
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge(options);
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+		</script>
+	</body>
+</html>

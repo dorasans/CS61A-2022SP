@@ -1,0 +1,1225 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Control</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Control</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="03-Control.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Side effects
+                        <li>More function features
+                        <li>Conditionals
+                        <li>Booleans
+                        <li>Iteration
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Side effects</h2>
+                </section>
+
+                <section>
+                    <h3>The None value</h3>
+
+                    <p>The special value <code>None</code> represents nothingness in Python.</p>
+
+                    <p>Any function that doesn't explicitly return a value will return <code>None</code>:</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def square_it(x):
+                      x * x
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p>When a function returns <code>None</code>, the console shows no output at all:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    square_it(4)
+                    </code></pre>
+                    </div>
+                    <div class="fragment">
+                    <p>Attempting to treat the <code>None</code> like a number will result in an error:</p>
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    sixteen = square_it(4)
+                    sum = sixteen + 4     <span># 🚫 TypeError!</span>
+                    </code></pre>
+                    </div>
+
+                </section>
+                <section>
+                    <h3>Side effects</h3>
+
+                    <p>A <strong>side effect</strong> is when something happens as a result of calling a function
+                    besides just returning a value.</p>
+
+                    <p>The most common side effect is logging to the console, via the built-in <code>print()</code> function.</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    print(-2)
+                    </code></pre>
+
+                    <p>Other common side effects: writing to files, drawing graphics on the screen.</p>
+
+                </section>
+
+                <section>
+                    <h3>Side effects vs. Return values</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def square_num1(number):
+                        return pow(number, 2)
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def square_num2(number):
+                        print(number ** 2)
+                    </code></pre>
+
+                    <ul>
+                        <li>Which one has a side effect?<br>
+                        <span class="fragment">The second function has a side effect,
+                            because it prints to the console.</span>
+                        <br><br>
+                        <li>What data type do they each return?
+                        <br>
+                        <span class="fragment">The first function returns a number,
+                        the second one returns <code>None</code>.
+
+
+                    </p>
+
+                </section>
+
+
+                <section>
+                    <h3>Pure vs. non-pure functions</h3>
+
+                    <table class="smaller">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Arguments</th>
+                                <th></th>
+                                <th>Return value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="2"><strong>Pure functions</strong><br>
+                                    just return values.
+                                </td>
+                                <td style="text-align:right; vertical-align:top; padding-top: 16px;">-2</td>
+                                <td style="padding-top: 16px;">
+                                    <img src="../images/abs.png" alt="abs() function" style="width:200px; margin: 0px;">
+                                </td>
+                                <td style="vertical-align: top; padding-top: 50px; padding-left: 0px;">2</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:right; vertical-align:top; padding-top: 16px;">2, 10</td>
+                                <td style="padding-top: 16px;">
+                                    <img src="../images/pow.png" alt="pow() function" style="width:200px; margin: 0px;">
+                                </td>
+                                <td style="vertical-align: top; padding-top: 50px; padding-left: 0px;">1024</td>
+                            </tr>
+                            <tr class="fragment">
+                                <td rowspan="2"><strong>Non-pure functions</strong><br>
+                                    have side effects.
+                                </td>
+                                <td style="text-align:right; vertical-align:top; padding-top: 16px;">-2</td>
+                                <td style="width:200px; padding-top: 16px;">
+                                    <img src="../images/print.png" alt="print() function" style="width:200px; margin: 0px;">
+                                    <br>
+                                    <em class="smaller">Python displays output "-2"</em>
+                                </td>
+                                <td style="vertical-align: top; padding-top: 50px; padding-left: 0px;"><code>None</code>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </section>
+
+                <section>
+                    <h3>Nested print statements</h3>
+
+                    <p>What will this display?</p>
+                    <pre style="font-size:1.0em" class="no-code-badge"><code data-trim data-noescape class="python">
+                    print(print(1), print(2))
+                    </code></pre>
+
+                    <svg class="fragment" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="947.82" height="491.19" viewBox="0 0 947.82 491.19">
+                        <defs>
+                          <style>
+                            .cls-1 {
+                              font-size: 41px;
+                              font-family: Courier;
+                            }
+                      
+                            .cls-2 {
+                              font-size: 21px;
+                              font-family: Courier-Oblique, Courier;
+                              font-style: oblique;
+                            }
+                      
+                            .cls-3, .cls-4 {
+                              fill: #662d91;
+                              stroke: #662d91;
+                            }
+                      
+                            .cls-3, .cls-4, .cls-5, .cls-6 {
+                              stroke-miterlimit: 10;
+                            }
+                      
+                            .cls-3, .cls-6 {
+                              stroke-width: 2px;
+                            }
+                      
+                            .cls-5, .cls-6 {
+                              fill: none;
+                              stroke: #006837;
+                            }
+                      
+                            .cls-7 {
+                              fill: #ccc;
+                            }
+                      
+                            .cls-8 {
+                              font-size: 36px;
+                            }
+                      
+                            .cls-9 {
+                              letter-spacing: -0.01em;
+                            }
+                      
+                            .cls-10 {
+                              letter-spacing: -0.08em;
+                            }
+                      
+                            .cls-11 {
+                              letter-spacing: -0.09em;
+                            }
+                      
+                            .cls-12 {
+                              fill: #f15a24;
+                            }
+                      
+                            .cls-13 {
+                              font-size: 31.16px;
+                              fill: #fff;
+                            }
+                      
+                            .cls-14 {
+                              letter-spacing: -0.02em;
+                            }
+                            .svg-display {
+                                font-size: 30px;
+                            }
+                          </style>
+                        </defs>
+                        <text/>  <text/>  <text class="cls-1" transform="translate(228.3 113.65)">print(print(1), print(2))</text>
+                        <g class="fragment">
+                          <text class="cls-2" transform="translate(69.66 256.25)">def print()...</text>
+                          <line class="cls-3" x1="233" y1="135.19" x2="354" y2="135.19"/>
+                          <line class="cls-4" x1="193" y1="237.19" x2="292" y2="135.19"/>
+                        </g>
+                        <g class="fragment">
+                          <text class="cls-1" transform="translate(373.98 278.47)">print(1)</text>
+                          <line class="cls-5" x1="471.21" y1="241.69" x2="471.21" y2="135.19"/>
+                          <line class="cls-6" x1="374" y1="135.19" x2="568" y2="135.19"/>
+                        </g>
+                        <g class="fragment">
+                          <text class="cls-2" transform="translate(211.66 416.25)">def print()...</text>
+                          <line class="cls-3" x1="375" y1="295.19" x2="496" y2="295.19"/>
+                          <line class="cls-4" x1="335" y1="397.19" x2="434" y2="295.19"/>
+                        </g>
+                        <g class="fragment">
+                          <line class="cls-5" x1="530.9" y1="402.42" x2="530.9" y2="295.92"/>
+                          <line class="cls-6" x1="505.7" y1="295.92" x2="556" y2="295.92"/>
+                          <text class="cls-1" transform="translate(519.1 440.47)">1</text>
+                        </g>
+                        <g class="fragment">
+                          <rect class="cls-7" x="205" y="440.19" width="259" height="51" rx="17.4"/>
+                          <text class="cls-8 svg-display" transform="translate(261.04 476.25)">Display "1"</text>
+                        </g>
+                        <g class="fragment">
+                          <rect class="cls-12" x="395.66" y="185.3" width="151" height="57.35" rx="28.67"/>
+                          <text class="cls-13" transform="translate(435.9 223.12)">None</text>
+                        </g>
+                        <g class="fragment">
+                            <line class="cls-5" x1="840.5" y1="241.69" x2="715.9" y2="135.79"/>
+                            <line class="cls-6" x1="618.7" y1="135.79" x2="812.7" y2="135.79"/>
+                            <text class="cls-1" transform="translate(750.98 278.47)">print(2)</text>
+                          </g>
+                        <g class="fragment">
+                          <text class="cls-2" transform="translate(591.38 419.24)">def print()...</text>
+                          <line class="cls-3" x1="754.72" y1="298.17" x2="875.72" y2="298.17"/>
+                          <line class="cls-4" x1="714.72" y1="400.17" x2="813.72" y2="298.17"/>
+                        </g>
+                        <g class="fragment">
+                          <line class="cls-5" x1="910.63" y1="405.41" x2="910.63" y2="298.91"/>
+                          <line class="cls-6" x1="885.42" y1="298.91" x2="935.72" y2="298.91"/>
+                          <text class="cls-1" transform="translate(898.82 443.45)">2</text>
+                        </g>
+                        <g class="fragment">
+                            <rect class="cls-7" x="586" y="440.19" width="259" height="51" rx="17.4"/>
+                            <text class="cls-8 svg-display" transform="translate(642.04 476.25)">Display "2"</text>
+                          </g>
+                        <g class="fragment">
+                        <rect class="cls-12" x="752.2" y="185" width="151" height="57.35" rx="28.67"/>
+                        <text class="cls-13" transform="translate(792.45 222.82)">None</text>
+                        </g>
+
+                        <g class="fragment">
+                            <rect class="cls-7" y="278.19" width="340" height="51" rx="17.4"/>
+                            <text class="cls-8 svg-display" transform="translate(19.04 314.25)">Display "None None"</text>
+                          </g>
+                        <g class="fragment">
+                        <rect class="cls-12" x="480.2" width="151" height="57.35" rx="28.67"/>
+                        <text class="cls-13" transform="translate(520.45 37.82)">None</text>
+                        </g>
+                    </svg>                      
+
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>More function features</h2>
+                </section>
+
+                <section>
+                    <h3>Default arguments</h3>
+
+                    <p>In the function signature, a parameter can specify a <strong>default value</strong>.
+                        If that argument isn't passed in, the default value is used instead.</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def calculate_dog_age(human_years, multiplier = 7):
+                        return human_years * multiplier
+                    </code></pre>
+
+                    <p>These two lines of code have the same result:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    calculate_dog_age(3)
+                    calculate_dog_age(3, 7)
+                    </code></pre>
+
+                    <p>Default arguments can be overriden two ways:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    calculate_dog_age(3, 6)
+                    calculate_dog_age(3, multiplier=6)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Multiple return values</h3>
+
+                    <p>A function can specify multiple return values, separated by commas.</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    def divide_exact(n, d):
+                        quotient = n // d
+                        remainder = n % d
+                        return quotient, remainder
+                    </code></pre>
+
+                    <p>Any code that calls that function must also "unpack it" using commas:</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    q, r = divide_exact(618, 10)
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <h3>Doctests</h3>
+
+                    <p>Doctests check the input/output of functions.</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def divide_exact(n, d):
+                        """
+                        >>> q, r = divide_exact(2021, 10)
+                        >>> q
+                        202
+                        >>> r
+                        1
+                        """
+                        quotient = n // d
+                        remainder = n % d
+                        return quotient, remainder
+                    </code></pre>
+
+                    <p>See more in <a target="_blank" href="https://docs.python.org/3/library/doctest.html">Python doctests documentation</a>.</p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Boolean expressions</h2>
+                </section>
+
+                <section>
+                    <h3>Booleans</h3>
+
+                    <p>A <strong>Boolean value</strong> is either <code>True</code> or <code>False</code>
+                    and is used frequently in computer programs.</p>
+
+                    <p>Google Maps uses a boolean to decide whether to avoid highways in driving directions:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    avoid_highways = True
+                    </code></pre>
+
+                    <p>Twitter uses a boolean to remember where the user allows personalized ads:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    personalized_ads = False
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Boolean expressions</h3>
+
+                    <p>An expression can evaluate to a Boolean.
+                        Most Boolean expressions use either comparison or logical operators.
+                    </p>
+                    <br>
+                    <p>An expression with a comparison operator:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    passed_class = grade > 65
+                    </code></pre>
+                    <br>
+                    <p>An expression with a logical operator:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    wear_jacket = is_raining or is_windy
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Comparison operators</h3>
+
+                    <table>
+                        <thead>
+                            <tr><td>Operator  </td><td>Meaning </td><td>True expressions
+                            </td></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>==    </td><td>Equality </td><td><code>32 == 32</code>, <code>'a' == 'a'</code>
+                            <tr><td>!=     </td><td>Inequality </td><td><code>30 != 32</code>, <code>'a' != 'b'</code>
+                            <tr><td>&gt;  </td><td>Greater than </td><td> <code>60 &gt; 32	</code>
+                            <tr><td>&gt;=</td><td>Greater than or equal </td><td><code>60 &gt;= 32	</code>, <code>32 &gt;= 32</code>
+                            </tr><tr><td>&lt;   </td><td>Less than </td><td><code>20 &lt; 32</code>
+                            </tr><tr><td>&lt;= </td><td>Less than or equal </td><td><code>20 &lt;= 32</code>, <code>32 &lt;= 32</code>
+                        </tbody>
+                    </table>
+                    <br>
+                    <p class="smaller">⚠️ Common mistake: Do not confuse <code>=</code> (the assignment operator) with <code>==</code> (the equality operator).</p>
+                </section>
+
+                <section>
+                    <h3>Logical operators</h3>
+
+                    <table>
+                        <thead>
+                            <tr><th>Operator<th style="width:40%">True expressions <th>Meaning
+                        <tbody>
+                            <tr><td><code>and</code> <td> <code>4 &gt; 0 and -2 &lt; 0</code> <td class="smaller">Evaluates to <code>True</code> if both conditions are true. If one is <code>False</code> evaluates to <code>False</code>.
+                            <tr><td><code>or</code>  <td> <code>4 &gt; 0 or -2 &gt; 0 </code> <td class="smaller">Evaluates to <code>True</code> if either condition is true. Evaluates to <code>False</code> only if both are false.
+                            <tr><td><code>not</code> <td> <code>not (5 == 0)</code> <td class="smaller">Evaluates to <code>True</code> if condition is false; evaluates to <code>False</code> if condition is true.
+                       </tbody>
+                    </table>
+                    <br>
+                </section>
+                
+                <!-- TODO: Replace with this slide?
+                To evaluate the expression <left> and <right>:
+                    1. Evaluate the subexpression <left>.
+                    2. If the result is a false value v, then the expression evaluates to v.
+                    3. Otherwise, the expression evaluates to the value of the subexpression <right>.
+                To evaluate the expression <left> or <right>:
+                    1. Evaluate the subexpression <left>.
+                    2. If the result is a true value v, then the expression evaluates to v.
+                    3. Otherwise, the expression evaluates to the value of the subexpression <right>.
+                See demo as well: https://www.youtube.com/watch?v=DDcYvnqUCNA&list=PL6BsET-8jgYXeefqDPnwLJ03jyw5-KKTT&index=9
+                -->
+
+                <section>
+                    <h3>Compound booleans</h3>
+
+                    <p>When combining multiple operators in a single expression, use parentheses to group:</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    may_have_mobility_issues = (age &gt;= 0 and age &lt; 2)  or age &gt; 90
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Boolean expressions in functions</h3>
+
+                    <p>A function can use a Boolean expression to return a result based on the
+                        values of the parameters.</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    def passed_class(grade):
+                        return grade > 65
+                    </code></pre>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    def should_wear_jacket(is_rainy, is_windy):
+                        return is_rainy or is_windy
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise</h3>
+
+                    <p>These are un-graded exercises you can do after the lecture to make sure you grok the basics:</p>
+
+                    <ul>
+                        <li><a href="https://code.cs61a.org/has_curly_hair" target="_blank">has_curly_hair()</a>
+                        <li><a href="https://code.cs61a.org/can_be_president" target="_blank">can_be_president()</a>
+                        <li><a href="https://code.cs61a.org/safe_to_eat" target="_blank">is_safe_to_eat()</a>
+                        <li><a href="https://code.cs61a.org/harvest_time" target="_blank">harvest_time()</a>
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Statements</h2>
+                </section>
+
+                <section>
+                    <h3>Statements</h3>
+
+                    <p>A <strong>statement</strong> is executed by the interpreter to perform an action.</p>
+
+                    <p>So far we've seen a few...</p>
+
+                    <table class="smaller">
+                        <thead>
+                            <tr>
+                                <th>Statement type</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Assignment statement</td>
+                                <td>
+                                <pre style="font-size:1.0em" class="no-code-badge"><code data-trim data-noescape class="python">
+                                name = 'sosuke'
+                                greeting = 'ahoy, ' + name
+                                </code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Def statement</td>
+                                <td><pre style="font-size:1.0em" class="no-code-badge"><code data-trim data-noescape class="python">
+                                def greet(name):
+                                    return 'ahoy, ' + name
+                                </code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Return statement</td>
+                                <td><pre style="font-size:1.0em" class="no-code-badge"><code data-trim data-noescape class="python">
+                                return 'ahoy, ' + name
+                                </code></pre>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h3>Compound statements</h3>
+
+                    <style type="text/css">
+                    .reveal .slides section .fragment.blue-border {
+                        opacity: 1;
+                        visibility: inherit;
+                        border: 2px dotted transparent;
+                    }
+                    .reveal .slides section .fragment.blue-border.visible {
+                        border: 2px dashed blue; 
+                        border-radius: 6px; 
+                    }
+                    .compound-clause, .compound-suite {
+                        padding: 8px;
+                    }
+                    .compound-suite {
+                        margin-left: 100px; width: 55%;
+                    }
+                    </style>
+                    <p>A <strong>compound statement</strong> contains groups of other statements.</p>
+
+                    <pre style="font-size:0.9em; width: 75%;" class="no-code-badge"><code data-trim data-noescape class="python">
+                    <div class="fragment blue-border compound-clause" data-fragment-index="1">&lt;header&gt;:                        <span class="fragment" data-fragment-index="1"># CLAUSE</span>
+                    <div class="fragment blue-border compound-suite" data-fragment-index="2">&lt;statement&gt;   <span class="fragment" data-fragment-index="2"># SUITE</span>
+                    &lt;statement&gt;
+                    ...</div></div>
+                    <div class="fragment blue-border" style="margin-top:-25px;" data-fragment-index="1">&lt;separating header&gt;:             <span class="fragment" data-fragment-index="1"># CLAUSE</span>
+                    <div class="fragment blue-border compound-suite" data-fragment-index="2">&lt;statement&gt;   <span class="fragment" data-fragment-index="2"># SUITE</span>
+                    &lt;statement&gt;
+                    ...</div></div>
+                    </code></pre>
+
+                    <p class="fragment" data-fragment-index="3">The first header determines a statement's type, and the header of each clause
+                        controls the suite that follows.
+                    </p>
+
+                </section>
+
+
+                <section>
+                    <h3>Execution of suites</h3>
+
+                    <p>A <strong>suite</strong> is a sequence of statements.</p>
+                    <pre style="font-size:0.9em; width: 75%;" class="no-code-badge"><code data-trim data-noescape class="python">
+                    &lt;header&gt;:
+                    <div class="fragment blue-border compound-suite" data-fragment-index="2">&lt;statement&gt;   <span class="fragment" data-fragment-index="2"># SUITE</span>
+                    &lt;statement&gt;
+                    ...</div>
+                    &lt;separating header&gt;:
+                    <div class="fragment blue-border compound-suite" data-fragment-index="2">&lt;statement&gt;   <span class="fragment" data-fragment-index="2"># SUITE</span>
+                    &lt;statement&gt;
+                    ...</div>
+                    </code></pre>
+
+                    <p>Execution rule for a sequence of statements:</p>
+                    <ul>
+                        <li>Execute the first statement</li>
+                        <li>Unless directed otherwise, execute the rest</li>
+                    </ul>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Conditional statements</h2>
+                </section>
+
+                <section>
+                    <h3>Conditional statements</h3>
+
+                    <p>A <strong>conditional statement</strong> gives your code a way to execute
+                        a different suite of code statements based on whether certain
+                        conditions are true or false.</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    if &lt;condition&gt;:
+                        &lt;statement&gt;
+                        &lt;statement&gt;
+                        ...
+                    </code></pre>
+
+                    <p>A simple conditional:</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    clothing = "shirt"
+
+                    if temperature < 32:
+                        clothing = "jacket"
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Compound conditionals</h3>
+
+                    <p>A conditional can include any number of <code>elif</code>
+                        statements to check other conditions.</p>
+
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    if &lt;condition&gt;:
+                        &lt;statement&gt;
+                        ...
+                    elif &lt;condition&gt;:
+                        &lt;statement&gt;
+                        ...
+                    elif &lt;condition&gt;:
+                        &lt;statement&gt;
+                        ...
+                    </code></pre>
+
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    clothing = "shirt"
+
+                    if temperature < 0:
+                        clothing = "snowsuit"
+                    elif temperature < 32:
+                        clothing = "jacket"
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>The else statement</h3>
+
+                    <p>A conditional can include an <code>else</code>
+                    to specify code to execute if no previous conditions are true.</p>
+
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    if &lt;condition&gt;:
+                        &lt;statement&gt;
+                        ...
+                    elif &lt;condition&gt;:
+                        &lt;statement&gt;
+                        ...
+                    else &lt;condition&gt;:
+                        &lt;statement&gt;
+                        ...
+                    </code></pre>
+
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    if temperature < 0:
+                        clothing = "snowsuit"
+                    elif temperature < 32:
+                        clothing = "jacket"
+                    else:
+                        clothing = "shirt"
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Conditional statements summary</h3>
+
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    if num < 0:
+                        sign = "negative"
+                    elif num > 0:
+                        sign = "positive"
+                    else:
+                        sign = "neutral"
+                    </code></pre>
+
+                    <p>Syntax tips:</p>
+                    <ul>
+                        <li>Always start with <code>if</code> clause.
+                        <li>Zero or more <code>elif</code> clauses.
+                        <li>Zero or one <code>else</code> clause, always at the end.
+                    </ul>
+                    <!-- TODO CS61A add execution rules -->
+
+                </section>
+
+                <section>
+                    <h3>Execution of conditional statements</h3>
+
+                    <p>Each clause is considered in order.</p>
+                    <ul>
+                        <li>Evaluate the header's expression. 
+                        <li>If it's true, execute the suite of statements underneath
+                            and skip the remaining clauses.
+                        <li>Otherwise, continue to the next clause.
+                    </ul>
+                    <img src="https://girldevelopit.github.io/gdi-python/images/pythontutor_conditionals.png" alt="Screenshot of a conditional statement in PythonTutor" height="250">
+                    <p class="python-tutor-link">
+                        <a target="_blank" href="http://pythontutor.com/visualize.html#code=num%20%3D%205%0A%0Aif%20num%20%3C%200%3A%0A%20%20%20%20sign%20%3D%20%22negative%22%0Aelif%20num%20%3E%200%3A%0A%20%20%20%20sign%20%3D%20%22positive%22%0Aelse%3A%0A%20%20%20%20sign%20%3D%20%22neutral%22&cumulative=true&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false">
+                            View in PythonTutor</a>
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Conditionals in functions</h3>
+
+                    <p>It's common for a conditional to be based on the value of
+                        the parameters to a function.</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def get_number_sign(num):
+                        if num < 0:
+                            sign = "negative"
+                        elif num > 0:
+                            sign = "positive"
+                        else:
+                            sign = "neutral"
+                        return sign
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    get_number_sign(50)  # "positive"
+                    get_number_sign(-1)  # "negative"
+                    get_number_sign(0)   # "neutral"
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Returns inside conditionals</h3>
+
+                    <p>A branch of a conditional can end in a return,
+                        which exits the function entirely.
+                    </p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def get_number_sign(num):
+                        if num < 0:
+                            return "negative"
+                        elif num > 0:
+                            return "positive"
+                        else:
+                            return "neutral"
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    get_number_sign(50)  # "positive"
+                    get_number_sign(-1)  # "negative"
+                    get_number_sign(0)   # "neutral"
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise</h3>
+
+                    <p>These are un-graded exercises you can do after the lecture to make sure you grok the basics:</p>
+                    <ul>
+                        <li><a target="_blank" href="https://code.cs61a.org/greater_num">greater_num</a>
+                        <li><a target="_blank" href="https://code.cs61a.org/world_translator">hello_world</a>
+                        <li><a target="_blank" href="https://code.cs61a.org/grade_assigner">assign_grade</a>
+                    </ul>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>While loops</h2>
+                </section>
+
+                <section data-visibility="hidden">
+                    <h3>Why loops?</h3>
+
+                    <p>Consider the following code...</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    print(9 * 1)
+                    print(9 * 2)
+                    print(9 * 3)
+                    print(9 * 4)
+                    print(9 * 5)
+                    </code></pre>
+
+                    <p>This code is repetitive and variable, but the variability
+                        is sequential - it just adds one to the right-hand side number each time.
+                        In English, we could describe this as "print out the first 5 multiples of 9".</p>
+
+                    <p>We can simplify this code with a loop!</p>
+                </section>
+
+                <section>
+                    <h3>While loops</h3>
+
+                    <p>The while loop syntax:</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    while &lt;condition&gt;:
+                        &lt;statement&gt;
+                        &lt;statement&gt;
+                    </code></pre>
+
+                    <p>As long as the condition is true, the statements below it are executed.</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    multiplier = 1
+                    while multiplier &lt;= 5:
+                        print(9 * multiplier)
+                        multiplier += 1
+                    </code></pre>
+
+                    <p>The code is significantly shorter, and it can easily be extended
+                        to loop for more or less iterations.</p>
+
+                </section>
+
+                <section data-visibility="hidden">
+                    <h3>Changing a while loop #1</h3>
+
+                    <p>You can change the initial values of the variables used in the condition:</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    multiplier = 3
+                    while multiplier &lt;= 5:
+                        print(9 * multiplier)
+                        multiplier += 1
+                    </code></pre>
+
+                    <ul>
+                        <li>What will be the first thing displayed? <span class="fragment">27</span>
+                        <li>What will be the last thing displayed? <span class="fragment">45</span>
+                        <li>How many iterations? <span class="fragment">3 (for values of 3, 4, 5)<span>
+                    </ul>
+                </section>
+
+                <section data-visibility="hidden">
+                    <h3>Changing a while loop #2</h3>
+
+                    <p>You can change the condition:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    multiplier = 3
+                    while multiplier &lt;= 10:
+                        print(9 * multiplier)
+                        multiplier += 1
+                    </code></pre>
+
+                    <ul>
+                        <li>What will be the first thing displayed? <span class="fragment">27</span>
+                        <li>What will be the last thing displayed? <span class="fragment">90</span>
+                        <li>How many iterations? <span class="fragment">8 (for values of 3, 4, 5, 6, 7, 8, 9, 10)<span>
+                    </ul>
+                </section>
+
+                <section data-visibility="hidden">
+                    <h3>Changing a while loop #3</h3>
+
+                    <p>You can change how much the values change between iterations:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    multiplier = 3
+                    while multiplier &lt;= 10:
+                        print(9 * multiplier)
+                        multiplier += 2
+                    </code></pre>
+
+                    <ul>
+                        <li>What will be the first thing displayed? <span class="fragment">27</span>
+                        <li>What will be the last thing displayed? <span class="fragment">81</span>
+                        <li>How many iterations? <span class="fragment">4 (for values of 3, 5, 7, 9)<span>
+                    </ul>
+                </section>
+
+
+                <section data-visibility="hidden">
+                    <h3>Changing a while loop #4</h3>
+
+                    <p>You can change the computation inside the while loop:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    multiplier = 3
+                    while multiplier &lt;= 10:
+                        print(10 * multiplier)
+                        multiplier += 2
+                    </code></pre>
+
+                    <ul>
+                        <li>What will be the first thing displayed? <span class="fragment">30</span>
+                        <li>What will be the last thing displayed? <span class="fragment">90</span>
+                        <li>How many iterations? <span class="fragment">4 (for values of 3, 5, 7, 9)<span>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Using a counter variable</h3>
+
+                    <p>It's common to use a <strong>counter variable</strong>
+                        whose job is keeping track of the number of iterations.</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    total = 0
+                    counter = 0
+                    while counter < 5:
+                      total += pow(2, 1)
+                      counter += 1
+                    </code></pre>
+
+                    <p>The counter variable may also be involved in the loop computation:</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    total = 0
+                    counter = 0
+                    while counter < 5:
+                      total += pow(2, counter)
+                      counter += 1
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Beware infinite loops</h3>
+
+                    <p>Uh oh..</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    counter = 1
+                    while counter < 5:
+                        total += pow(2, counter)
+                    </code></pre>
+
+                    <p>What one line of code would fix this?
+                        <br><code class="fragment">counter += 1</code>
+                    </p>
+
+                    <div class="fragment">
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    counter = 6
+                    while counter > 5:
+                      total += pow(2, counter)
+                      counter += 1
+                    </code></pre>
+
+                    <p>How do we save this code?
+                        <br><span class="fragment">Intentions are unclear! Change the initial value and condition?
+                    </p>
+                    </div>
+
+                </section>
+
+                <section>
+                    <h3>Execution of loops</h3>
+
+                    <ol>
+                        <li>Evaluate the header’s Boolean expression.
+                        <li>If it is a true value, execute the suite of statements,
+                            then return to step 1.
+                    </ol>
+                    <img src="https://girldevelopit.github.io/gdi-python/images/pythontutor_loops.png" alt="Screenshot of a loop in PythonTutor" height="250">
+                    <p class="python-tutor-link">
+                        <a target="_blank" href="http://pythontutor.com/visualize.html#code=sum%20%3D%200%0Acounter%20%3D%200%0Awhile%20counter%20%3C%2010%3A%0A%20%20%20%20sum%20%2B%3D%20pow%28counter,%202%29%0A%20%20%20%20counter%20%2B%3D%201%0A&cumulative=true&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false">
+                            View in PythonTutor</a>
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Loops in functions</h3>
+
+                    <p>A loop in a function will commonly use a parameter to determine some aspect of its repetition.</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def sum_up_squares(start, end):
+                        counter = start
+                        total = 0
+                        while counter <= end:
+                          total += pow(counter, 2)
+                          counter += 1
+                        return total
+
+                    sum_up_squares(1, 5)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>The break statement</h3>
+
+                    <p>To prematurely exit a loop, use the <code>break</code> statement:</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    counter = 100
+                    while counter < 200:
+                        if counter % 7 == 0:
+                            first_multiple = counter
+                            break
+                        counter += 1
+                    </code></pre>
+
+                    <p class="python-tutor-link">
+                        <a target="_blank" href="http://pythontutor.com/visualize.html#code=counter%20%3D%20100%0Awhile%20counter%20%3C%20200%3A%0A%20%20%20%20if%20counter%20%25%207%20%3D%3D%200%3A%0A%20%20%20%20%20%20%20%20first_multiple%20%3D%20counter%0A%20%20%20%20%20%20%20%20break%0A%20%20%20%20counter%20%2B%3D%201&cumulative=true&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false">View in PythonTutor</a>
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Looping while true</h3>
+
+                    <p>If you are brave, you can write while loops like this:</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    counter = 100
+                    while True:
+                        if counter % 62 == 0:
+                            first_multiple = counter
+                            break
+                        counter += 1
+                    </code></pre>
+
+                    <p>⚠️ Be very sure that you're not coding an infinite loop!</p>
+
+                    <p><a href="https://twitter.com/Carnage4Life/status/1416890838462832642" target="_blank">Don't trust me? Ask Twitter!</a></p>
+                </section>
+
+
+                <section>
+                    <h3>Exercise</h3>
+
+                    <p>These are un-graded exercises you can do after the lecture to make sure you grok the basics:</p>
+
+                    <ul>
+                        <li><a target="_blank" href="https://code.cs61a.org/count_evens">count_evens()</a></li>
+                        <li><a target="_blank" href="https://code.cs61a.org/count_multiples">count_multiples()</a></li>
+                        <li><a target="_blank" href="https://code.cs61a.org/sum_multiples">sum_multiples()</a></li>
+                        <li><a target="_blank" href="https://code.cs61a.org/product_of_numbers">product_of_numbers()</a></li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Example: Prime factors</h3>
+                    <p>A <strong>prime number</strong> is an integer greater than 1 whose only factors are
+                        1 and the number itself (e.g., 3, 5, 7, 11).</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def is prime(n):
+                        """Return True iff N is prime."""
+                        return n > 1 and smallest factor(n) == n
+                    
+                    def smallest factor(n):
+                        """Returns the smallest value k>1 that evenly divides N."""
+                        ???
+                    
+                    def print factors(n):
+                        """Print the prime factors of N."""
+                        ???
+                    </code></pre>
+
+                    <p>Let's <a target="_blank" href="https://code.cs61a.org/prime_factors">implement them</a> together.</p>
+                </section>
+
+			</div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+		<script>
+			const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+			Reveal.initialize({
+				hash: true,
+				center: false,
+				slideNumber: true,
+				showNotes: false,
+				margin: 0.1,
+				preloadIframes: true,
+				plugins: [ RevealHighlight ],
+				pdfSeparateFragments: true
+			});
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge(options);
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+		</script>
+	</body>
+</html>

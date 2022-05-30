@@ -1,0 +1,934 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>OOP: Composition, Representation</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Composition, Representation</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="16-Composition_Representation.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Composition
+                        <li>Representation
+                    </ul>
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>Composition</h2>
+                </section>
+
+                <section>
+                    <h3>Composition</h3>
+
+                    <p>An object can contain references to objects of other classes.</p>
+
+                    <p>What examples of composition are in an animal conservatory?</p>
+                    <ul>
+                        <li>An animal has a mate.</li>
+                        <li>An animal has a mother.</li>
+                        <li>An animal has children.</li>
+                        <li>A conservatory has animals.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Referencing other instances</h3>
+
+                    <p>An instance variable can refer to another instance.</p>
+
+                    <p>We can add this method to the <a target="_blank" href="15-Inheritance.html#/11">base Animal class</a>
+                    that adds a <code>mate</code> instance variable:</p>
+                    
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    class Animal:
+
+                        def mate_with(self, other):
+                            if other is not self and other.species_name == self.species_name:
+                                self.mate = other
+                                other.mate = self
+                    </code></pre>
+
+                    <p class="smaller">How would we call that method?</p>
+                    <pre style="font-size:0.8em" class="fragment"><code data-trim data-noescape class="python">
+                    mr_wabbit = Rabbit("Mister Wabbit", 3)
+                    jane_doe = Rabbit("Jane Doe", 2)
+                    mr_wabbit.mate_with(jane_doe)
+                    </code></pre>
+                </section>
+
+
+                <section>
+                    <h3>Referencing a list of instances</h3>
+
+                    <p>An instance variable can also store a list of instances.</p>
+
+                    <p>We can add this method to the <a target="_blank" href="15-Inheritance.html#/13">Rabbit class</a>
+                        that adds a <code>babies</code> instance variable.</p>
+
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    class Rabbit(Animal):
+
+                        def reproduce_like_rabbits(self):
+                            if self.mate is None:
+                                print("oh no! better go on ZoOkCupid")
+                                return
+                            self.babies = []
+                            for _ in range(0, self.num_in_litter):
+                                self.babies.append(Rabbit("bunny", 0))
+                    </code></pre>
+
+                    <p class="smaller">How would we call that function?</p>
+                    <pre style="font-size:0.6em" class="fragment"><code data-trim data-noescape class="python">
+                    mr_wabbit = Rabbit("Mister Wabbit", 3)
+                    jane_doe = Rabbit("Jane Doe", 2)
+                    mr_wabbit.mate_with(jane_doe)
+                    jane_doe.reproduce_like_rabbits()
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Relying on a common interface</h3>
+
+                    <p class="smaller">If all instances implement a method with the same function signature,
+                    a program can rely on that method across instances of different subclasses.
+                    </p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    def partytime(animals):
+                        """Assuming ANIMALS is a list of Animals, cause each
+                        to interact with all the others exactly once."""
+                        for i in range(len(animals)):
+                            for j in range(i + 1, len(animals)):
+                                animals[i].interact_with(animals[j])
+                    </code></pre>
+
+                    <p class="smaller">How would we call that function?</p>
+                    <pre style="font-size:0.7em" class="fragment"><code data-trim data-noescape class="python">
+                    jane_doe = Rabbit("Jane Doe", 2)
+                    scar = Lion("Scar", 12)
+                    elly = Elephant("Elly", 5)
+                    pandy = Panda("PandeyBear", 4)
+                    partytime([jane_doe, scar, elly, pandy])
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Composition vs. Inheritance</h3>
+
+                    <p>Inheritance is best for representing "is-a" relationships</p>
+                    <ul class="smaller">
+                        <li>Rabbit is a specific type of Animal</li>
+                        <li>So, Rabbit inherits from Animal</li>
+                    </ul>
+                    <p>Composition is best for representing "has-a" relationships</p>
+                    <ul class="smaller">
+                        <li>A conservatory has a collection of animals it cares for</li>
+                        <li>So, a conservatory has a list of animals as an instance variable</li>
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Objects everywhere</h2>
+                </section>
+
+                <section>
+                    <h3>So many objects</h3>
+
+                    <p>What are the objects in this code?</p>
+
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    class Lamb:
+                        species_name = "Lamb"
+                        scientific_name = "Ovis aries"
+
+                        def __init__(self, name):
+                            self.name = name
+
+                        def play(self):
+                            self.happy = True
+
+                    lamb = Lamb("Lil")
+                    owner = "Mary"
+                    had_a_lamb = True
+                    fleece = {"color": "white", "fluffiness": 100}
+                    kids_at_school = ["Billy", "Tilly", "Jilly"]
+                    day = 1
+                    </code></pre>
+
+                    <p class="smaller fragment"><code>lamb</code>, <code>owner</code>, <code>had_a_lamb</code>, <code>fleece</code>,
+                        <code>kids_at_school</code>, <code>day</code>, etc.<br>
+                        We can prove it by checking <code>object.__class__.__bases__</code>, which reports the base class(es) of the object's class.
+                    </p>
+
+                </section>
+
+                <section>
+                    <h3>It's all objects</h3>
+
+                    <p>All the built-in types inherit from <code>object</code>:</p>
+
+                    <img class="r-stretch" src="https://i.imgur.com/A3WUUvn.png" alt="Diagram of object inheritance">
+
+                </section>
+
+                <section>
+                    <h3>Built-in object attributes</h3>
+
+                    <p>If all the built-in types and user classes inherit from <code>object</code>,
+                        what are they inheriting?</p>
+
+                    <p>Just ask <code>dir()</code>, a built-in function that returns
+                        a list of all the "interesting" attributes on an object.</p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    dir(object)
+                    </code></pre>
+
+                    <ul class="fragment"  data-fragment-index="1" style="font-size:0.5em;">
+                        <li>For string representation: <code>__repr__</code>, <code>__str__</code>, <code>__format__</code></li>
+                        <li>For comparisons: <code>__eq__</code>, <code>__ge__</code>, <code>__gt__</code>, <code>__le__</code>, <code>__lt__</code>, <code>__ne__</code></li>
+                        <li>Related to classes: <code>__bases__</code>, <code>__class__</code>, <code>__new__</code>, <code>__init__</code>,
+                            <code>__init_subclass__</code>, <code>__subclasshook__</code>, <code>__setattr__</code>, <code>__delattr__</code>, <code>__getattribute__</code></li>
+                        <li>Others: <code>__dir__</code>, <code>__hash__</code>, <code>__module__</code>, <code>__reduce__</code>, <code>__reduce_ex__</code></li>
+                    </ul>
+
+                    <p class="smaller fragment" data-fragment-index="1">Python calls these methods behind these scenes, so we are often not aware
+                        when the "dunder" methods are being called. <br>💡 Let us become enlightened! 💡</p>
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>String representation</h2>
+                </section>
+
+                <section>
+                    <h3>__str__</h3>
+
+                    <p>The <code>__str__</code> method returns a human readable
+                    string representation of an object.</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    from fractions import Fraction
+
+                    one_third = 1/3
+                    one_half = Fraction(1, 2)
+                    </code></pre>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    float.__str__(one_third)      <span class="fragment" data-fragment-index="1"># '0.3333333333333333'</span>
+                    Fraction.__str__(one_half)    <span class="fragment" data-fragment-index="1"># '1/2'</span>
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>__str__ usage</h3>
+
+                    <p>The <code>__str__</code> method is used in multiple places by Python: <code>print()</code> function,
+                        <code>str()</code> constructor, f-strings, and more.
+                    </p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    from fractions import Fraction
+
+                    one_third = 1/3
+                    one_half = Fraction(1, 2)
+                    </code></pre>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    print(one_third)             <span class="fragment" data-fragment-index="1"># '0.3333333333333333'</span>
+                    print(one_half)              <span class="fragment" data-fragment-index="1"># '1/2'</span>
+
+                    str(one_third)               <span class="fragment" data-fragment-index="1"># '0.3333333333333333'</span>
+                    str(one_half)                <span class="fragment" data-fragment-index="1"># '1/2'</span>
+
+                    f"{one_half} > {one_third}"  <span class="fragment" data-fragment-index="1"># '1/2 > 0.3333333333333333'</span>
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Custom __str__ behavior</h3>
+
+                    <p>When making custom classes, we can override <code>__str__</code>
+                        to define our human readable string representation.</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    class Lamb:
+                        species_name = "Lamb"
+                        scientific_name = "Ovis aries"
+
+                        def __init__(self, name):
+                            self.name = name
+
+                        def __str__(self):
+                            return "Lamb named " + self.name
+                    </code></pre>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    lil = Lamb("Lil lamb")
+
+                    str(lil)
+
+                    print(lil)
+                    </code></pre>
+
+                    <aside class="notes">Show how lil still shows Lamb object as a lead in for next slide
+                    </aside>
+                </section>
+
+
+                <section>
+                    <h3>__repr__</h3>
+
+                    <p>The <code>__repr__</code> method returns
+                        a string that would evaluate to an object with the same values.
+                    </p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    from fractions import Fraction
+
+                    one_half = Fraction(1, 2)
+                    Fraction.__repr__(one_half)           # 'Fraction(1, 2)'
+                    </code></pre>
+
+                    <p class="padded smaller">If implemented correctly, calling <code>eval()</code>
+                        on the result should return back that same-valued object.</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    another_half = eval(Fraction.__repr__(one_half))
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>__repr__ usage</h3>
+
+                    <p>
+                        The <code>__repr__</code> method is used multiple places by Python:
+                        when <code>repr(object)</code> is called
+                        and when displaying an object in an interactive Python session.
+                    </p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    from fractions import Fraction
+
+                    one_third = 1/3
+                    one_half = Fraction(1, 2)
+                    </code></pre>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    one_third
+                    one_half
+                    repr(one_third)
+                    repr(one_half)
+                    </code></pre>
+
+                </section>
+
+
+                <section>
+                    <h3>Custom __repr__ behavior</h3>
+
+                    <p>When making custom classes, we can override <code>__repr__</code>
+                        to return a more appropriate Python representation.</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    class Lamb:
+                        species_name = "Lamb"
+                        scientific_name = "Ovis aries"
+
+                        def __init__(self, name):
+                            self.name = name
+
+                        def __str__(self):
+                            return "Lamb named " + self.name
+
+                        def __repr__(self):
+                            return f"Lamb({repr(self.name)})"
+                    </code></pre>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    lil = Lamb("Lil lamb")
+                    repr(lil)
+                    lil
+                    </code></pre>
+
+                    <aside class="notes">Show how lil still shows Lamb object as a lead in for next slide
+                    </aside>
+                </section>
+
+                <section>
+                    <h3>The rules of repr and str</h3>
+
+                    <p>When the <code>repr(obj)</code> function is called:</p>
+                    <ul>
+                        <li>Python calls the  <code>ClassName.__repr__</code> method if it exists.</li>
+                        <li>If <code>ClassName.__repr__</code> does not exist,
+                        Python will look up the chain of parent classes until it finds
+                        one with <code>__repr__</code> defined.</li>
+                        <li>If all else fails, <code>object.__repr__</code> will be called.</li>
+                    </ul>
+
+                    <p>When the <code>str(obj)</code> class constructor is called:</p>
+                    <ul>
+                        <li>Python calls the <code>ClassName.__str__</code> method if it exists.</code></li>
+                        <li>If no <code>__str__</code> method is found on that class,
+                            Python calls <code>repr()</code> on the object instead.
+                        </li>
+                        <li>↑ See above!</li>
+                    </ul>
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>Special methods</h2>
+                </section>
+
+                <section>
+                    <h3>Special methods</h3>
+
+                    <p class="smaller">Special methods have built-in behavior. Special method names always start and end with double underscores.</p>
+
+                    <table class="smaller">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Behavior</th>
+                            </tr>
+                        <tbody>
+                            <tr>
+                                <td><code>__init__</code>
+                                <td>Method invoked automatically when an object is constructed 
+                            <tr>
+                                <td><code>__repr__</code>
+                                <td>Method invoked to display an object as a Python expression
+                            <tr>
+                                <td><code>__str__</code>
+                                <td>Method invoked to stringify an object
+                            <tr>
+                                <td><code>__add__</code>
+                                <td>Method invoked to add one object to another
+                            <tr>
+                                <td><code>__bool__</code>
+                                <td>Method invoked to convert an object to True or False
+                            <tr>
+                                <td><code>__float__</code>
+                                <td>Method invoked to convert an object to a float (real number)
+                        </tbody>
+                    </table>
+
+                    <p class="smaller"><a target="_blank" href="https://docs.python.org/3/reference/datamodel.html#special-method-names">See all special method names.</a></p>
+                </section>
+
+                <section>
+                    <h3>Special method examples</h3>
+                    
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    zero = 0
+                    one = 1
+                    two = 2
+                    </code></pre>
+
+                    <table style="width: 100%">
+                        <thead>
+                            <th>Standard approach
+                            <th>Dunder equivalent
+                        <tbody>
+                        <tr>
+                            <td>
+                            <pre style="font-size:0.7em" class="no-code-badge"><code data-trim data-noescape class="python">
+                            one + two # 3
+                            </code></pre>
+
+                            <td>
+                            <pre style="font-size:0.7em" class="no-code-badge"><code data-trim data-noescape class="python">
+                            one.__add__(two) # 3
+                            </code></pre>
+                        <tr>
+                            <td>
+                            <pre style="font-size:0.7em" class="no-code-badge"><code data-trim data-noescape class="python">
+                            bool(zero) # False
+                            </code></pre>
+
+                            <td>
+                            <pre style="font-size:0.7em" class="no-code-badge"><code data-trim data-noescape class="python">
+                            zero.__bool__() # False
+                            </code></pre>
+                        <tr>
+                            <td>
+                            <pre style="font-size:0.7em" class="no-code-badge"><code data-trim data-noescape class="python">
+                            bool(one)  # True
+                            </code></pre>
+
+                            <td>
+                            <pre style="font-size:0.7em" class="no-code-badge"><code data-trim data-noescape class="python">
+                            one.__bool__()  # True
+                            </code></pre>
+                    </table>
+
+                </section>
+
+
+                <section>
+                    <h3>Adding together custom objects</h3>
+
+                    <p>Consider the following class:</p>
+
+                    <pre style="font-size:0.55em"><code data-trim data-noescape class="python">
+                    from math import gcd
+
+                    class Rational:
+                        def __init__(self, numerator, denominator):
+                            g = gcd(numerator, denominator)
+                            self.numer = numerator // g
+                            self.denom = denominator // g
+
+                        def __str__(self):
+                            return f"{self.numer}/{self.denom}"
+
+                        def __repr__(self):
+                            return f"Rational({self.numer}, {self.denom})"
+                    </code></pre>
+
+                    <p>Will this work?</p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    Rational(1, 2) + Rational(3, 4)
+                    </code></pre>
+
+                    <p class="fragment" style="font-size:0.8em">🚫 TypeError: unsupported operand type(s) for +: 'Rational' and 'Rational'</p>
+
+                </section>
+
+                <section>
+                    <h3>Implementing dunder methods</h3>
+
+                    <p>We can make instances of custom classes addable by defining the <a href="https://docs.python.org/3/reference/datamodel.html#object.__add__" target="_blank"><code>__add__</code></a> method:
+                    </p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    class Rational:
+                        def __init__(self, numerator, denominator):
+                            g = gcd(numerator, denominator)
+                            self.numer = numerator // g
+                            self.denom = denominator // g
+
+                        def __add__(self, other):
+                            <span class="fragment">new_numer = self.numer * other.denom + other.numer * self.denom
+                            new_denom = self.denom * other.denom
+                            return Rational(new_numer, new_denom)</span>
+
+                        # The rest...
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p>Now try...</p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    Rational(1, 2) + Rational(3, 4)
+                    </code></pre>
+                    </div>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Polymorphism</h2>
+                </section>
+
+                <section>
+                    <h3>Polymorphic functions</h3>
+
+                    <p><strong>Polymorphic function</strong>: A function that applies to many (poly) different forms (morph) of data</p>
+
+                    <p><code>str</code> and <code>repr</code> are both polymorphic; they apply to any object.
+                    </p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    repr(1/3)            # '0.3333333333333333'
+                    repr(Rational(1, 3)) # 'Rational(1, 3)'
+                    </code></pre>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    str(1/3)            # '0.3333333333333333'
+                    str(Rational(1, 3)) # '1/3'
+                    </code></pre>
+                    
+                    <p>The class of that object can customize the per-object behavior using <code>__str__</code>
+                        and <code>__repr__</code>.</p>
+
+                </section>
+
+
+                <section>
+                    <h3>Generic functions</h3>
+
+                    <p>A <strong>generic function</strong> can apply to arguments of different types.
+                    </p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    def sum_two(a, b):
+                        return a + b
+                    </code></pre>
+    
+                    <p>What could <code>a</code> and <code>b</code> be? <span class="fragment">Anything summable!</span></p>
+
+                    <p>The function <code>sum_two</code> is <strong>generic</strong> in the type of <code>a</code> and <code>b</code>.</p>
+                </section>
+
+
+                <section>
+                    <h3>Generic function #2</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def sum_em(items, initial_value):
+                        """Returns the sum of ITEMS,
+                        starting with a value of INITIAL_VALUE."""
+                        sum = initial_value
+                        for item in items:
+                            sum += item
+                        return sum
+                    </code></pre>
+
+                    <p>What could <code>items</code> be? <span class="fragment">Any iterable with summable values.</span></p>
+                    <p>What could <code>initial_value</code> be? <span class="fragment">Any value that can be summed with the values in iterable.</span></p>
+
+                    <p>The function <code>sum_em</code> is <strong>generic</strong> in the type of <code>items</code> and the type of <code>initial_value</code>.</p>
+                </section>
+
+                <section>
+                    <h3>Type dispatching</h3>
+
+                    <p>Another way to make generic functions is to select a behavior based on the type of the argument.</p>
+                    
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                        def is_valid_month(month):
+                            if isinstance(month, int):
+                                return month >= 1 and month <= 12
+                            elif isinstance(month, str):
+                                return month in ["January", "February", "March", "April",
+                                                "May", "June", "July", "August", "September",
+                                                "October", "November", "December"]
+                            return false
+                    </code></pre>
+
+                    <p>What could <code>month</code> be? <span class="fragment">Either an int or string.</span></p>
+    
+                    <p>The function <code>is_valid_month</code> is <strong>generic</strong> in the type of <code>month</code>.</p>
+    
+                </section>
+
+
+                <section>
+                    <h3>Type coercion</h3>
+
+                    <p>Another way to make generic functions is to coerce an argument into the desired type.</p>
+                    
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                        def sum_numbers(nums):
+                            """Returns the sum of NUMS"""
+                            sum = Rational(0, 0)
+                            for num in nums:
+                                if isinstance(num, int):
+                                    num = Rational(num, 1)
+                                sum += num
+                            return sum
+                        </code></pre>
+    
+                        <p>What could <code>nums</code> be? <span class="fragment">Any iterable with ints or Rationals.</span></p>
+    
+                        <p>The function <code>sum_numbers</code> is <strong>generic</strong> in the type of <code>nums</code>.</p>
+                </section>
+
+			</div>
+		</div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-menu@2.1.0/menu.js"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight, RevealMenu ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge();
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+
+        </script>
+    </body>
+</html>

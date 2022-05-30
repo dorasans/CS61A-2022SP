@@ -1,0 +1,668 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Conclusion</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:valid {
+                background-color: rgb(192, 255, 216);
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+        <style>
+            .reveal .slides section .fragment.bordered-fragment.visible {
+                border: 1px dashed blue;
+                border-radius: 8px;
+            }
+            .reveal .slides section .fragment.bordered-fragment {
+                opacity: 1;
+                visibility: inherit;
+                padding: 6px;
+                border: 1px dashed transparent;
+            }
+            </style>
+        
+        <style>
+        .node, .edge, .node text {
+            visibility: hidden;
+        }
+        .node.activated text:first-of-type {
+            visibility: visible;
+        }
+        .node.activated path {
+            visibility: visible;
+        }
+        .node text.activated {
+            visibility: visible;
+        }
+        .edge.activated {
+            visibility: visible;
+        }
+        .svg-controls {
+            width: 600px;
+            display: grid;
+            grid-template-rows: 1fr;
+            grid-template-columns: 100px 1fr 100px;
+            grid-gap: 8px;
+            position: fixed;
+            right: 0;
+            top: 0;
+            background: #80808070;
+        }
+        .svg-controls button:first-of-type {
+            grid-row: 1;
+            grid-column: 1;
+        }
+        .svg-controls input {
+            grid-row: 1;
+            grid-column: 2;
+        }
+        .svg-controls button:last-of-type {
+            grid-row: 1;
+            grid-column: 3;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Conclusion</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="39-Conclusion.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+                <section class="heading-only">
+                    <h2>What did we learn?</h2>
+                </section>
+
+
+                <section>
+                    <h3>Programming paradigms</h3>
+
+                    <p><strong>Imperative programming:</strong> using statements to change a program's state.</p>
+                    <pre style="font-size:0.9em; margin-top: 0px;"><code data-trim data-noescape class="python">
+                    nums = [1, 2, 4]
+                    for i in range(0, len(nums)):
+                        nums[i] = nums[i] ** 2
+                    </code></pre>
+                    
+                    <p class="padded"><strong>Functional programming:</strong> expressions, not statements; no side-effects;
+                            use of higher-order functions.</li>
+                    <pre style="font-size:0.9em; margin-top: 0px;"><code data-trim data-noescape class="python">
+                   list(map(lambda x: x ** 2, [1, 2, 4]))
+                    </code></pre>
+                    <pre style="font-size:0.9em; margin-top: 0px;"><code data-trim data-noescape class="scheme">
+                    (map (lambda (n) (expt n 2)) '(1 2 4))
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Programming paradigms #2</h3>
+                    <p><strong>Object-oriented</strong> and <strong>data-centric</strong> programming</strong>.</p>
+                    
+                    <pre style="font-size:0.8em; margin-top: 0px;"><code data-trim data-noescape class="python">
+                    innocent_bee = Bee(5)
+                    horrible_ant = Ant(10)
+                    innocent_bee.fend_off(horrible_ant)
+                    </code></pre>
+
+                    <pre style="font-size:0.7em; margin-top: 0px;"><code data-trim data-noescape class="scheme">
+                    (define t
+                        (tree 3
+                                (list (tree 1 nil)
+                                    (tree 2 (list (tree 1 nil) (tree 1 nil))))))
+                    (map label (branches t))
+                    </code></pre>
+
+                    <p><strong>Declarative programming:</strong>
+                        State goals or properties of the solution rather than procedures.</p>
+                    <pre style="font-size:0.8em; margin-top: 0px;"><code data-trim data-noescape class="text">
+                    (.+)@(.+)\.(.{3})
+                    </code></pre>
+                    <pre style="font-size:0.8em; margin-top: 0px;"><code data-trim data-noescape class="bnf">
+                    calc_op: "(" OPERATOR calc_expr* ")"
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Programming concepts</h3>
+                    <ul>
+                        <li><strong>Data storage</strong>: <ul>
+                            <li>Primitive/simple types: booleans, numbers, strings
+                            <li>Compound types: lists, linked lists, trees
+                            </ul>
+                        <li><strong>Environments</strong>: rules for how programs access and modify named objects
+                        <li><strong>Higher-order functions</strong>: Functions as data values, functions on functions
+                        <li><strong>Recursion</strong>: approaching a problem recursively, general recursive patterns
+                        <li><strong>Mutability</strong>: mutable objects, mutation operations, dangers of mutation
+                        <li><strong>Exceptions</strong>: Dealing with errors
+                        <li><strong>Efficiency</strong>: Different programs have different time/space needs
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Software engineering</h3>
+
+                    <ul>
+                        <li>Abstractions, separation of concerns</li>
+                        <li>Specification of a program vs. its implementation
+                            <ul>
+                                <li>Syntactic spec (header) vs. semantic spec (docstring).</li>
+                                <li>Example of multiple implementations for the same abstract behavior</li>
+                            </ul>
+                        </li>
+                        <li>Testing: for every program, there is a test.
+                        </li>
+                    </ul>
+
+                    <p class="fragment">Remember: code isn't just read by computers, it's also read by humans.</p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>What's next?</h2>
+                </section>
+
+
+                <section>
+                    <h3>Practice programming</h3>
+
+                    <ul>
+                        <li>Programming puzzles (HackerRank, LeetCode, Euler)
+                        <li>Programming contests (Advent of Code, Kaggle)
+                        <li>Hackathons
+                        <li>More paradigms and languages (Web dev, Embedded)
+                        <li>The open-source world: Go out and build something!
+                        <li>Personal projects
+                        <li>Above all: Have fun!</li>
+                    </ul>
+                </section>
+
+
+                <section>
+                    <h3>Future CS courses</h2>
+
+                    <ul style="font-size:0.8em;">
+                        <li>CS61B: (conventional) data structures, statically typed production languages.</li>
+                        <li>CS61C: computing architecture and hardware as programmers see it.</li>
+                        <li>CS70: Discrete Math and Probablilty Theory.</li>
+                        <li>CSC100: Data Science</li>
+                        <li>CS170, CS171, CS172, CS174: “Theory”—analysis and construction
+                        of algorithms, cryptography, computability, complexity, combinatorics,
+                        use of probabilistic algorithms and analysis.</li>
+                        <li>CS161: Security</li>
+                        <li>CS162: Operating systems.</li>
+                        <li>CS164: Implementation of programming languages</li>
+                        <li>CS168: Introduction to the Internet</li>
+                        <li>CS160, CS169: User interfaces, software engineering</li>
+                        <li>CS176: Computational Biology</li>
+                    </ul>
+
+                </section>
+
+                <section>
+                    <h3>Future CS courses #2</h2>
+
+                    <ul style="font-size:0.8em;">
+                        <li>CS182, CS188, CS189: Neural networks, Artificial intelligence, Machine Learning</li>
+                        <li>CS184: Graphics</li>
+                        <li>CS186: Databases</li>
+                        <li>CS191: Quantum Computing</li>
+                        <li>CS195: Social Implications of Computing</li>
+                        <li>EECS 16A, 16B: Designing Information Systems and Devices</li>
+                        <li>EECS 126: Probabilty and Random Processes</li>
+                        <li>EECS149: Embedded Systems</li>
+                        <li>EECS 151: Digital Design</li>
+                        <li>CS194: Special topics. (E.g.) computational photography and image
+                            manipulation, cryptography, cyberwar.</li>
+                        <li>Plus graduate courses on these subjects and more.</li>
+                        <li>And please don't forget CS199 and research projects.</li>
+                    </ul>
+
+                </section>
+
+                <section>
+                    <h3>Plus EE courses...</h2>
+
+                    <ul style="font-size:0.8em;">
+                        <li>EE105: Microelectronic Devices and Circuits.</li>
+                        <li>EE106: Robotics</li>
+                        <li>EE118, EE134: Optical Engineering, Photovotalaic Devices.</li>
+                        <li>EE120: Signals and Systems.</li>
+                        <li>EE123: Digital Signal Processing.</li>
+                        <li>EE126: Probability and Random Processes.</li>
+                        <li>EE130: Integrated Circuit Devices.</li>
+                        <li>EE137A: Power Circuits.</li>
+                        <li>EE140: Linear Integrated Circuits (analog circuits, amplifiers).</li>
+                        <li>EE142: Integrated Circuits for Communication.</li>
+                        <li>EE143: Microfabrication Technology.</li>
+                        <li>EE147: Micromechanical Systems (MEMS).</li>
+                        <li>EE192: Mechatronic Design.</li>
+                    </ul>
+                </section>
+
+
+
+                <section>
+                    <h3>Learn more Python!</h3>
+
+                    <ul>
+                        <li><a href="https://docs.python.org/3/library/datatypes.html" target="_blank">More built-in data types</a>: sets, deques, datetime
+                        <li><a href="https://realpython.com/introduction-to-python-generators/#understanding-generators" target="_blank">Generator expressions</a>
+                        <li><a href="https://docs.python.org/3/library/threading.html#module-threading" target="_blank">Threading</a>, <a href="https://docs.python.org/3/library/multiprocessing.html" target="_blank">multiprocessing</a>, <a href="https://docs.python.org/3/library/queue.html" target="_blank">queues</a>
+                        <li><a href="https://realpython.com/python-scope-legb-rule/" target="_blank">Nonlocal/global</a>
+                        <li>More Python standard library modules: datetime, math, functools, urllib, etc. </li>
+                    </ul>
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>Fun with Python 🎉 🐍</h2>
+                </section>
+
+                <section>
+                    <h3>What can you do with Python?</h3>
+                    <p>Almost anything! <span class="fragment" data-fragment-index="1">Thanks to libraries!</li> </p>
+                    <ul>
+                        <li>Webapp backends <span class="fragment" data-fragment-index="1">(Flask, Django)</span></li>
+                        <li>Web scraping <span class="fragment" data-fragment-index="1">(BeautifulSoup)</span></li>
+                        <li>Natural Language Processing <span class="fragment" data-fragment-index="1">(NLTK)</span></li>
+                        <li>Data analysis <span class="fragment" data-fragment-index="1">(Numpy, Pandas, Matplotlib)</span></li>
+                        <li>Machine Learning <span class="fragment" data-fragment-index="1">(FastAi, PyTorch, Keras)</span></li>
+                        <li>Scientific computing <span class="fragment" data-fragment-index="1">(SciPy)</span></li>
+                        <li>Games <span class="fragment" data-fragment-index="1">(Pygame)</span></li>
+                        <li>Procedural generation - L Systems, Noise, Markov</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Web scraping & Markov chains</h3>
+
+                    <p><strong>Web scraping</strong>: Getting data from webpages by traversing the HTML.</p>
+
+                    <p><strong>Markov chain</strong>: A way to generate a sequence based on the probabalistic next token.</p>
+                    <img src="https://sookocheff.com/post/nlp/ngram-modeling-with-markov-chains/following-transitions-from-I.png" alt="Markov diagram"/>
+
+                    <p><a href="https://replit.com/@PamelaFox2/BeautifulSoupDemo" target="_blank">👉🏽 Demo: Composing Gobbledygooks</a></p>
+
+                    <p class="smaller">Further learning:
+                        <a href="https://docs.python.org/3/howto/urllib2.html" target="_blank">urllib2 module</a>,
+                        <a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/" target="_blank">BeautifulSoup docs</a>,
+                        <a href="https://sookocheff.com/post/nlp/ngram-modeling-with-markov-chains/" target="_blank">N-Gram modeling with Markov chains</a>,
+                        CS70/EECS126 for Markov chains
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Web APIs</h3>
+
+                    <p><strong>API</strong> (Application Programming Interface): A way to access the functionality or data
+                        of another program. </p>
+
+                    <p><strong>Web APIs</strong>: A way to access the functionality or data of an online web service.
+                        Typically over HTTP or via JavaScript.</p>
+
+                    <p><a href="https://replit.com/@PamelaFox2/BeautifulSoupDemo-MovieMarkov" target="_blank">👉🏽 Demo: Movie Mashups</a></p>
+                
+                    <br>
+                    <p class="smaller">Further learning: 
+                        <a href="https://docs.python.org/3/howto/urllib2.html" target="_blank">urllib2 module</a>,
+                        <a href="https://developers.themoviedb.org/3" target="_blank">The Movie DB API</a>,
+                        <a href="https://www.programmableweb.com/" target="_blank">ProgrammableWeb</a>
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Turtle & L-systems</h3>
+
+                    <p><strong>Turtle</strong>: A library for drawing graphics (as if a pen is controlled by a turtle).</p>
+
+                    <p><strong>L-system</strong>: A parallel rewriting system and a type of formal grammar,
+                        developed originally by a biologist to model the growth of plants.
+                    </p>
+
+                    <p class="smaller">Example: Axiom: <code>A</code>, Rules: <code>A → AB</code>, <code>B → A</code></p>
+
+                    <pre><code data-trim data-noescape class="python">
+                    n = 0 : A
+                    n = 1 : AB
+                    n = 2 : ABA
+                    n = 3 : ABAAB
+                    </code></pre>
+
+                    <p><a href="https://replit.com/@PamelaFox2/LTreeDemo" target="_blank">👉🏽 Demo: L Trees!</a></p>
+
+                    <p class="smaller">Further learning: <a href="https://docs.python.org/3/library/turtle.html" target="_blank">turtle module</a>,
+                            <a href="https://runestone.academy/runestone/books/published/thinkcspy/Strings/TurtlesandStringsandLSystems.html" target="_blank">Tutorial: Turtles and Strings and L-Systems</a>,
+                            <a href="http://paulbourke.net/fractals/lsys/" target="_blank">Algorithmic Botany: Graphical Modeling using L-systems</a>,
+                            <a href="http://paulbourke.net/fractals/lsys/" target="_blank">L-system examples</a>
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Natural Language Processing</h3>
+
+                    <p>NLP includes language modeling, spelling correction, text classification, sentiment analysis,
+                        information retrieval, relation extraction, recommendation systems, translation question answering, word vectors,
+                        and more.
+                    </p>
+
+                    <p><a href="https://replit.com/@PamelaFox2/NLPDemo#main.py">👉🏽 Demo: Sentence trees!</a></p>
+
+                    <br>
+                    <p class="smaller">Further learning:
+                        <a href="http://www.nltk.org/book/ch08.html" target="_blank">NLTK Book</a>,
+                        <a href="https://realpython.com/python-nltk-sentiment-analysis/" target="_blank">NLTK Sentiment Analysis</a>,
+                        <a href="https://web.stanford.edu/~jurafsky/" target="_blank">Dan Jurafsky's lectures and books</a>,
+                        Berkeley classes: INFO 159, CS 288
+                    </p>
+
+                </section>
+
+                <section>
+                    <h3>Demo: Supervised Machine Learning</h3>
+
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/Supervised_machine_learning_in_a_nutshell.svg" alt="Diagram of supervised ML process">
+
+                    <p><a href="https://www.kaggle.com/vyombhatia/96-accuracy-with-7-lines-of-code" target="_blank">👉🏽 Demo: Bee vs. Wasp?</a></p>
+
+                    <br>
+                    <p class="smaller">Further learning:
+                        <a href="https://docs.fast.ai/" target="_blank">FastAI Documentation</a>,
+                        <a href="https://www.kaggle.com/learn/intro-to-machine-learning" target="_blank">Kaggle ML tutorial</a>,
+                        <a href="https://www.khanacademy.org/computing/ap-computer-science-principles/data-analysis-101#x2d2f703b37b450a3:machine-learning-and-bias" target="_blank">Bias in ML</a>,
+                        Berkeley classes: CS182, CS188, CS189
+                    </p>
+
+                </section>
+
+                <section>
+                    <h3>What do you want to do?</h3>
+
+                    <p>There are so many possible programs that haven't been made yet.
+                        What will you make?</p>
+
+                </section>
+
+			</div>
+		</div>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight ],
+                pdfSeparateFragments: true,
+                transition: "none"
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge(options);
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+        </script>
+    </body>
+</html>

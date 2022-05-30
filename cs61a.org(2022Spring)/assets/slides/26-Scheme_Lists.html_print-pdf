@@ -1,0 +1,783 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Scheme Lists</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Scheme Lists</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="26-Scheme_Lists.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Lists
+                        <li>Quotation
+                        <li>List procedures
+                        <li>Exercises
+                    </ul>
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>Scheme lists</h2>
+                </section>
+
+                <section>
+                    <h3>Constructing a list</h3>
+
+                    <p>Scheme lists are linked lists.</p>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="width: 100%;"><rect id="SvgjsRect1022" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1019" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1007" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1008" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1009" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1010" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1011" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1012" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1013" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1014" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><text id="SvgjsText1015" font-family="Monaco, monospace" fill="black" font-size="14" x="195.31175" y="20.27075"><tspan id="SvgjsTspan1016" dy="18.2" x="195.31175">()</tspan></text><text id="SvgjsText1017" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.27075"><tspan id="SvgjsTspan1018" dy="18.2" x="160.910875">2</tspan></text><text id="SvgjsText1020" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.27075"><tspan id="SvgjsTspan1021" dy="18.2" x="68.702875">1</tspan></text></svg>
+
+                    <p>Python (with our <code>Link</code> class:)</p>
+                    <pre style="font-size:1.0em" class="fragment"><code data-trim data-noescape class="python">
+                    Link(1, Link(2))
+                    </code></pre>
+
+                    <div class="fragment padded">
+                    <p>Scheme (with the <code>cons</code> form:)</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (cons 1 (cons 2 nil))
+                    </code></pre>
+                    <p><code>nil</code> is the empty list.</p>
+
+                    <p class="smaller padded">Lists are written in parentheses with space-separated elements:</p>
+
+                    <pre style="font-size:0.7em" class=""><code data-trim data-noescape class="scheme">
+                    (cons 1 (cons 2 (cons 3 (cons 4 nil))))   ; (1 2 3 4)
+                    </code></pre>
+                    </div>
+
+                </section>
+
+                <section>
+                    <h3>Accessing list elements</h3>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" height="61.604000091552734" style="width: 100%;"><rect id="SvgjsRect1022" width="77.208" height="38.604" x="53.604" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect1019" width="77.208" height="38.604" x="145.812" y="14" stroke="black" stroke-width="2" fill="transparent"></rect><circle id="SvgjsCircle1007" r="2.5" cx="19.302" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1008" points="53.604,33.302 43.604,38.302 43.604,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1009" x1="19.302" y1="33.302" x2="48.604" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1010" x1="92.208" y1="14" x2="92.208" y2="52.604" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle1011" r="2.5" cx="111.50999999999999" cy="33.302" fill="black"></circle><polygon id="SvgjsPolygon1012" points="145.812,33.302 135.812,38.302 135.812,28.302" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine1013" x1="111.50999999999999" y1="33.302" x2="140.812" y2="33.302" stroke="black" stroke-width="2"></line><line id="SvgjsLine1014" x1="184.416" y1="14" x2="184.416" y2="52.604" stroke="black" stroke-width="2"></line><text id="SvgjsText1015" font-family="Monaco, monospace" fill="black" font-size="14" x="195.31175" y="20.27075"><tspan id="SvgjsTspan1016" dy="18.2" x="195.31175">()</tspan></text><text id="SvgjsText1017" font-family="Monaco, monospace" fill="black" font-size="14" x="160.910875" y="20.27075"><tspan id="SvgjsTspan1018" dy="18.2" x="160.910875">2</tspan></text><text id="SvgjsText1020" font-family="Monaco, monospace" fill="black" font-size="14" x="68.702875" y="20.27075"><tspan id="SvgjsTspan1021" dy="18.2" x="68.702875">1</tspan></text></svg>
+
+                    <p>Python access:</p>
+                    <pre style="font-size:0.8em" class="fragment"><code data-trim data-noescape class="python">
+                    lst = Link(1, Link(2))
+                    lst.first  # 1
+                    lst.rest   # Link(2)
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p>Scheme access:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define lst (cons 1 (cons 2 nil)))
+                    (car lst)  ; 1
+                    (cdr lst)  ; (2)
+                    </code></pre>
+
+                    <ul>
+                        <li><code>car</code>: Procedure that returns the first element of a list
+                        <li><code>cdr</code>: Procedure that returns the rest of the list
+                    </ul>
+
+                    <p>Remember: "cdr" = "Cee Da Rest"</p>
+                    </div>
+
+                </section>
+
+
+                <section>
+                    <h3>The list procedure</h3>
+
+                    <p> The built-in <code>list</code> procedure takes in an arbitrary number of arguments and constructs a list with the values of these arguments:</p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (list 1 2 3)                       ; (1 2 3)
+                    (list 1 (list 2 3) 4)              <span class="fragment">; (1 (2 3) 4)</span>
+                    (list (cons 1 (cons 2 nil)) 3 4)   <span class="fragment">; ((1 2) 3 4)</span>
+                    </code></pre>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-builtins/index.html#list">📖  Procedure reference: list</a>
+                </section>
+
+
+
+                <section class="heading-only">
+                    <h2>Quotation</h2>
+                </section>
+
+                <section>
+                    <h3>Quoting symbols</h3>
+
+                    <p>Symbols typically refer to values:</p>
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="scheme">
+                    (define a 1)
+                    (define b 2)
+                    (list a b)    <span class="fragment">; (1 2)</span>
+                    </code></pre>
+
+                    <p><strong>Quotation</strong> is used to refer to symbols directly:</p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="scheme">
+                    (list 'a 'b)  <span class="fragment">; (a b)</span>
+                    (list 'a b)   <span class="fragment">; (a 2)</span>
+                    </code></pre>
+
+                    <p>The <code>'</code> is shorthand for the <code>quote</code> form:</p>
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="scheme">
+                    (list (quote a) (quote b))  <span class="fragment">; (a b)</span>
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Quoting lists</h3>
+
+                    <p>Combinations can be quoted to form lists.</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    '(a b c)       ; (a b c)
+                    (car '(a b c)) <span class="fragment">; a</span>
+                    (cdr '(a b c)) <span class="fragment">; (b c)</span>
+                    </code></pre>
+
+                    <p>Remember: quoted symbols are not evaluated.</p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>List procedures</h2>
+                </section>
+
+                <section>
+                    <h3>length</h3>
+
+                    <p><code>length</code> returns the length of a list.
+                    </p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (length '(1 2))   <span class="fragment">; 2</span>
+                    (length '())      <span class="fragment">; 0</span>
+                    (length nil)      <span class="fragment">; 0</span>
+                    (length 123)      <span class="fragment">; Error!</span>
+                    </code></pre>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-builtins/index.html#pair-and-list-manipulation">
+                    📖  Scheme built-in procedures: List manipulation</a>
+                    </p>
+                </section>
+
+                <section>
+                    <h3>null?</h3>
+
+                    <p><code>null?</code> returns whether a list is empty or not.
+                    </p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (null? '())      <span class="fragment">; #t</span>
+                    (null? nil)      <span class="fragment">; #t</span>
+                    (null? '(1 2))   <span class="fragment">; #f</span>
+                    (null? 123)      <span class="fragment">; #f</span>
+                    </code></pre>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-builtins/index.html#type-checking">
+                    📖  Scheme built-in procedures: Type checking</a>
+                    </p>
+                </section>
+
+                <section>
+                    <h3>append</h3>
+
+                    <p><code>append</code> returns the result of appending the items of all provided lists
+                        into a single list in the order provided.
+                    </p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (append '(1 2) '(3 4))         <span class="fragment">; (1 2 3 4)</span>
+                    (append '(1 2) '(3 4) '(5 6))  <span class="fragment">; (1 2 3 4 5 6)</span>
+                    </code></pre>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-builtins/index.html#pair-and-list-manipulation">
+                    📖  Scheme built-in procedures: List manipulation</a>
+                    </p>
+                </section>
+
+
+                <section>
+                    <h3>map</h3>
+
+                    <p><code>(map &lt;proc&gt; &lt;lst&gt;)</code> returns a new list
+                        created by applying <code>proc</code> to each item in <code>lst</code>
+                    </p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (map abs '(-1 -2 3 4))   <span class="fragment">; (1 2 3 4)</span>
+                    (map - '(1 2))           <span class="fragment">; (-1 -2)</span>
+                    </code></pre>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-builtins/index.html#pair-and-list-manipulation">
+                    📖  Scheme built-in procedures: List manipulation</a>
+                    </p>
+                </section>
+
+
+                <section>
+                    <h3>filter</h3>
+
+                    <p><code>(filter &lt;pred&gt; &lt;lst&gt;)</code> returns a new list
+                        consisting only of elements of <code>lst</code> for which <code>pred</code>
+                        is true.
+                    </p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (filter even? '(0 1 2 3 4 5))   <span class="fragment">; (0 2 4)</span>
+                    (filter odd? '(0 1 2 3 4 5))    <span class="fragment">; (1 3 5)</span>
+                    </code></pre>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-builtins/index.html#pair-and-list-manipulation">
+                    📖  Scheme built-in procedures: List manipulation</a>
+                    </p>
+                </section>
+
+                <section>
+                    <h3>reduce</h3>
+
+                    <p><code>(reduce &lt;combiner&gt; &lt;lst&gt;)</code> returns the 
+                        result of sequentially combining each element in <code>lst</code>
+                        using <code>combiner</code> (a two-arg procedure).
+                    </p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (reduce + '(1 2 3 4 5))         <span class="fragment">; (15)</span>
+                    (reduce expt '(1 2 3 4 5))      <span class="fragment">; (1)</span>
+                    (reduce expt '(2 3 4 5))        <span class="fragment">; (1152921504606846976)</span>
+                    </code></pre>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-builtins/index.html#pair-and-list-manipulation">
+                    📖  Scheme built-in procedures: List manipulation</a>
+                    </p>
+                </section>
+                
+                <section>
+                    <h3>List equality</h3>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (define list1 '(a b c))
+                    (define list2 '(a b c))
+                    </code></pre>
+
+                    <p>For lists, <code>(eq? a b)</code> returns whether <code>a</code>
+                        and <code>b</code> are the same list in memory.</p>
+                    
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (eq? list1 list2)  <span class="fragment">#f</span>
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p>While <code>(equal? a b)</code> returns whether <code>a</code>
+                        and and <code>b</code> are equivalent.
+                        Two lists are considered equivalent if <code>(car a)</code> is equivalent to <code>(car b)</code> and
+                        <code>(cdr a)</code> is equivalent to <code>(cdr b)</code>.</p>
+                    
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (equal? list1 list2)  <span class="fragment">#t</span>
+                    </code></pre>
+                    </div>
+
+                    <p class="padded"><a target="_blank" href="../../articles/scheme-builtins/index.html#boolean-operations">
+                    📖  Scheme built-in procedures: Boolean operations</a>
+                    </p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Exercises</h2>
+                </section>
+
+                <section>
+                    <h3>North of equator?</h3>
+
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/62/Latitude_and_Longitude_of_the_Earth.svg" alt="Diagram showing lines of latitudes going from 0 to 90 above the equator and lines of longitude going from -180-180" style="height:200px; float: right;">
+
+                    <p>Implement <code>(north_of_eq point)</code>, a procedure that takes <code>point</code>,
+                        a two-element list with a latitude and longitude,
+                        and returns whether <code>point</code> is north of the Equator.
+                    <p>
+
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (north_of_eq point)
+                        
+                    )
+                    (expect (north_of_eq '(67 10)) #t)
+                    (expect (north_of_eq '(67 -10)) #t)
+                    (expect (north_of_eq '(-67 10)) #f)
+                    (expect (north_of_eq '(-67 -10)) #f)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>North of equator? (Solution)</h3>
+
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/62/Latitude_and_Longitude_of_the_Earth.svg" alt="Diagram showing lines of latitudes going from 0 to 90 above the equator and lines of longitude going from -180-180" style="height:200px; float: right;">
+
+                    <p>Implement <code>(north_of_eq point)</code>, a procedure that takes <code>point</code>,
+                        a two-element list with a latitude and longitude,
+                        and returns whether <code>point</code> is north of the Equator.
+                    <p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (north_of_eq point)
+                        (> (car point) 0)
+                    )
+                    (expect (north_of_eq '(67 10)) #t)
+                    (expect (north_of_eq '(67 -10)) #t)
+                    (expect (north_of_eq '(-67 10)) #f)
+                    (expect (north_of_eq '(-67 -10)) #f)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>All north?</h3>
+
+
+                    <p>Implement <code>(all_north_of_eq points)</code>, a procedure that takes <code>points</code>,
+                        a list of two-element lists,
+                        and returns whether all the <code>points</code> are north of the equator.
+                    <p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (all_north_of_eq points)
+                    
+                    
+                    )
+                    
+                    (expect (all_north_of_eq '( (67 10) (14 43) (37 -122))) #t)
+                    (expect (all_north_of_eq '( (-67 10) (14 43) (37 -122))) #f)
+                    (expect (all_north_of_eq '( (67 10) (14 43) (-37 -122))) #f)
+                    (expect (all_north_of_eq '()) #t)
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>All north? (Solution 1)</h3>
+
+
+                    <p>Implement <code>(all_north_of_eq points)</code>, a procedure that takes <code>points</code>,
+                        a list of two-element lists,
+                        and returns whether all the <code>points</code> are north of the equator.
+                    <p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (all_north_of_eq points)
+                        (= (length (filter north_of_eq points)) (length points))   
+                    )
+                    
+                    (expect (all_north_of_eq '( (67 10) (14 43) (37 -122))) #t)
+                    (expect (all_north_of_eq '( (-67 10) (14 43) (37 -122))) #f)
+                    (expect (all_north_of_eq '( (67 10) (14 43) (-37 -122))) #f)
+                    (expect (all_north_of_eq '()) #t)
+                    </code></pre>
+
+                </section>
+
+
+                <section>
+                    <h3>All north? (Solution 2)</h3>
+
+                    <p>Implement <code>(all_north_of_eq points)</code>, a procedure that takes <code>points</code>,
+                        a list of two-element lists,
+                        and returns whether all the <code>points</code> are north of the equator.
+                    <p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (all_north_of_eq points)
+                        (cond 
+                            ( (null? points) #t)
+                            ( (north_of_eq (car points)) (all_north_of_eq (cdr points)) )
+                            (else #f)
+                        )
+                    )
+                    
+                    (expect (all_north_of_eq '( (67 10) (14 43) (37 -122))) #t)
+                    (expect (all_north_of_eq '( (-67 10) (14 43) (37 -122))) #f)
+                    (expect (all_north_of_eq '( (67 10) (14 43) (-37 -122))) #f)
+                    (expect (all_north_of_eq '()) #t)
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Countdown list</h3>
+
+                    <p>Implement <code>countdown_list</code>, a procedure which
+                        takes a number <code>n</code> and returns a list with
+                        all the numbers from <code>n</code> down to 1.
+                    </p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (countdown_list n)
+
+
+                    )
+                    
+                    (expect (countdown_list 3) (3 2 1))
+                    (expect (countdown_list 1) (1))
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Countdown list (Solution)</h3>
+
+                    <p>Implement <code>countdown_list</code>, a procedure which
+                        takes a number <code>n</code> and returns a list with
+                        all the numbers from <code>n</code> down to 1.
+                    </p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (countdown_list n) 
+                        (if
+                            (= n 0) nil
+                            (cons n (countdown_list (- n 1)))
+                        )
+                    )
+                    
+                    (expect (countdown_list 3) (3 2 1))
+                    (expect (countdown_list 1) (1))
+                    </code></pre>
+
+                </section>
+
+
+                <section>
+                    <h3>Countup list</h3>
+
+                    <p>Implement <code>countup_list</code>, a procedure which
+                        takes a number <code>n</code> and returns a list with
+                        all the numbers from 1 up to (and including) <code>n</code>.
+                    </p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (countup_list n) 
+
+
+                    )
+                    
+                    (expect (countup_list 3) (1 2 3))
+                    (expect (countup_list 1) (1))
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Countup list (Solution)</h3>
+
+                    <p>Implement <code>countup_list</code>, a procedure which
+                        takes a number <code>n</code> and returns a list with
+                        all the numbers from 1 up to (and including) <code>n</code>.
+                    </p>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (countup_list n) 
+                        (if
+                            (= n 0) nil
+                            (append (countup_list (- n 1)) (cons n nil) )
+                        )
+                    )
+                                        
+                    (expect (countup_list 3) (1 2 3))
+                    (expect (countup_list 1) (1))
+                    </code></pre>
+
+                </section>
+
+
+			</div>
+		</div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-menu@2.1.0/menu.js"></script>
+        <!-- The loading of KaTeX is deferred to speed up page rendering -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.js" integrity="sha384-31El76TwmbHj4rF9DyLsygbq6xoIobG0W+jqXim+a3dU9W53tdH3A/ngRPxOzzaB" crossorigin="anonymous"></script>
+        <!-- To automatically render math in text elements, include the auto-render extension: -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"
+            onload="renderMathInElement(document.body, {fleqn: true});"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight, RevealMenu ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge();
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+        </script>
+    </body>
+</html>

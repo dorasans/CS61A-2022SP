@@ -1,0 +1,55 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="1987.35" height="821.13" viewBox="0 0 1987.35 821.13">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #ddd;
+      }
+
+      .cls-2, .cls-3, .cls-4 {
+        font-family: monospace;
+        font-size: 50px;
+      }
+
+      .cls-5 {
+        fill: none;
+        stroke: #000;
+        stroke-miterlimit: 10;
+        stroke-width: 4px;
+      }
+
+      .small-text {
+        font-size:40px;
+      }
+    </style>
+  </defs>
+  <g>
+    <rect class="cls-1" x="312.25" y="567.08" width="1235.19" height="212.84"/>
+    <path d="M1547,567.49v212H312.66v-212H1547m.82-.81h-1236V780.33h1236V566.68Z"/>
+  </g>
+  <text class="cls-2" transform="translate(410.06 527.58)">main.py</text>
+  <text class="cls-3 small-text" transform="translate(366.35 691.02)">Creates an Icon and displays in DisplayFrame.</text>
+  <text class="cls-2" transform="translate(1.38 50.22)">icon.py</text>
+  <g>
+    <rect class="cls-1" x="1.42" y="89.75" width="877.22" height="320.16"/>
+    <path d="M878.22,90.17V409.49H1.84V90.17H878.22m.84-.84H1v321H879.06v-321Z"/>
+  </g>
+  <text class="cls-3" transform="translate(103.23 203.93)">Icon</text>
+  <text class="cls-3" transform="translate(312.13 203.93)">Pixel</text>
+  <text class="cls-3" transform="translate(587.02 203.93)">Color</text>
+  <text class="cls-2" transform="translate(935.07 63.57)">display_frame.py</text>
+  <text class="cls-3 small-text" transform="translate(57.9 321.97)">Defines classes for icon + parts.</text>
+  <g>
+    <rect class="cls-1" x="935.31" y="91.14" width="1051.58" height="320.08"/>
+    <path d="M1986.43,91.6V410.76H935.77V91.6H1986.43m.92-.92H934.85v321h1052.5v-321Z"/>
+  </g>
+  <text class="cls-3" transform="translate(1258.27 203.93)">DisplayFrame</text>
+  <text class="cls-4 small-text" transform="translate(959.97 326.58)">Defines class for displaying icon on canvas.</text>
+  <g>
+    <line class="cls-5" x1="1209.91" y1="411.68" x2="1209.91" y2="545.8"/>
+    <polygon points="1195.1 534.56 1209.91 540.86 1224.72 534.56 1209.91 569.68 1195.1 534.56"/>
+  </g>
+  <g>
+    <line class="cls-5" x1="797.91" y1="410.68" x2="797.91" y2="544.8"/>
+    <polygon points="783.1 533.56 797.91 539.86 812.72 533.56 797.91 568.68 783.1 533.56"/>
+  </g>
+</svg>

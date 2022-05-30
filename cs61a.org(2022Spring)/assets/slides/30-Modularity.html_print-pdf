@@ -1,0 +1,681 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Modularity</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Modularity</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="30-Modularity.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Modules
+                        <li>Packages
+                        <li>Modularity
+                        <li>Modular design
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Modules</h2>
+                </section>
+
+                <section>
+                    <h3>Python modules</h3>
+
+                    <p>A <a target="_blank" href="https://docs.python.org/3/tutorial/modules.html">Python module</a> is
+                        a file typically containing function or class definitions.</p>
+
+                    <p>link.py:</p>
+                    <pre style="font-size:0.45em"><code data-trim data-noescape class="python">
+                    class Link:
+                        empty = ()
+
+                        def __init__(self, first, rest=empty):
+                            assert rest is Link.empty or isinstance(rest, Link)
+                            self.first = first
+                            self.rest = rest
+
+                        def __repr__(self):
+                            if self.rest:
+                                rest_repr = ', ' + repr(self.rest)
+                            else:
+                                rest_repr = ''
+                            return 'Link(' + repr(self.first) + rest_repr + ')'
+
+                        def __str__(self):
+                            string = '<'
+                            while self.rest is not Link.empty:
+                                string += str(self.first) + ' '
+                                self = self.rest
+                            return string + str(self.first) + '>'
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Importing</h3>
+
+                    <p>Importing a whole module:</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    import link
+
+                    ll = link.Link(3, link.Link(4, link.Link(5)))
+                    </code></pre>
+
+                    <p class="padded">Importing specific names:</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    from link import Link
+
+                    ll = Link(3, Link(4, Link(5)))
+                    </code></pre>
+
+                    <p class="padded">Importing all names:</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    from link import *
+
+                    ll = Link(3, Link(4, Link(5)))
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Importing with alias</h3>
+
+                    <p>I don't recommend aliasing a class or function name:</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    from link import Link as LL
+
+                    ll = LL(3, LL(4, LL(5)))
+                    </code></pre>
+
+                    <p class="padded">But aliasing a whole module is sometimes okay (and is common in data science):</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    import numpy as np
+
+                    b = np.array([(1.5, 2, 3), (4, 5, 6)])
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Running a module</h3>
+
+                    <p>This command runs a module:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    python module.py
+                    </code></pre>
+
+                    <p>When run like that, Python sets a global variable <code>__name__</code>
+                        to "main". That means you often see code at the bottom of modules like this:</p>
+                    
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    if __name__ == "__main__":
+                        # use the code in the module somehow
+                    </code></pre>
+
+                    <p>The code inside that condition will be executed as well,
+                        but only when the module is run directly.</p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Packages</h2>
+                </section>
+
+                <section>
+                    <h3>Python packages</h3>
+
+                    <p>A <a target="_blank" href="https://docs.python.org/3/tutorial/modules.html#packages">Python package</a> is a way
+                        of bundling multiple related modules together. Popular packages are NumPy and Pillow.</p>
+                    
+                    <p class="smaller">Example package structure:</p>
+                    <pre style="font-size:0.45em"><code data-trim data-noescape class="python">
+                    sound/                        Top-level package
+                        __init__.py               Initialize the sound package
+                        formats/                  Subpackage for file format conversions
+                                __init__.py
+                                wavread.py
+                                wavwrite.py
+                                aiffread.py
+                                aiffwrite.py
+                                auread.py
+                                auwrite.py
+                                ...
+                        effects/                  Subpackage for sound effects
+                                __init__.py
+                                echo.py
+                                surround.py
+                                reverse.py
+                                ...
+                        filters/                  Subpackage for filters
+                                __init__.py
+                                equalizer.py
+                                vocoder.py
+                                karaoke.py
+                                ...
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Importing from a package</h3>
+
+                    <p>Importing a whole path:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    import sound.effects.echo
+
+                    sound.effects.echo.echofilter(input, output, delay=0.7, atten=4)
+                    </code></pre>
+
+                    <p class="padded">Importing a module from the path:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    from sound.effects import echo
+    
+                    echo.echofilter(input, output, delay=0.7, atten=4)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Installing packages</h3>
+
+                    <p>The <a target="_blank" href="https://pypi.org/">Python Package Index</a> is a repository of packages
+                        for the Python language.</p>
+
+                    <p>Once you find a package you like, <code>pip</code> is the standard way to install:</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    pip install nltk
+                    </code></pre>
+
+                    <p>You may need to use <code>pip3</code> if your system defaults to Python 2.</p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Modularity</h2>
+                </section>
+
+                <section>
+                    <h3>Modular design</h3>
+
+                    <p>A design principle: Isolate different parts of a program that address different concerns.</p>
+
+                    <p>A modular component can be developed and tested independently.</p>
+
+                    <p>Ways to isolate in Python:</p>
+                    <ul>
+                        <li class="fragment" data-fragment-index="1">Functions</li>
+                        <li class="fragment" data-fragment-index="1">Classes</li>
+                        <li class="fragment" data-fragment-index="1">Modules</li>
+                        <li class="fragment" data-fragment-index="1">Packages</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Hog design</h3>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    ┌─────────────┐ ┌────────────┐
+                    │  hog.py     │ │  dice.py   │
+                    │             │ │            │
+                    │ Strategies  │ │ Dice rolls │
+                    └────┬────────┘ └─────┬──────┘
+                         │                │
+                         │                │
+                    ┌────▼────────────────▼─────┐
+                    │       hog_gui.py          │
+                    │                           │
+                    │     Plays the game        │
+                    │     according to rules.   │
+                    └───────────────────────────┘
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Ants design</h3>
+
+                    <img src="images/ants_design.svg"/>
+
+                    <p>See also: <a href="../../proj/ants/diagram/ants_diagram.pdf">Ants class diagram</a></p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Scheme design</h2>
+                </section>
+
+                <section>
+                    <h3>High-level overview</h3>
+
+                    <img src="images/scheme_what_you_edit.svg" alt="Diagram of Scheme project files" height="600" style="float:right;">
+
+                    <ul style="width: 500px; padding-right: 20px; font-size: 0.75em;">
+                        <li><code>scheme_reader.py</code>: the reader for Scheme input</li>
+                        <li><code>pair.py</code>: defines the <code>Pair</code> class and the <code>nil</code> object</li>
+                        <li><code>buffer.py</code>: defines the <code>Buffer</code> class and related classes</li>
+                        <li><code>scheme.py</code>: the interpreter REPL</li>
+                        <li><code>scheme_eval_apply.py</code>: the recursive evaluator for Scheme expressions</li>
+                        <li><code>scheme_forms.py</code>: evaluation for special forms</li>
+                        <li><code>scheme_classes.py</code>: classes that describe Scheme expressions</li>
+                        <li><code>scheme_builtins.py</code>: built-in Scheme procedures</li>
+                        <li><code>scheme_tokens.py</code>: the tokenizer for Scheme input</li>
+                        <li><code>scheme_utils.py</code>: functions for inspecting Scheme expressions</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>scheme_reader.py functions</h3>
+
+                    <p>✏️ This is a file you edited in Lab 11!</p>
+
+                    <img src="images/scheme_reader_flow.png" alt="Diagram of flow of function calls in scheme_reader.py" style="float:right;">
+
+                    <ul>
+                        <li><code>scheme_read(src)</code>
+                        <li><code>read_tail(src)</code>
+                        <li><code>buffer_input()</code>
+                        <li><code>buffer_lines()</code>
+                        <li><code>read_line()</code>
+                        <li><code>read_print_loop()</code>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>buffer.py classes</h3>
+
+                    <p>✏️ This is a file you edited in Lab 11!</p>
+
+                    <img src="images/buffer_classes.png" alt="Diagram of Buffer, LineReader,Input class" height="600">
+                </section>
+
+                <section>
+                    <h3>pair.py classes</h3>
+
+                    <img src="images/pair_classes.png" alt="Diagram of Pair and nil class">
+                </section>
+
+                <section>
+                    <h3>scheme.py functions</h3>
+
+                    <ul>
+                        <li><code>read_eval_print_loop(next_line, env)</code>
+                        <li><code>add_builtins(frame, funcs_and_names)</code>
+                        <li><code>create_global_frame()</code>
+                        <li><code>run(*argv)</code>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>scheme_eval_apply.py functions</h3>
+
+                    <p>✏️ This is a file you'll be editing!</p>
+                    <ul>
+                        <li><code>scheme_eval(expr, env)</code>
+                        <li><code>scheme_apply(procedure, args, env</code>
+                        <li><code>eval_all(expressions, env</code>
+                    </ul>
+                    <p>Also contains a class and some functions for the EC, tail call optimization.</p>
+                    <ul>
+                        <li><code>Unevaluated</code> class
+                        <li><code>complete_apply(procedure, args, env)</code>
+                        <li><code>optimize_tail_calls(unoptimized_scheme_eval)</code>
+                    </ul>
+                </section>
+                    
+                <section>
+                    <h3>scheme_builtins.py functions</h3>
+
+                    <ul>
+                        <li><code>scheme_equalp</code></li>
+                        <li><code>scheme_eqp</code></li>
+                        <li><code>scheme_pairp</code></li>
+                        <li><code>scheme_length</code></li>
+                        <li><code>scheme_cons</code></li>
+                        <li><code>scheme_car</code></li>
+                        <li><code>scheme_cdr</code></li>
+                        <li><code>scheme_list</code></li>
+                        <li><code>scheme_append</code></li>
+                        <li><code>scheme_add</code></li>
+                        <li><code>scheme_sub</code></li>
+                        <li><code>scheme_mul</code></li>
+                        <li><code>scheme_div</code></li>
+                        <li>etc..</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>scheme_forms.py functions</h3>
+
+                    <p>✏️ This is a file you'll be editing!</p>
+
+                    <ul>
+                        <li><code>do_define_form</code></li>
+                        <li><code>do_quote_form</code></li>
+                        <li><code>do_begin_form</code></li>
+                        <li><code>do_lambda_form</code></li>
+                        <li><code>do_if_form</code></li>
+                        <li><code>do_and_form</code></li>
+                        <li><code>do_or_form</code></li>
+                        <li><code>do_cond_form</code></li>
+                        <li><code>do_let_form</code></li>
+                        <li><code>make_let_frame</code></li>
+                        <li><code>do_unquote_form</code></li>
+                        <li><code>do_mu_form</code></li>
+                        <li>etc.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>scheme_classes.py classes</h3>
+                    <p>✏️ This is a file you'll be editing!</p>
+
+                    <img src="images/scheme_classes.png" alt="Diagram of Frame, Procedure classes">
+                </section>
+                
+                <section>
+                    <h3>Appendix: Visualization tools</h3>
+
+                    <p>If you'd like to visualize the organization of your projects, try these tools:</p>
+
+                    <ul>
+                        <li><a target="_blank" href="https://github.com/scottrogowski/code2flow">Code2Flow</a>: Visualize the flow of functions (what calls what) in a file.
+                        <li><a target="_blank" href="https://www.pynsource.com/">PynSource</a>: Generate UML diagrams of Python classes/subclasses.
+                        <li><a target="_blank" href="https://github.com/thebjorn/pydeps">PyDeps</a>: Visualize the dependencies (imports) between Python modules.
+
+                    <p>More tools are mentioned in <a target="_blank" href="https://lmy.medium.com/7-tools-for-visualizing-a-codebase-41b7cddb1a14">this blog post.</a></p>
+                </section>
+                
+
+			</div>
+		</div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-menu@2.1.0/menu.js"></script>
+        <!-- The loading of KaTeX is deferred to speed up page rendering -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.js" integrity="sha384-31El76TwmbHj4rF9DyLsygbq6xoIobG0W+jqXim+a3dU9W53tdH3A/ngRPxOzzaB" crossorigin="anonymous"></script>
+        <!-- To automatically render math in text elements, include the auto-render extension: -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"
+            onload="renderMathInElement(document.body, {fleqn: true});"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight, RevealMenu ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge();
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+        </script>
+    </body>
+</html>

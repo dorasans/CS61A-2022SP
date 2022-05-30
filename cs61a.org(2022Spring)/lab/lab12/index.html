@@ -1,0 +1,681 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS" />
+    <meta name="author" content ="Pamela Fox" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+    <title>
+Lab 12: Scheme Data Abstraction | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="../../assets/images/logo.png"/>
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../../weekly">Weekly Schedule</a></li>
+                <li><a href="../../office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../../instructor">Instructors</a></li>
+                <li><a href="../../TAs">TAs</a></li>
+                <li><a href="../../tutors">Tutors</a></li>
+                <li><a href="../../academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../../resources/index.html">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="../../articles/campus-res/index.html">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="../../articles/about">Syllabus</a></li>
+            <li><a href="../../contact/index.html">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>
+        
+Lab 12: Scheme Data Abstraction
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="lab12.zip" class="label label-outline">lab12.zip</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<p><i>Due by 11:59pm on Wednesday, April 13.</i></p>
+
+
+
+
+
+
+<h2 id='starter-files'>Starter Files</h2>
+
+<p>Download <a href="lab12.zip">lab12.zip</a>.
+Inside the archive, you will find starter files for the questions in this lab,
+  along with a copy of the <a href="ok">Ok</a> autograder.</p>
+
+
+
+
+
+
+
+
+    
+<h1 id="topics">Topics</h1>
+
+
+<p>Consult this section if you need a refresher on the material for this lab. It's
+okay to skip directly to <a href="index.html#required-questions">the questions</a> and refer back
+here should you get stuck.</p>
+
+
+<h2 id="data-abstractions">Data Abstractions</h2>
+
+
+<br>
+
+        <button id='toggle-1' class='btn btn-outline btn-lg alwaystoggle toggle'>
+        Data Abstractions<noscript> (enable JavaScript)</noscript>
+        </button>
+        <div class="solution toggle-1">
+
+<p>Data abstraction is a powerful concept in computer science that
+allows programmers to treat code as objects.
+For example, using code to represent cars, chairs, people, and so on.
+That way, programmers don't have to worry about <em>how</em> code is implemented;
+they just have to know <em>what</em> it does.</p>
+
+<p>Data abstraction mimics how we think about the world.
+If you want to drive a car, you don't need to know how the
+engine was built or what kind of material the tires are made of to do so.
+You just have to know how to use the car for driving itself,
+such as how to turn the wheel or press the gas pedal.</p>
+
+<p>A data abstraction consists of two types of functions:</p>
+
+<ul>
+  <li><strong>Constructors</strong>: functions that build the abstract data type.</li>
+  <li><strong>Selectors</strong>: functions that retrieve information from the data type.</li>
+</ul>
+
+<p>Programmers design data abstractions to abstract away how information is stored and
+calculated such that the end user does <em>not</em> need to know how constructors and
+selectors are implemented. The nature of <em>abstraction</em> allows whoever uses them to
+assume that the functions have been written correctly and
+work as described. Using this idea, developers are able to use a variety of powerful
+libraries for tasks such as data processing, security, visualization, and more
+without needing to write the code themselves!</p>
+
+<p>In Python, you primarily worked with data abstractions using Object Oriented Programming, which used
+Python <code>Object</code>s to store the data. Notably, this is not possible in Scheme, which is a functional
+programming language. Instead, we create and return new structures which represent the current state of the data.
+</div>
+<br></p>
+
+
+<h2 id="example-data-abstractions">Example Data Abstractions</h2>
+
+
+
+<h3 id="rational"><code>Rational</code></h3>
+
+<p>Recall that a <a href="https://en.wikipedia.org/wiki/Rational_number">rational number</a>
+is any number that can be expressed as <em>p / q</em>, where <em>p</em>
+and <em>q</em> are integers.</p>
+
+<pre><code class="scheme">; Creates the rational number n/d (Assume n, d are integers and d != 0)
+; Note that the constructor simplifies the numerator and denominator.
+(rational n d)
+
+; Gets the numerator of rational number r
+(numer r) 
+
+; Gets the denominator of rational number r
+(denom r)
+
+; Adds two rational numbers x and y
+(add&#x2d;rational x y)
+
+; Multiplies two rational numbers x and y
+(mul&#x2d;rational x y)</code></pre>
+
+
+
+
+<h3 id="trees"><code>Trees</code></h3>
+
+<p>Below is a Scheme-ified data abstraction of the Tree class we've
+been working with this semester.</p>
+
+<pre><code class="scheme">; Constructs tree given label and list of branches
+(tree label branches)
+
+; Returns the label of the tree
+(label t)
+
+; Returns the list of branches of the given tree
+(branches t)
+
+; Returns #t if t is a leaf, #f otherwise
+(is&#x2d;leaf t)</code></pre>
+
+
+
+
+<h1 id="questions">Questions</h1>
+
+
+
+<h2 id="what-would-scheme-do">What Would Scheme Do?</h2>
+
+
+
+<h3 id="q1-wwsd-data-abstractions">Q1: WWSD: Data Abstractions</h3>
+
+
+<p>Let's familiarize ourselves with some Scheme data abstractions!</p>
+
+<blockquote><p>If you need a refresher on the <code>tree</code> and <code>rational</code> abstractions, refer to this lab's introduction or <a href="../../lecture/lec31/index.html">Monday 04/11's lecture</a>.</p></blockquote>
+
+<p>Use Ok to test your knowledge with the following "What Would Python Display?" questions:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q abstractions -u<button id="copy-code-python3ok-qabstractions-u" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qabstractions-u").onclick = () => copyCode('python3 ok -q abstractions -u', "copy-code-python3ok-qabstractions-u");
+        </script>
+        <br/>
+
+<prompt>
+
+<pre><code class="scheme">scm&gt; (load rational.scm)
+scm&gt; (define x (rational 2 5))
+
+scm&gt; (numer x)
+
+scm&gt; (denom x)
+
+scm&gt; (define y (rational 1 4))
+
+scm&gt; (define z1 (add&#x2d;rational x y))
+
+scm&gt; (numer z1)
+
+scm&gt; (denom z1)
+
+scm&gt; (define z2 (mul&#x2d;rational x y)) ; don&#x27;t forget to reduce the rational!
+
+scm&gt; (numer z2)
+
+scm&gt; (denom z2)</code></pre>
+
+
+</prompt>
+
+<prompt>
+
+<pre><code class="scheme">scm&gt; (load tree.scm)
+scm&gt; (define t (tree 1 (list (tree 2 nil)) ))
+
+scm&gt; (label t)
+
+scm&gt; (length (branches t))
+
+scm&gt; (define child (car (branches t)))
+
+scm&gt; (label child)
+
+scm&gt; (is&#x2d;leaf child)
+
+scm&gt; (branches child)</code></pre>
+
+
+</prompt>
+
+<prompt>
+
+<pre><code class="scheme">scm&gt; (load tree.scm)
+scm&gt; (define b1 (tree 5 (list (tree 6 nil) (tree 7 nil)) )) 
+
+scm&gt; (map is&#x2d;leaf (branches b1))    ; draw the tree if you get stuck!
+
+scm&gt; (define b2 (tree 8 (list (tree 9 (list (tree 10 nil)) )) )) 
+
+scm&gt; (map is&#x2d;leaf (branches b2))    ; draw the tree if you get stuck!
+
+scm&gt; (define t (tree 11 (list b1 b2)))
+
+scm&gt; (label t)
+
+scm&gt; (map (lambda (b) (label b)) (branches t)) ; draw the tree if you get stuck!</code></pre>
+
+
+</prompt>
+
+
+<h2 id="code-writing-questions">Code Writing Questions</h2>
+
+
+<blockquote><p>Remember that when working with data abstractions, you should <strong>not</strong> break the abstraction barrier if possible! Later questions will have <em>abstraction checks</em>, where the underlying representation of the abstraction will be changed; thus, attempting to refer to specifics of the implementation will break. Attempt to use the functions you are creating to interface with the classes whenever possible.</p></blockquote>
+
+
+<h3 id="cities">Cities</h3>
+
+
+<p>Say we have an abstract data type for cities. A city has a name, a latitude
+coordinate, and a longitude coordinate.</p>
+
+<p>Our data abstraction has one <strong>constructor</strong>:</p>
+
+<ul>
+  <li><code>(make&#x2d;city name lat lon)</code>: Creates a city object with the given name,
+  latitude, and longitude.</li>
+</ul>
+
+<p>We also have the following <strong>selectors</strong> in order to get the information for
+each city:</p>
+
+<ul>
+  <li><code>(get&#x2d;name city)</code>: Returns the city's name</li>
+  <li><code>(get&#x2d;lat city)</code>: Returns the city's latitude</li>
+  <li><code>(get&#x2d;lon city)</code>: Returns the city's longitude</li>
+</ul>
+
+<p>Here is how we would use the constructor and selectors to create cities and
+extract their information:</p>
+
+<pre><code class="scheme">scm&gt; (define berkeley (make&#x2d;city &#x27;Berkeley 122 37))
+berkeley
+scm&gt; (get&#x2d;name berkeley)
+Berkeley
+scm&gt; (get&#x2d;lat berkeley)
+122
+scm&gt; (define new&#x2d;york (make&#x2d;city &#x27;NYC 74 40))
+new&#x2d;york
+scm&gt; (get&#x2d;lon new&#x2d;york)
+40</code></pre>
+
+
+
+<p>All of the selector and constructor functions can be found in the lab file,
+if you are curious to see how they are implemented. However, the point of data
+abstraction is that we do not need to know how an abstract data type is
+implemented, but rather just how we can interact with and use the data type.</p>
+
+
+<h3 id="q2-distance">Q2: Distance</h3>
+
+
+<p>We will now implement the function <code>distance</code>, which computes the
+<em>Euclidean distance</em> between two city objects; the Euclidean distance between two
+coordinate pairs <code>(x1, y1)</code> and <code>(x2, y2)</code> can be found by calculating
+the <code>sqrt((x1 &#x2d; x2) ** 2 + (y1 &#x2d; y2) ** 2)</code>. Use the latitude and longitude of a city as
+its coordinates; you'll need to use the selectors to access this info!</p>
+
+<blockquote><p>You may find the following methods useful:</p>
+
+<ul>
+  <li><code>(expt base exp)</code>: calculate <code>base ** exp</code></li>
+  <li><code>(sqrt x)</code> calculate <code>sqrt(x)</code></li>
+</ul></blockquote>
+
+<solution>
+
+<pre><code>(define (distance city&#x2d;a city&#x2d;b)
+    'YOUR-CODE-HERE
+)</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q city_distance<button id="copy-code-python3ok-qcity_distance" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qcity_distance").onclick = () => copyCode('python3 ok -q city_distance', "copy-code-python3ok-qcity_distance");
+        </script>
+        <br/>
+
+
+<h3 id="q3-closer-city">Q3: Closer city</h3>
+
+
+<p>Next, implement <code>closer&#x2d;city</code>, a function that takes a latitude,
+longitude, and two cities, and returns the name of the city that is
+relatively closer to the provided latitude and longitude.</p>
+
+<p>You may only use the selectors and constructors introduced above and the
+<code>distance</code> function you just defined for this question.</p>
+
+<blockquote><p><strong>Hint</strong>: How can you use your <code>distance</code> function to find the distance between
+the given location and each of the given cities?</p></blockquote>
+
+<solution>
+
+<pre><code>(define (closer&#x2d;city lat lon city&#x2d;a city&#x2d;b)
+    'YOUR-CODE-HERE
+)</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q city_closer<button id="copy-code-python3ok-qcity_closer" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qcity_closer").onclick = () => copyCode('python3 ok -q city_closer', "copy-code-python3ok-qcity_closer");
+        </script>
+        <br/>
+
+
+<h3 id="teachers-and-students">Teachers and Students</h3>
+
+
+<p>In the following questions, you'll be implementing data abstractions for students and teachers:</p>
+
+<ol>
+  <li>The <code>teacher</code> abstraction keeps track of the teacher's <code>name</code>, the <code>class</code> they teach, and the <code>students</code> enrolled in their class. Specifically, a <code>teacher</code>'s <code>name</code> and <code>class</code> are atomic symbols, and their <code>students</code> is a list of <code>student</code> objects.</li>
+  <li>The <code>student</code> abstraction keeps track of a student's <code>name</code> and number of <code>classes</code> attended. Specifically, a <code>student</code>'s <code>name</code> is an atomic symbol, and their <code>classes</code> is a list of atomic symbols representing all classes attended. For example, if a student had attended <code>cs61a</code> and <code>astronomy</code>, their <code>classes</code> list would be <code>(cs61a astronomy)</code>.</li>
+</ol>
+
+<p>You can find the constructors for these classes below:</p>
+
+<pre><code class="scheme">(define (student&#x2d;create name classes) (cons name classes))
+(define (teacher&#x2d;create name class students) (cons name (cons class students)))</code></pre>
+
+
+
+
+<h3 id="q4-teachers-and-students-selectors">Q4: Teachers and Students: Selectors</h3>
+
+
+<p>Implement <code>student&#x2d;get&#x2d;name</code>, <code>student&#x2d;get&#x2d;classes</code>, <code>teacher&#x2d;get&#x2d;name</code>, <code>teacher&#x2d;get&#x2d;class</code>, and <code>teacher&#x2d;get&#x2d;students</code>. These functions take in a <code>student</code> or <code>teacher</code> abstraction, and return the relevant attribute; for example, <code>student&#x2d;get&#x2d;name</code> takes a <code>student</code> as input, and returns the <code>name</code>.</p>
+
+<solution>
+
+<pre><code>(define (student&#x2d;get&#x2d;name student)
+    'YOUR-CODE-HERE
+)
+
+(define (student&#x2d;get&#x2d;classes student)
+    'YOUR-CODE-HERE
+)
+
+(define (teacher&#x2d;get&#x2d;name teacher)
+    'YOUR-CODE-HERE
+)
+
+(define (teacher&#x2d;get&#x2d;class teacher)
+    'YOUR-CODE-HERE
+)
+
+(define (teacher&#x2d;get&#x2d;students teacher)
+    'YOUR-CODE-HERE
+)</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q teacher_student_selectors<button id="copy-code-python3ok-qteacher_student_selectors" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qteacher_student_selectors").onclick = () => copyCode('python3 ok -q teacher_student_selectors', "copy-code-python3ok-qteacher_student_selectors");
+        </script>
+        <br/>
+
+
+<h3 id="q5-students-attend-class">Q5: Students: Attend Class</h3>
+
+
+<p>Implement <code>student&#x2d;attend&#x2d;class</code>. This method takes in a <code>student</code> and a <code>class</code> as input, and returns a <em>new</em> <code>student</code> abstraction with the <code>class</code> list updated to reflect the <code>class</code> attended.</p>
+
+<blockquote><p>Be sure to keep the abstraction barrier in mind!</p></blockquote>
+
+<solution>
+
+<pre><code>(define (student&#x2d;attend&#x2d;class student class)
+    'YOUR-CODE-HERE
+)</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q student_attend_class<button id="copy-code-python3ok-qstudent_attend_class" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qstudent_attend_class").onclick = () => copyCode('python3 ok -q student_attend_class', "copy-code-python3ok-qstudent_attend_class");
+        </script>
+        <br/>
+
+
+<h3 id="q6-teachers-hold-discussion">Q6: Teachers: Hold Discussion</h3>
+
+
+<p>Implement <code>teacher&#x2d;hold&#x2d;class</code>. This method takes in a <code>teacher</code> as input, and emulates holding a class. Specifically, the function should return a <em>new</em> updated <code>teacher</code>, where all <code>student</code> objects in the <code>teacher</code>'s <code>students</code> list have updated <code>class</code> lists to reflect their attendance.</p>
+
+<blockquote><p>Be sure to keep the abstraction barrier in mind! Feel free to use any of the functions implemented in previous parts of this lab. You may also find the <a href="../../articles/scheme-builtins/index.html"><code>map</code></a> function useful.</p></blockquote>
+
+<solution>
+
+<pre><code>(define (teacher&#x2d;hold&#x2d;class teacher)
+    'YOUR-CODE-HERE
+)</code></pre>
+
+</solution>
+
+<p>Use Ok to test your code:</p><pre style="margin-bottom:0;"><code class="nohighlight">python3 ok -q teacher_hold_class<button id="copy-code-python3ok-qteacher_hold_class" class="inline-copy-button"><div class="copy-tooltip"><span>Copy</span></div>✂️</a></code></pre>
+        <script>
+        document.getElementById("copy-code-python3ok-qteacher_hold_class").onclick = () => copyCode('python3 ok -q teacher_hold_class', "copy-code-python3ok-qteacher_hold_class");
+        </script>
+        <br/>
+
+
+<h2 id="submit">Submit</h2>
+
+
+<p>Make sure to submit this assignment by running:</p>
+
+<pre><code>python3 ok &#x2d;&#x2d;submit</code></pre>
+<script>
+    $('.alwaystoggle').css('display', 'inline-block');
+    $('.alwaystoggle').click(function() {
+      var solution_id = $(this).attr('id');
+      $('div.' + solution_id).slideToggle(600);
+    });
+</script>
+
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#topics">Topics</a></li>
+  <ul>
+    <li><a href="index.html#data-abstractions">Data Abstractions</a></li>
+    <li><a href="index.html#example-data-abstractions">Example Data Abstractions</a></li>
+    <ul>
+      <li><a href="index.html#rational"><code>Rational</code></a></li>
+      <li><a href="index.html#trees"><code>Trees</code></a></li>
+    </ul>
+  </ul>
+  <li><a href="index.html#questions">Questions</a></li>
+  <ul>
+    <li><a href="index.html#what-would-scheme-do">What Would Scheme Do?</a></li>
+    <ul>
+      <li><a href="index.html#q1-wwsd-data-abstractions">Q1: WWSD: Data Abstractions</a></li>
+    </ul>
+    <li><a href="index.html#code-writing-questions">Code Writing Questions</a></li>
+    <ul>
+      <li><a href="index.html#cities">Cities</a></li>
+      <li><a href="index.html#q2-distance">Q2: Distance</a></li>
+      <li><a href="index.html#q3-closer-city">Q3: Closer city</a></li>
+      <li><a href="index.html#teachers-and-students">Teachers and Students</a></li>
+      <li><a href="index.html#q4-teachers-and-students-selectors">Q4: Teachers and Students: Selectors</a></li>
+      <li><a href="index.html#q5-students-attend-class">Q5: Students: Attend Class</a></li>
+      <li><a href="index.html#q6-teachers-hold-discussion">Q6: Teachers: Hold Discussion</a></li>
+    </ul>
+    <li><a href="index.html#submit">Submit</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="../../index.html">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="../../weekly">Weekly Schedule</a></li>
+            <li><a href="../../office-hours">Office Hours</a></li>
+            <li><a href="../../staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="../../articles/studying">Studying Guide</a></li>
+            <li><a href="../../articles/debugging">Debugging Guide</a></li>
+            <li><a href="../../articles/composition">Composition Guide</a></li>
+            <li><a href="../../articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="../../articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="../../articles/about#assignments">Assignments</a></li>
+            <li><a href="../../articles/about#exams">Exams</a></li>
+            <li><a href="../../articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<script src="../../assets/js/sketchy.js"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  </body>
+</html>

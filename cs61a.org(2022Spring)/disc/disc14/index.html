@@ -1,0 +1,824 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS" />
+    <meta name="author" content ="Pamela Fox" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="../../assets/css/disc.css">
+
+
+    <title>
+Discussion 14 | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="../../assets/images/logo.png"/>
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../../weekly">Weekly Schedule</a></li>
+                <li><a href="../../office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../../instructor">Instructors</a></li>
+                <li><a href="../../TAs">TAs</a></li>
+                <li><a href="../../tutors">Tutors</a></li>
+                <li><a href="../../academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../../resources/index.html">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="../../articles/campus-res/index.html">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="../../articles/about">Syllabus</a></li>
+            <li><a href="../../contact/index.html">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>
+        
+Discussion 14: Final Review
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="disc14.pdf" class="label label-outline">disc14.pdf</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<div class="alert storable-login-status"></div>
+
+This is an online worksheet that you can work on during discussions.
+Your work is not graded and you do not need to submit anything.
+
+
+    
+<h1 id="final-review">Final Review</h1>
+
+
+<p>The following worksheet is final review! It covers various topics that have been seen throughout the semester.</p>
+
+<p>Your TA will not be able to get to all of the problems on this worksheet
+ so feel free to work through the remaining problems on your own. Bring any questions you have to office hours
+ or post them on piazza.</p>
+
+<p>Good luck on the final and congratulations on making it to the last discussion of CS61A!</p>
+
+
+<h2 id="recursion">Recursion</h2>
+
+
+
+<h3 id="q1-paths-list">Q1: Paths List</h3>
+
+
+<p>(Adapted from Fall 2013) Fill in the blanks in the implementation of <code>paths</code>, which
+takes as input two positive integers <code>x</code> and <code>y</code>. It returns a list of paths, where
+each path is a list containing steps to reach <code>y</code> from <code>x</code> by repeated incrementing or
+doubling. For instance, we can reach 9 from 3 by incrementing to 4, doubling to 8,
+then incrementing again to 9, so one path is [3, 4, 8, 9]</p>
+
+
+            <div class="monaco-storable" id="path-arithmetic-input" style="height:414px;"></div>
+            <a href="javascript:void" id="modal-link-path-arithmetic-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-path-arithmetic-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-path-arithmetic-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def paths(x, y):\n    &quot;&quot;&quot;Return a list of ways to reach y from x by repeated\n    incrementing or doubling.\n    &gt;&gt;&gt; paths(3, 5)\n    [[3, 4, 5]]\n    &gt;&gt;&gt; sorted(paths(3, 6))\n    [[3, 4, 5, 6], [3, 6]]\n    &gt;&gt;&gt; sorted(paths(3, 9))\n    [[3, 4, 5, 6, 7, 8, 9], [3, 4, 8, 9], [3, 6, 7, 8, 9]]\n    &gt;&gt;&gt; paths(3, 3) # No calls is a valid path\n    [[3]]\n    &quot;&quot;&quot;\n    if ____________________________________\n        return ____________________________________\n    elif ____________________________________\n        return ____________________________________\n    else:\n        a = ____________________________________\n        b = ____________________________________\n        return ____________________________________\n\n', "python", "path-arithmetic-input"));
+            </script>
+        
+
+
+<h2 id="mutation">Mutation</h2>
+
+
+
+<h3 id="q2-reverse">Q2: Reverse</h3>
+
+
+<p>Write a function that reverses the given list. Be sure to mutate the original list.
+This is practice, so don't use the built-in <code>reverse</code> function!</p>
+
+
+            <div class="monaco-storable" id="reverse-input" style="height:360px;"></div>
+            <a href="javascript:void" id="modal-link-reverse-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-reverse-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-reverse-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def reverse(lst):\n    &quot;&quot;&quot;Reverses lst using mutation.\n\n    &gt;&gt;&gt; original_list = [5, &#x2d;1, 29, 0]\n    &gt;&gt;&gt; reverse(original_list)\n    &gt;&gt;&gt; original_list\n    [0, 29, &#x2d;1, 5]\n    &gt;&gt;&gt; odd_list = [42, 72, &#x2d;8]\n    &gt;&gt;&gt; reverse(odd_list)\n    &gt;&gt;&gt; odd_list\n    [&#x2d;8, 72, 42]\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\n', "python", "reverse-input"));
+            </script>
+        
+
+<div class="page-break"></div>
+
+
+<h2 id="trees">Trees</h2>
+
+
+
+<h3 id="q3-reverse-other">Q3: Reverse Other</h3>
+
+
+<p>Write a function <code>reverse_other</code> that mutates the tree such that <strong>labels</strong> on
+<em>every other</em> (odd-depth) level are reversed. For example,
+<code>Tree(1,[Tree(2, [Tree(4)]), Tree(3)])</code> becomes <code>Tree(1,[Tree(3, [Tree(4)]), Tree(2)])</code>.
+Notice that the nodes themselves are <em>not</em> reversed; only the labels are.</p>
+
+
+            <div class="monaco-storable" id="reverse-other-input" style="height:468px;"></div>
+            <a href="javascript:void" id="modal-link-reverse-other-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-reverse-other-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-reverse-other-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def reverse_other(t):\n    &quot;&quot;&quot;Mutates the tree such that nodes on every other (odd&#x2d;depth)\n    level have the labels of their branches all reversed.\n\n    &gt;&gt;&gt; t = Tree(1, [Tree(2), Tree(3), Tree(4)])\n    &gt;&gt;&gt; reverse_other(t)\n    &gt;&gt;&gt; t\n    Tree(1, [Tree(4), Tree(3), Tree(2)])\n    &gt;&gt;&gt; t = Tree(1, [Tree(2, [Tree(3, [Tree(4), Tree(5)]), Tree(6, [Tree(7)])]), Tree(8)])\n    &gt;&gt;&gt; reverse_other(t)\n    &gt;&gt;&gt; t\n    Tree(1, [Tree(8, [Tree(3, [Tree(5), Tree(4)]), Tree(6, [Tree(7)])]), Tree(2)])\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\n', "python", "reverse-other-input"));
+            </script>
+        
+
+<div class="page-break"></div>
+
+
+<h2 id="linked-lists">Linked Lists</h2>
+
+
+
+<h3 id="q4-multiply-links">Q4: Multiply Links</h3>
+
+
+<p>Write a function that takes in a Python list of linked lists and
+multiplies them element-wise. It should return a new linked list.</p>
+
+<p>If not all of the <code>Link</code> objects are of equal length, return a
+linked list whose length is that of the shortest linked list given. You
+may assume the <code>Link</code> objects are shallow linked lists, and that
+<code>lst_of_lnks</code> contains at least one linked list.</p>
+
+
+            <div class="monaco-storable" id="multiply-lnks-input" style="height:432px;"></div>
+            <a href="javascript:void" id="modal-link-multiply-lnks-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-multiply-lnks-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-multiply-lnks-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def multiply_lnks(lst_of_lnks):\n    &quot;&quot;&quot;\n    &gt;&gt;&gt; a = Link(2, Link(3, Link(5)))\n    &gt;&gt;&gt; b = Link(6, Link(4, Link(2)))\n    &gt;&gt;&gt; c = Link(4, Link(1, Link(0, Link(2))))\n    &gt;&gt;&gt; p = multiply_lnks([a, b, c])\n    &gt;&gt;&gt; p.first\n    48\n    &gt;&gt;&gt; p.rest.first\n    12\n    &gt;&gt;&gt; p.rest.rest.rest is Link.empty\n    True\n    &quot;&quot;&quot;\n    # Implementation Note: you might not need all lines in this skeleton code\n    ___________________ = ___________\n    for _______________________________________:\n        if __________________________________________:\n            _________________________________\n        ___________________\n\t________________________________________________________\n    ________________________________________________________\n\n', "python", "multiply-lnks-input"));
+            </script>
+        
+
+
+
+<div class="page-break"></div>
+
+
+<h2 id="scheme">Scheme</h2>
+
+
+
+<h3 id="q5-group-by-non-decreasing">Q5: Group by Non-Decreasing</h3>
+
+
+<p>Define a function <code>nondecreaselist</code>, which takes in a scheme list of numbers and outputs a list of lists, which overall has the same numbers in the same order, but grouped into lists that are non-decreasing.</p>
+
+<p>For example, if the input is a stream containing elements</p>
+
+<pre><code>(1 2 3 4 1 2 3 4 1 1 1 2 1 1 0 4 3 2 1)</code></pre>
+
+<p>the output should contain elements</p>
+
+<pre><code>((1 2 3 4) (1 2 3 4) (1 1 1 2) (1 1) (0 4) (3) (2) (1))</code></pre>
+
+<p><strong>Note:</strong> The skeleton code is just a suggestion; feel free to use your own structure if you prefer.</p>
+
+
+            <div class="monaco-storable" id="nondecreaselist-input" style="height:342px;"></div>
+            <a href="javascript:void" id="modal-link-nondecreaselist-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-nondecreaselist-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-nondecreaselist-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('(define (nondecreaselist s)\n\n    (if _____________________________\n        _____________________________\n        (let ((rest _____________________________ ))\n            (if _____________________________\n                (cons _____________________________ rest)\n                (cons _____________________________ (cdr rest))\n            )\n        )\n    )\n)\n\n(expect (nondecreaselist &#x27;(1 2 3 1 2 3)) ((1 2 3) (1 2 3)))\n\n(expect (nondecreaselist &#x27;(1 2 3 4 1 2 3 4 1 1 1 2 1 1 0 4 3 2 1))\n        ((1 2 3 4) (1 2 3 4) (1 1 1 2) (1 1) (0 4) (3) (2) (1)))\n', "scheme", "nondecreaselist-input"));
+            </script>
+        
+
+<div class="page-break"></div>
+
+
+<h2 id="environment-diagrams">Environment Diagrams</h2>
+
+
+
+<h3 id="q6-to-scheme-an-environment-diagram">Q6: To Scheme An Environment Diagram</h3>
+
+
+<p><code>mu</code>, implemented in the Scheme project as <code>MuProcedure</code>, allows us to create
+procedures that are <em>dynamically scoped</em>.
+This means that calling a <code>mu</code> procedure creates a new frame whose <em>parent</em> is
+the frame in which it was <strong>called</strong> (dynamic scoping).</p>
+
+<p>In contrast, calling a <code>lambda</code> procedure creates a new frame whose <em>parent</em> is
+the frame in which it was <strong>defined</strong> (lexical scoping).</p>
+
+<p>You can also find <code>mu</code> described in the
+<a href="../../articles/scheme-spec/index.html#mu">Scheme Specification</a>.</p>
+
+<blockquote><p>For an interactive version of each diagram, copy-paste the code into 61A Code,
+and click the yellow bug icon on the top right. That icon starts up the
+debugger and environment diagram visualizer for code.cs61a.org.</p></blockquote>
+
+<p>Say that we are given the following section of code:</p>
+
+<pre><code class="scheme">(define lamb2 (lambda (x) (+ x y)))
+(define cow2 (mu (x) (+ x y)))
+(define y 5)
+(lamb2 1)
+(cow2 1)</code></pre>
+
+
+
+
+
+<p>Running the full code results in this environment diagram:</p>
+
+<p><img class="img-responsive center-block" src="assets/frame2.png" alt="Diagram 1" width="70%" height=""></p>
+
+<p>What is the parent frame of frame f1?
+
+            <label class="sr-only" for="env2-1-input">Your Answer:</label>
+            <input class="form-control storable" id="env2-1-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<p>What is the parent frame of frame f2?
+
+            <label class="sr-only" for="env2-2-input">Your Answer:</label>
+            <input class="form-control storable" id="env2-2-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<p>Now let's say we have the following section of code:</p>
+
+<pre><code class="scheme">(define (goat x y) (lambda (x) (+ x y)))
+(define (horse x y) (mu (x) (+ x y)))
+(define horns (goat 1 2))
+(define saddle (horse 1 2))
+(define x 10)
+(define y 20)
+(horns 5)
+(saddle 5)</code></pre>
+
+
+
+
+
+<p>Running the entire code block gives you the diagram:</p>
+
+<p><img class="img-responsive center-block" src="assets/frame3.png" alt="Diagram 2" width="70%" height=""></p>
+
+<p>Which frame is created by the call to <code>(goat 1 2)</code>, and what is the parent of
+this frame?
+
+            <label class="sr-only" for="env3-1-input">Your Answer:</label>
+            <input class="form-control storable" id="env3-1-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<p>What kind of procedure is <code>horns</code>, and what scoping rule does it use?
+
+            <label class="sr-only" for="env3-1-2-input">Your Answer:</label>
+            <input class="form-control storable" id="env3-1-2-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<p>Which frame is created by the call to <code>(horse 1 2)</code>, and what is the parent of
+this frame?
+
+            <label class="sr-only" for="env3-2-input">Your Answer:</label>
+            <input class="form-control storable" id="env3-2-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<p>What kind of procedure is <code>saddle</code>, and what scoping rule does it use?
+
+            <label class="sr-only" for="env3-2-2-input">Your Answer:</label>
+            <input class="form-control storable" id="env3-2-2-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<p>Which frame is created by the call to <code>(horns 5)</code>, and what is the parent of
+this frame?
+
+            <label class="sr-only" for="env3-3-input">Your Answer:</label>
+            <input class="form-control storable" id="env3-3-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<p>Which frame is created by the call to <code>(saddle 5)</code>, and what is the parent of
+this frame?
+
+            <label class="sr-only" for="env3-4-input">Your Answer:</label>
+            <input class="form-control storable" id="env3-4-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<p>What would be the output of the lines <code>(horns 5)</code> and <code>(saddle 5)</code>?
+
+            <label class="sr-only" for="env3-5-input">Your Answer:</label>
+            <input class="form-control storable" id="env3-5-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<p>Would there be any difference in output if <code>horse</code> was defined using a <code>lambda</code>
+as opposed to a <code>define</code>, e.g. <code>(define horse (lambda (x y) ...)</code>? If so, what?
+
+            <label class="sr-only" for="env3-6-input">Your Answer:</label>
+            <input class="form-control storable" id="env3-6-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<div class="page-break"></div>
+
+
+<h2 id="programs-as-data">Programs as Data</h2>
+
+
+
+<h3 id="q7-or-with-multiple-args">Q7: Or with Multiple Args</h3>
+
+
+<p>Implement <code>make&#x2d;long&#x2d;or</code>,  which returns, as a list, a program that takes in any number of expressions and <code>or</code>'s them together (applying short-circuiting rules). This procedure should do this without using the <code>or</code> special form. Unlike the <code>make&#x2d;or</code> procedure, the arguments will be passed in as a list named <code>args</code>.</p>
+
+<p>The behavior of the <code>or</code>  procedure is specified by the following doctests:</p>
+
+<pre><code class="scheme">scm&gt; (define or&#x2d;program (make&#x2d;long&#x2d;or &#x27;((print &#x27;hello) (/ 1 0) 3 #f)))
+or&#x2d;program
+scm&gt; (eval or&#x2d;program)
+hello
+scm&gt; (eval (make&#x2d;long&#x2d;or &#x27;((= 1 0) #f (+ 1 2) (print &#x27;goodbye))))
+3
+scm&gt; (eval (make&#x2d;long&#x2d;or &#x27;((&gt; 3 1))))
+#t
+scm&gt; (eval (make&#x2d;long&#x2d;or &#x27;()))
+#f</code></pre>
+
+
+
+
+            <div class="monaco-storable" id="make-long-or-input" style="height:198px;"></div>
+            <a href="javascript:void" id="modal-link-make-long-or-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-make-long-or-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-make-long-or-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor("(define (make&#x2d;long&#x2d;or args)\n    'YOUR-CODE-HERE\n)\n", "scheme", "make-long-or-input"));
+            </script>
+        
+
+<div class="page-break"></div>
+
+
+<h2 id="regex">Regex</h2>
+
+
+
+<h3 id="q8-phone-number-validator">Q8: Phone Number Validator</h3>
+
+
+<!-- <b>Difficulty:</b> ⭐⭐ -->
+
+<p>Create a regular expression that matches phone numbers that are 11, 10, or 7 numbers long.</p>
+
+<p>Phone numbers 7 numbers long have a group of 3 numbers followed by a group of 4 numbers, either separated by a space, a dash, or nothing.</p>
+
+<p>Examples: <code>123&#x2d;4567</code>, <code>1234567</code>, <code>123 4567</code></p>
+
+<p>Phone numbers 10 numbers long have a group of 3 numbers followed by a group of 3 numbers followed by a group of 4 numbers, either separated by a space, a dash, or nothing.</p>
+
+<p>Examples: <code>123&#x2d;456&#x2d;7890</code>, <code>1234567890</code>, <code>123 456 7890</code></p>
+
+<p>Phone numbers 11 numbers long have a group of 1 number followed by a group 3 numbers followed by a group of 3 numbers followed by a group of 4 numbers, either separated by a space, a dash, or nothing.</p>
+
+<p>Examples: <code>1&#x2d;123&#x2d;456&#x2d;7890</code>, <code>11234567890</code>, <code>1 123 456 7890</code></p>
+
+<p>It is fine if spacing/dashes/no space mix! So <code>123 456&#x2d;7890</code> is fine.</p>
+
+<p><strong>Note:</strong> The skeleton code is just a suggestion; feel free to use your own structure if you prefer.</p>
+
+
+            <div class="monaco-storable" id="phone_number lang:python-input" style="height:504px;"></div>
+            <a href="javascript:void" id="modal-link-phone_number lang:python-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-phone_number lang:python-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-phone_number lang:python-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('import re\ndef phone_number(string):\n    &quot;&quot;&quot;\n    &gt;&gt;&gt; phone_number(&quot;Song by Logic: 1&#x2d;800&#x2d;273&#x2d;8255&quot;)\n    True\n    &gt;&gt;&gt; phone_number(&quot;123 456 7890&quot;)\n    True\n    &gt;&gt;&gt; phone_number(&quot;1&quot; * 11) and phone_number(&quot;1&quot; * 10) and phone_number(&quot;1&quot; * 7)\n    True\n    &gt;&gt;&gt; phone_number(&quot;The secret numbers are 4, 8, 15, 16, 23 and 42 (from the TV show Lost)&quot;)\n    False\n    &gt;&gt;&gt; phone_number(&quot;Belphegor&#x27;s Prime is 1000000000000066600000000000001&quot;)\n    False\n    &gt;&gt;&gt; phone_number(&quot; 1122334455 &quot;)\n    True\n    &gt;&gt;&gt; phone_number(&quot; 11 22 33 44 55 &quot;)\n    False\n    &gt;&gt;&gt; phone_number(&quot;Tommy Tutone&#x27;s &#x27;80s hit 867&#x2d;5309 /Jenny&quot;)\n    True\n    &gt;&gt;&gt; phone_number(&quot;11111111&quot;) # 8 digits isn&#x27;t valid, has to be 11, 10, or 7\n    False\n    &quot;&quot;&quot;\n    return bool(re.search(_____________________________________________________))\n\n', "python", "phone_number lang:python-input"));
+            </script>
+        
+
+<div class="page-break"></div>
+
+
+<h2 id="bnf">BNF</h2>
+
+
+
+<h3 id="q9-comprehension-is-everything">Q9: Comprehension is Everything</h3>
+
+
+<p>(Adapted from Spring 2021 Final)
+The following EBNF grammar can describe a subset of
+Python list comprehensions, but cannot yet describe all of them.</p>
+
+<pre><code>start: comp
+
+?comp: &quot;[&quot; expression &quot;for&quot; IDENTIFIER &quot;in&quot; IDENTIFIER &quot;]&quot;
+
+expression: IDENTIFIER operation*
+
+operation: OPERATOR NUMBER
+
+IDENTIFIER: /[a&#x2d;zA&#x2d;Z]+/
+
+OPERATOR: &quot;*&quot; | &quot;/&quot; | &quot;+&quot; | &quot;&#x2d;&quot;
+
+%import common.NUMBER
+%ignore /\s+/</code></pre>
+
+
+
+<p>Select all of the non-terminal symbols in the grammar:</p>
+
+<ul>
+  <li><code>comp</code></li>
+  <li><code>expression</code></li>
+  <li><code>operation</code></li>
+  <li><code>NUMBER</code></li>
+  <li><code>IDENTIFIER</code></li>
+  <li><code>OPERATOR</code></li>
+</ul>
+
+
+            <label class="sr-only" for="symbols-input">Your Answer:</label>
+            <input class="form-control storable" id="symbols-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+
+<p>Which of the following comprehensions would be successfully parsed by the grammar?</p>
+
+<ul>
+  <li><code>[x * 2 for x in list]</code></li>
+  <li><code>[x for x in list]</code></li>
+  <li><code>[x ** 2 for x in list]</code></li>
+  <li><code>[x + 2 for x in list if x == 1]</code></li>
+  <li><code>[x * y for x in list for y in list2]</code></li>
+  <li><code>[x &#x2d; 2 for x in my_list]</code></li>
+  <li><code>[x &#x2d; y for (x,y) in tuples]</code></li>
+</ul>
+
+
+            <label class="sr-only" for="comprehensions-input">Your Answer:</label>
+            <input class="form-control storable" id="comprehensions-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+
+<p>Recall that we can provide an optional <code>if</code> clause to the list comprehension which filters the resulting list based on the given condition. For example, an expression like <code>[x &#x2d; 3 for x in list if x &gt; 7]</code> is possible. Which line(s) would we need to modify to add support for the syntax described above, assuming that the conditional always compares an expression to a number?</p>
+
+<ul>
+  <li><code>OPERATOR: &quot;*&quot; | &quot;/&quot; | &quot;+&quot; | &quot;&#x2d;&quot;</code></li>
+  <li><code>IDENTIFIER: /[a&#x2d;zA&#x2d;z]+/</code></li>
+  <li><code>operation: OPERATOR NUMBER</code></li>
+  <li><code>expression: IDENTIFIER operation*</code></li>
+  <li><code>?comp: &quot;[&quot; expression &quot;for&quot; IDENTIFIER &quot;in&quot; IDENTIFIER &quot;]&quot;</code></li>
+</ul>
+
+
+            <label class="sr-only" for="modulo-input">Your Answer:</label>
+            <input class="form-control storable" id="modulo-input" type="text">
+            <div class="storable-status"></div>
+        
+
+</li>
+</ul>
+
+<p>Now modify the selected line(s) so that it can parse the syntax described above.</p>
+
+
+            <label class="sr-only" for="if-input">Your Answer:</label>
+            <input class="form-control storable" id="if-input" type="text">
+            <div class="storable-status"></div>
+        
+
+</li>
+</ul>
+
+<p>We can also nest list comprehensions within list comprehensions. For example, <code>[[z * 2 for z in list] for x in [y + 1 for y in list2]]</code> is valid Python syntax. As we can see, the nested list comprehension can go into either the map expression or the iterable expression or both. Modify the grammar so that it can now parse nested list comprehensions.</p>
+
+
+            <label class="sr-only" for="nested-input">Your Answer:</label>
+            <input class="form-control storable" id="nested-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#final-review">Final Review</a></li>
+  <ul>
+    <li><a href="index.html#recursion">Recursion</a></li>
+    <ul>
+      <li><a href="index.html#q1-paths-list">Q1: Paths List</a></li>
+    </ul>
+    <li><a href="index.html#mutation">Mutation</a></li>
+    <ul>
+      <li><a href="index.html#q2-reverse">Q2: Reverse</a></li>
+    </ul>
+    <li><a href="index.html#trees">Trees</a></li>
+    <ul>
+      <li><a href="index.html#q3-reverse-other">Q3: Reverse Other</a></li>
+    </ul>
+    <li><a href="index.html#linked-lists">Linked Lists</a></li>
+    <ul>
+      <li><a href="index.html#q4-multiply-links">Q4: Multiply Links</a></li>
+    </ul>
+    <li><a href="index.html#scheme">Scheme</a></li>
+    <ul>
+      <li><a href="index.html#q5-group-by-non-decreasing">Q5: Group by Non-Decreasing</a></li>
+    </ul>
+    <li><a href="index.html#environment-diagrams">Environment Diagrams</a></li>
+    <ul>
+      <li><a href="index.html#q6-to-scheme-an-environment-diagram">Q6: To Scheme An Environment Diagram</a></li>
+    </ul>
+    <li><a href="index.html#programs-as-data">Programs as Data</a></li>
+    <ul>
+      <li><a href="index.html#q7-or-with-multiple-args">Q7: Or with Multiple Args</a></li>
+    </ul>
+    <li><a href="index.html#regex">Regex</a></li>
+    <ul>
+      <li><a href="index.html#q8-phone-number-validator">Q8: Phone Number Validator</a></li>
+    </ul>
+    <li><a href="index.html#bnf">BNF</a></li>
+    <ul>
+      <li><a href="index.html#q9-comprehension-is-everything">Q9: Comprehension is Everything</a></li>
+    </ul>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="../../index.html">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="../../weekly">Weekly Schedule</a></li>
+            <li><a href="../../office-hours">Office Hours</a></li>
+            <li><a href="../../staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="../../articles/studying">Studying Guide</a></li>
+            <li><a href="../../articles/debugging">Debugging Guide</a></li>
+            <li><a href="../../articles/composition">Composition Guide</a></li>
+            <li><a href="../../articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="../../articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="../../articles/about#assignments">Assignments</a></li>
+            <li><a href="../../articles/about#exams">Exams</a></li>
+            <li><a href="../../articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<script src="../../assets/js/sketchy.js"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  </body>
+</html>

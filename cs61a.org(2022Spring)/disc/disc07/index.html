@@ -1,0 +1,772 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="description" content ="CS 61A: Structure and Interpretation of Computer Programs" />
+    <meta name="keywords" content ="CS 61A, Computer Science, CS, 61A, Programming, John DeNero, Berkeley, EECS" />
+    <meta name="author" content ="Pamela Fox" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/hl.js"></script>
+    <script src="../../assets/js/toggledarkmode.js"></script>
+    <script>
+        // we aren't registering builtins since
+        //      (1) they don't render differently in the current CSS from other names
+        //      (2) it's a mess to list all of them. You can extract from the site but that takes effort
+        // if (1) ceases to be true, (2) might be worth the effort. For now, we're leaving as is
+        hljsRegister({
+            'keyword': "define if cond and or let begin lambda mu quote delay cons-stream set! quasiquote unquote unquote-splicing define-macro"
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+    <script src="../../assets/js/dark-mode.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/mono-blue.css">
+    <link rel="icon" href="../../assets/images/favicon.ico">
+
+    
+
+<link rel="stylesheet" type="text/css" href="../../assets/css/disc.css">
+
+
+    <title>
+Discussion 7 | CS 61A Spring 2022
+</title>
+  </head>
+
+  <body id="index" class="home">
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container noselect">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-section">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../../index.html">
+            <img style="max-width:60px; margin-top: -20px;" class="logo" src="../../assets/images/logo.png"/>
+          </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse-section">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Calendar
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../../weekly">Weekly Schedule</a></li>
+                <li><a href="../../office-hours">Office Hours</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Staff
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../../instructor">Instructors</a></li>
+                <li><a href="../../TAs">TAs</a></li>
+                <li><a href="../../tutors">Tutors</a></li>
+                <li><a href="../../academic-interns">Academic Interns</a></li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="index.html#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Resources
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a href="../../resources/index.html">Topical Resources + Past Exams</a></li>
+                <li><a href="https://tutor.cs61a.org/">PyTutor</a></li>
+                <li><a href="https://code.cs61a.org/">Code</a></li>
+                <li><a href="https://piazza.com/class/kxj8vcku7037li" target="_blank">Piazza</a></li>
+                <li><a href="../../articles/campus-res/index.html">Department/Campus Resources</a></li>
+              </ul>
+            </li>
+            <li><a href="../../articles/about">Syllabus</a></li>
+            <li><a href="../../contact/index.html">Contact</a></li>
+            <li>
+              <label class="switch">
+                <input type="checkbox" id="toggle-mode-cb">
+                <span class="slider round"></span>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main id="content" class="container">
+      
+<div class='row'>
+  <div class='col-md-9'>
+    <header>
+      <h1>
+        
+Discussion 7: Linked Lists, Iterators, Generators
+
+        
+        
+        <ul class="inline-block list-inline">
+          <li><a href="disc07.pdf" class="label label-outline">disc07.pdf</a></li>
+        </ul>
+        
+        
+      </h1>
+    </header>
+    
+
+<div class="alert storable-login-status"></div>
+
+This is an online worksheet that you can work on during discussions.
+Your work is not graded and you do not need to submit anything.
+
+
+    
+
+
+
+
+
+<h1 id="linked-lists">Linked Lists</h1>
+
+
+<p>There are many different implementations of sequences in Python. Today, we'll
+explore the linked list implementation.</p>
+
+<p>A linked list is either an empty linked list, or a Link object containing a
+<code>first</code> value and the <code>rest</code> of the linked list.</p>
+
+<p>To check if a linked list is an empty linked list, compare it against the class
+attribute <code>Link.empty</code>:</p>
+
+<pre><code>if link is Link.empty:
+    print(&#x27;This linked list is empty!&#x27;)
+else:
+    print(&#x27;This linked list is not empty!&#x27;)</code></pre>
+
+
+
+<p>You can find an implementation of the <code>Link</code> class below:</p>
+
+<pre><code>class Link:
+    &quot;&quot;&quot;A linked list.&quot;&quot;&quot;
+    empty = ()
+
+    def __init__(self, first, rest=empty):
+        assert rest is Link.empty or isinstance(rest, Link)
+        self.first = first
+        self.rest = rest
+
+    def __repr__(self):
+        if self.rest:
+            rest_repr = &#x27;, &#x27; + repr(self.rest)
+        else:
+            rest_repr = &#x27;&#x27;
+        return &#x27;Link(&#x27; + repr(self.first) + rest_repr + &#x27;)&#x27;
+
+    def __str__(self):
+        string = &#x27;&lt;&#x27;
+        while self.rest is not Link.empty:
+            string += str(self.first) + &#x27; &#x27;
+            self = self.rest
+        return string + str(self.first) + &#x27;&gt;&#x27;</code></pre>
+
+
+
+
+
+<div class="page-break"></div>
+
+
+<h3 id="q1-wwpd-linked-lists">Q1: WWPD: Linked Lists</h3>
+
+
+<p>What would Python display?</p>
+
+<blockquote><p>Note: If you get stuck, try drawing out the box-and-pointer diagram for the
+linked list or running examples in 61A Code.</p></blockquote>
+
+<!-- <prompt>
+
+<pre><code>&gt;&gt;&gt; link = Link(1000)
+&gt;&gt;&gt; link.first</code></pre>
+
+</prompt>
+
+
+            <label class="sr-only" for="iter-wwpd-1-input">Your Answer:</label>
+            <input class="form-control storable" id="iter-wwpd-1-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<prompt>
+
+<pre><code>&gt;&gt;&gt; link.rest is Link.empty</code></pre>
+
+</prompt>
+
+
+            <label class="sr-only" for="iter-wwpd-1-input">Your Answer:</label>
+            <input class="form-control storable" id="iter-wwpd-1-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<prompt>
+
+<pre><code> &gt;&gt;&gt; link = Link(1000, 2000)</code></pre>
+
+</prompt>
+
+
+            <label class="sr-only" for="iter-wwpd-1-input">Your Answer:</label>
+            <input class="form-control storable" id="iter-wwpd-1-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<prompt>
+
+<pre><code>&gt;&gt;&gt; link = Link(1000, Link())</code></pre>
+
+</prompt>
+
+
+            <label class="sr-only" for="iter-wwpd-1-input">Your Answer:</label>
+            <input class="form-control storable" id="iter-wwpd-1-input" type="text">
+            <div class="storable-status"></div>
+        
+ -->
+
+<pre><code>&gt;&gt;&gt; link = Link(1, Link(2, Link(3)))
+&gt;&gt;&gt; link.first</code></pre>
+
+
+
+
+            <label class="sr-only" for="iter-wwpd-2-input">Your Answer:</label>
+            <input class="form-control storable" id="iter-wwpd-2-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<pre><code>&gt;&gt;&gt; link.rest.first</code></pre>
+
+
+
+
+            <label class="sr-only" for="iter-wwpd-2-input">Your Answer:</label>
+            <input class="form-control storable" id="iter-wwpd-2-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<pre><code>&gt;&gt;&gt; link.rest.rest.rest is Link.empty</code></pre>
+
+
+
+
+            <label class="sr-only" for="iter-wwpd-2-input">Your Answer:</label>
+            <input class="form-control storable" id="iter-wwpd-2-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<pre><code>&gt;&gt;&gt; link.rest = link.rest.rest
+&gt;&gt;&gt; link.rest.first</code></pre>
+
+
+
+
+            <label class="sr-only" for="iter-wwpd-2-input">Your Answer:</label>
+            <input class="form-control storable" id="iter-wwpd-2-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<pre><code>&gt;&gt;&gt; link = Link(1)
+&gt;&gt;&gt; link.rest = link
+&gt;&gt;&gt; link.rest.rest.rest.rest.first</code></pre>
+
+
+
+
+            <label class="sr-only" for="iter-wwpd-2-input">Your Answer:</label>
+            <input class="form-control storable" id="iter-wwpd-2-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<pre><code>&gt;&gt;&gt; link = Link(2, Link(3, Link(4)))
+&gt;&gt;&gt; link2 = Link(1, link)
+&gt;&gt;&gt; link2.first</code></pre>
+
+
+
+
+            <label class="sr-only" for="iter-wwpd-2-input">Your Answer:</label>
+            <input class="form-control storable" id="iter-wwpd-2-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<pre><code>&gt;&gt;&gt; link2.rest.first</code></pre>
+
+
+
+
+            <label class="sr-only" for="iter-wwpd-2-input">Your Answer:</label>
+            <input class="form-control storable" id="iter-wwpd-2-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<div class="page-break"></div>
+
+
+<h3 id="q2-remove-all">Q2: Remove All</h3>
+
+
+<p>Implement a function <code>remove_all</code> that takes a <code>Link</code>, and a <code>value</code>,
+and remove any linked list node containing that value.  You can assume the
+list already has at least one node containing <code>value</code> and the first element is
+never removed. Notice that you are not returning anything, so you should mutate the list.</p>
+
+<p><strong>Note:</strong> Can you create a recursive and iterative solution for <code>remove_all</code>?</p>
+
+
+            <div class="monaco-storable" id="remove_all-input" style="height:486px;"></div>
+            <a href="javascript:void" id="modal-link-remove_all-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-remove_all-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-remove_all-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def remove_all(link, value):\n    &quot;&quot;&quot;Remove all the nodes containing value in link. Assume that the\n    first element is never removed.\n\n    &gt;&gt;&gt; l1 = Link(0, Link(2, Link(2, Link(3, Link(1, Link(2, Link(3)))))))\n    &gt;&gt;&gt; print(l1)\n    &lt;0 2 2 3 1 2 3&gt;\n    &gt;&gt;&gt; remove_all(l1, 2)\n    &gt;&gt;&gt; print(l1)\n    &lt;0 3 1 3&gt;\n    &gt;&gt;&gt; remove_all(l1, 3)\n    &gt;&gt;&gt; print(l1)\n    &lt;0 1&gt;\n    &gt;&gt;&gt; remove_all(l1, 3)\n    &gt;&gt;&gt; print(l1)\n    &lt;0 1&gt;\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\n', "python", "remove_all-input"));
+            </script>
+        
+
+
+
+<div class="page-break"></div>
+
+
+<h1 id="iterators">Iterators</h1>
+
+
+<p>An iterable is an object where we can go through its elements one at a time.
+Specifically, we define an <strong>iterable</strong> as any object where calling the built-in <code>iter</code>
+function on it returns an <em>iterator</em>. An <strong>iterator</strong> is another type of object
+which can iterate over an iterable by keeping track of which element is next in
+the iterable.</p>
+
+<p>For example, a sequence of numbers is an iterable,
+since <code>iter</code> gives us an iterator over the given sequence:</p>
+
+<pre><code>&gt;&gt;&gt; lst = [1, 2, 3]
+&gt;&gt;&gt; lst_iter = iter(lst)
+&gt;&gt;&gt; lst_iter
+&lt;list_iterator object ...&gt;</code></pre>
+
+<p>With an iterator, we can call <code>next</code> on it to get the next element in the
+iterator. If calling <code>next</code> on an iterator raises a <code>StopIteration</code> exception,
+this signals to us that the iterator has no more elements to go through. This
+will be explored in the example below.</p>
+
+<p>Calling <code>iter</code> on an iterable multiple times returns a new iterator each time
+with distinct states (otherwise, you'd never be able to iterate through a
+iterable more than once). You can also call <code>iter</code> on the iterator itself, which
+will just return the same iterator without changing its state. However, note
+that you cannot call <code>next</code> directly on an iterable.</p>
+
+<p>For example, we can see what happens when we use <code>iter</code> and <code>next</code> with a list:</p>
+
+<pre><code>&gt;&gt;&gt; lst = [1, 2, 3]
+&gt;&gt;&gt; next(lst)             # Calling next on an iterable
+TypeError: &#x27;list&#x27; object is not an iterator
+&gt;&gt;&gt; list_iter = iter(lst) # Creates an iterator for the list
+&gt;&gt;&gt; next(list_iter)       # Calling next on an iterator
+1
+&gt;&gt;&gt; next(iter(list_iter)) # Calling iter on an iterator returns itself
+2
+&gt;&gt;&gt; for e in list_iter:   # Exhausts remainder of list_iter
+...     print(e)
+3
+&gt;&gt;&gt; next(list_iter)       # No elements left!
+StopIteration
+&gt;&gt;&gt; lst                   # Original iterable is unaffected
+[1, 2, 3]</code></pre>
+
+<div class="page-break"></div>
+
+
+<h3 id="q3-wwpd-iterators">Q3: WWPD: Iterators</h3>
+
+
+<p>What would Python display?</p>
+
+<pre><code>&gt;&gt;&gt; s = [[1, 2, 3, 4]]
+&gt;&gt;&gt; i = iter(s)
+&gt;&gt;&gt; j = iter(next(i))
+&gt;&gt;&gt; next(j)</code></pre>
+
+
+
+            <label class="sr-only" for="iter-wwpd-1-input">Your Answer:</label>
+            <input class="form-control storable" id="iter-wwpd-1-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<pre><code>&gt;&gt;&gt; s.append(5)
+&gt;&gt;&gt; next(i)</code></pre>
+
+
+
+            <label class="sr-only" for="iter-wwpd-2-input">Your Answer:</label>
+            <input class="form-control storable" id="iter-wwpd-2-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<pre><code>&gt;&gt;&gt; next(j)</code></pre>
+
+
+
+
+            <label class="sr-only" for="iter-wwpd-2-input">Your Answer:</label>
+            <input class="form-control storable" id="iter-wwpd-2-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<pre><code>&gt;&gt;&gt; list(j)</code></pre>
+
+
+
+
+            <label class="sr-only" for="iter-wwpd-2-input">Your Answer:</label>
+            <input class="form-control storable" id="iter-wwpd-2-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<pre><code>&gt;&gt;&gt; next(i)</code></pre>
+
+
+
+            <label class="sr-only" for="iter-wwpd-2-input">Your Answer:</label>
+            <input class="form-control storable" id="iter-wwpd-2-input" type="text">
+            <div class="storable-status"></div>
+        
+
+
+<div class="page-break"></div>
+
+
+<h1 id="generators">Generators</h1>
+
+
+<p>We can define custom iterators by writing a <em>generator function</em>,
+which returns a special type of iterator called a <strong>generator</strong>.</p>
+
+<p>A generator function has at least one <code>yield</code> statement
+and returns a <strong><em>generator</em></strong> <em>object</em> when we call it,
+without evaluating the body of the generator function itself.</p>
+
+<p>When we first call <code>next</code> on the returned generator,
+then we will begin evaluating the body of the generator function until
+an element is yielded or the function otherwise stops
+(such as if we <code>return</code>).
+The generator remembers where we stopped,
+and will continue evaluating from that stopping point
+on the next time we call <code>next</code>.</p>
+
+<p>As with other iterators, if there are no more elements to be generated,
+then calling <code>next</code> on the generator will give us a <code>StopIteration</code>.</p>
+
+<p>For example, here's a generator function:</p>
+
+<pre><code>def countdown(n):
+    print(&quot;Beginning countdown!&quot;)
+    while n &gt;= 0:
+        yield n
+        n &#x2d;= 1
+    print(&quot;Blastoff!&quot;)</code></pre>
+
+<p>To create a new generator object, we can call the generator function.
+Each returned generator object from a function call will separately
+keep track of where it is in terms of evaluating the body of the function.
+Notice that calling <code>iter</code> on a generator object doesn't create a new
+bookmark, but simply returns the existing generator object!</p>
+
+<pre><code>&gt;&gt;&gt; c1, c2 = countdown(2), countdown(2)
+&gt;&gt;&gt; c1 is iter(c1)  # a generator is an iterator
+True
+&gt;&gt;&gt; c1 is c2
+False
+&gt;&gt;&gt; next(c1)
+Beginning countdown!
+2
+&gt;&gt;&gt; next(c2)
+Beginning countdown!
+2</code></pre>
+
+<p>In a generator function, we can also have a <code>yield from</code> statement,
+which will <strong>yield</strong> each element <strong>from</strong> an iterator or iterable.</p>
+
+<pre><code>&gt;&gt;&gt; def gen_list(lst):
+...     yield from lst
+...
+&gt;&gt;&gt; g = gen_list([1, 2])
+&gt;&gt;&gt; next(g)
+1
+&gt;&gt;&gt; next(g)
+2
+&gt;&gt;&gt; next(g)
+StopIteration</code></pre>
+
+<div class="page-break"></div>
+
+
+<h3 id="q4-filter-iter">Q4: Filter-Iter</h3>
+
+<p>Implement a generator function called <code>filter_iter(iterable, f)</code> that only yields
+elements of <code>iterable</code> for which <code>f</code> returns True.</p>
+
+
+            <div class="monaco-storable" id="filter-iter-input" style="height:450px;"></div>
+            <a href="javascript:void" id="modal-link-filter-iter-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-filter-iter-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-filter-iter-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def filter_iter(iterable, f):\n    &quot;&quot;&quot;\n    &gt;&gt;&gt; is_even = lambda x: x % 2 == 0\n    &gt;&gt;&gt; list(filter_iter(range(5), is_even)) # a list of the values yielded from the call to filter_iter\n    [0, 2, 4]\n    &gt;&gt;&gt; all_odd = (2*y&#x2d;1 for y in range(5))\n    &gt;&gt;&gt; list(filter_iter(all_odd, is_even))\n    []\n    &gt;&gt;&gt; naturals = (n for n in range(1, 100))\n    &gt;&gt;&gt; s = filter_iter(naturals, is_even)\n    &gt;&gt;&gt; next(s)\n    2\n    &gt;&gt;&gt; next(s)\n    4\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\n', "python", "filter-iter-input"));
+            </script>
+        
+
+<div class="page-break"></div>
+
+
+<h3 id="q5-infinite-hailstone">Q5: Infinite Hailstone</h3>
+
+
+<p>Write a generator function that outputs the hailstone sequence starting at number <code>n</code>.
+After reaching the end of the hailstone sequence, the generator should yield the value 1 infinitely.</p>
+
+<p>Here's a quick reminder of how the hailstone sequence is defined:</p>
+
+<ol>
+  <li>Pick a positive integer <code>n</code> as the start.</li>
+  <li>If <code>n</code> is even, divide it by 2.</li>
+  <li>If <code>n</code> is odd, multiply it by 3 and add 1.</li>
+  <li>Continue this process until <code>n</code> is 1.</li>
+</ol>
+
+<p>Write this generator function recursively. If you're stuck, you can first try writing it iteratively 
+and then seeing how you can turn that implementation into a recursive one.</p>
+
+<p><strong>Hint:</strong> Since <code>hailstone</code> returns a generator, you can <code>yield from</code> a call to <code>hailstone</code>!</p>
+
+
+            <div class="monaco-storable" id="hailstone-input" style="height:360px;"></div>
+            <a href="javascript:void" id="modal-link-hailstone-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-hailstone-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-hailstone-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def hailstone(n):\n    &quot;&quot;&quot;Yields the elements of the hailstone sequence starting at n.\n       At the end of the sequence, yield 1 infinitely.\n\n    &gt;&gt;&gt; hail_gen = hailstone(10)\n    &gt;&gt;&gt; [next(hail_gen) for _ in range(10)]\n    [10, 5, 16, 8, 4, 2, 1, 1, 1, 1]\n    &gt;&gt;&gt; next(hail_gen)\n    1\n    &quot;&quot;&quot;\n    "*** YOUR CODE HERE ***"\n\n', "python", "hailstone-input"));
+            </script>
+        
+
+
+
+<div class="page-break"></div>
+
+
+<h3 id="q6-primes-generator">Q6: Primes Generator</h3>
+
+<p>Write a function <code>primes_gen</code> that takes a single argument <code>n</code> and yields all prime
+numbers less than or equal to <code>n</code> in decreasing order. Assume <code>n &gt;= 1</code>.
+You may use the <code>is_prime</code> function included below, which we implemented in
+<a href="../disc03/index.html">Discussion 3</a>.</p>
+
+<p>Optional Challenge:
+Now rewrite the generator so that it also prints the primes in
+<em>ascending order</em>.</p>
+
+
+            <div class="monaco-storable" id="primes-input" style="height:558px;"></div>
+            <a href="javascript:void" id="modal-link-primes-input">Run in 61A Code</a>
+            <div class="modal fade" id="modal-primes-input" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="padding-bottom: -5px">
+                    <iframe
+                        id="code-iframe-primes-input"
+                        width="100%"
+                        height="700px"
+                        style="border: none; display:block;"
+                    ></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="storable-status"></div>
+            <script>
+                $(() => activateEditor('def is_prime(n):\n    &quot;&quot;&quot;Returns True if n is a prime number and False otherwise.\n    &gt;&gt;&gt; is_prime(2)\n    True\n    &gt;&gt;&gt; is_prime(16)\n    False\n    &gt;&gt;&gt; is_prime(521)\n    True\n    &quot;&quot;&quot;\n    def helper(i):\n        if i &gt; (n ** 0.5): # Could replace with i == n\n            return True\n        elif n % i == 0:\n            return False\n        return helper(i + 1)\n    return helper(2)\n\ndef primes_gen(n):\n    &quot;&quot;&quot;Generates primes in decreasing order.\n    &gt;&gt;&gt; pg = primes_gen(7)\n    &gt;&gt;&gt; list(pg)\n    [7, 5, 3, 2]\n    &quot;&quot;&quot;\n    if __________________________________:\n        return\n    if __________________________________:\n        yield __________________________________\n    yield from __________________________________\n\n', "python", "primes-input"));
+            </script>
+        
+
+  </div>
+
+  <div class='col-md-3 sticky'>
+    <nav class='hidden-print hidden-sm hidden-xs sidebar'>
+      <ul>
+  <li><a href="index.html#linked-lists">Linked Lists</a></li>
+  <ul>
+    <li><a href="index.html#q1-wwpd-linked-lists">Q1: WWPD: Linked Lists</a></li>
+    <li><a href="index.html#q2-remove-all">Q2: Remove All</a></li>
+  </ul>
+  <li><a href="index.html#iterators">Iterators</a></li>
+  <ul>
+    <li><a href="index.html#q3-wwpd-iterators">Q3: WWPD: Iterators</a></li>
+  </ul>
+  <li><a href="index.html#generators">Generators</a></li>
+  <ul>
+    <li><a href="index.html#q4-filter-iter">Q4: Filter-Iter</a></li>
+    <li><a href="index.html#q5-infinite-hailstone">Q5: Infinite Hailstone</a></li>
+    <li><a href="index.html#q6-primes-generator">Q6: Primes Generator</a></li>
+  </ul>
+</ul>
+    </nav>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="container">
+      <div class="row text-center">
+        <div class="col col-sm-4">
+          <h3><a href="../../index.html">CS 61A</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="../../weekly">Weekly Schedule</a></li>
+            <li><a href="../../office-hours">Office Hours</a></li>
+            <li><a href="../../staff">Staff</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="https://cs61a.org/resources">Resources</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="../../articles/studying">Studying Guide</a></li>
+            <li><a href="../../articles/debugging">Debugging Guide</a></li>
+            <li><a href="../../articles/composition">Composition Guide</a></li>
+            <li><a href="../../articles/pair-programming">Pair Programming</a></li>
+          </ul>
+        </div>
+        <div class="col col-sm-4">
+          <h3><a href="../../articles/about">Policies</a></h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="../../articles/about#assignments">Assignments</a></li>
+            <li><a href="../../articles/about#exams">Exams</a></li>
+            <li><a href="../../articles/about#grading">Grading</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
+  <script>
+      require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs' }});
+      window.MonacoEnvironment = { getWorkerUrl: () => URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+          baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min'
+      };
+      importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/base/worker/workerMain.min.js');
+  `], { type: 'text/javascript' }))
+  };
+  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsPlumb/2.15.5/js/jsplumb.min.js"></script>
+    <script src="../../assets/js/network_storage.js"></script>
+    <script src="../../assets/js/storable.js"></script>
+    <script src="../../assets/js/editor.js"></script>
+    <script src="../../assets/js/copy-button.js"></script>
+    <script src="../../assets/js/env-diagram.js"></script>
+    
+<script src="../../assets/js/sketchy.js"></script>
+<script>
+  $('.sidebar ul').addClass('nav nav-stacked noselect');
+  $('body').scrollspy({
+    target: '.sidebar',
+    offset: 40
+  });
+
+  function goToId(id) {
+    var target = $(id);
+    target.parent().show();
+    $('html,body').animate({
+      scrollTop: target.offset().top,
+    }, 100);
+    $("body").scrollspy('refresh');
+  }
+
+  if (location.hash) {
+    setTimeout(function() {
+      if (location.hash) {
+        goToId(location.hash);
+      }
+    }, 1);
+  }
+
+  $("a").click(function(event) {
+    var urlBeforeHashRegEx = new RegExp("^"+window.location.href.split("#")[0]);
+    if (/^#/.test(this.hash) && urlBeforeHashRegEx.test(this.href)) {
+      event.preventDefault();
+      goToId(this.hash);
+      document.location.hash = this.hash;
+    }
+  });
+</script>
+
+  </body>
+</html>

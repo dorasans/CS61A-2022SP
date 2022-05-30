@@ -1,0 +1,563 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Interpreters</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Interpreters</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="28-Interpreters_Scheme.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Interpreting Scheme
+                        <li>Special forms
+                        <li>Logical forms
+                        <li>Quotation
+                        <li>Lambda expressions
+                        <li>Define expressions
+                    </ul>
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>Interpreting Scheme</h2>
+                </section>
+
+                <section>
+                    <h3>The Structure of an Interpreter</h3>
+                    <a href="https://en.wikipedia.org/wiki/File:SICP_JS,_cover_detail_2022.jpeg">
+                        <img width="512" alt="Cover of SICP, JavaScript edition" src="https://upload.wikimedia.org/wikipedia/en/5/57/SICP_JS%2C_cover_detail_2022.jpeg">
+                    </a>
+                    <p style="font-size:0.7em">Cover of "Structure and Interpretation of Computer Programs", JS adaptation</p>
+                </section>
+
+                <section>
+                    <h3>The Structure of an Interpreter</h3>
+
+                    <div style="text-align:center">
+
+                        <div style="font-size: 20px;text-align: left;width: 70%; background: #eee; padding: 20px;">
+                            <h4>Eval</h4>
+                            <p>Base cases:</p>
+                            <ul>
+                                <li class="fragment" data-fragment-index="1">Primitive values (numbers)
+                                <li class="fragment" style="color: maroon" data-fragment-index="5">Look up values bound to symbols
+                            </ul>
+
+                            <p>Recursive calls:</p>
+                            <ul>
+                                <li class="fragment" data-fragment-index="2">Eval(operator, operands) of call expressions
+                                <li class="fragment" data-fragment-index="3">Apply(procedure, arguments)
+                                <li class="fragment" style="color: maroon" data-fragment-index="6">Eval(sub-expressions) of special forms
+                            </ul>
+                        </div>
+                        <div style="display:flex; align-items: center; width: 70%; "><span style="text-align:left;">⤹</span><span style="flex: auto;"></span><span style="text-align:right;" class="fragment" data-fragment-index="7">⤴</span></div>
+                        <div style="font-size: 20px;text-align: left;width: 70%; background: #eee; padding: 20px;">
+                            <h4>Apply</h4>
+                            <p>Base cases:</p>
+                            <ul>
+                                <li class="fragment" data-fragment-index="4">Built-in primitive procedures 
+                            </ul>
+
+                            <p class="fragment" data-fragment-index="7">Recursive calls:</p>
+                            <ul>
+                                <li class="fragment" style="color: maroon" class="fragment" data-fragment-index="7">Eval(body) of user-defined procedures 
+                            </ul>
+                        </div>
+                        <!--TODO: Environment notes-->
+                </section>
+
+                <section class="heading-only">
+                    <h2>Special forms</h2>
+                </section>
+
+                <section>
+                    <h3>Scheme evaluation</h3>
+
+                    <p>The <code>scheme_eval</code> function chooses behavior based on expression form:</p>
+                    <ul>
+                        <li>Symbols are looked up in the current environment
+                        <li>Self-evaluating expressions (booleans, numbers, nil) are returned as values
+                        <li>All other legal expressions are represented as Scheme lists, called combinations<br>
+                            <code>(&lt;operator&gt; &lt;operand 0&gt; ... &lt;operand k&gt;)</code>
+                    </ul>
+
+                </section>
+
+                <section>
+                    <h3>Evaluating combinations</h3>
+                    <p>The special forms can all be identified by the first element:</p>
+                    <pre style="font-size:1.0em" class="no-code-badge"><code data-trim data-noescape class="scheme">
+                    (<strong>if</strong> &lt;predicate&gt; &lt;consequent&gt; &lt;alternative&gt;)
+                    (<strong>lambda</strong> (&lt;formal-parameters&gt;) &lt;body&gt;)
+                    (<strong>define</strong> &lt;name&gt; &lt;expression&gt;)
+                    </code></pre>
+
+                    <p class="padded">Any combination that is <em>not</em> a known special form must be a call expression.</p>
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="scheme">
+                    (define (demo s)
+                        (if (null? s)
+                            '(3)
+                            (cons (car s) (demo (cdr s)))))  <span class="fragment">; Special!</span>
+                    (demo (list 1 2))                        <span class="fragment">; Call expression!</span>
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Logical special forms</h3>
+
+                    <p>Logical forms are special forms that may only evaluate some sub-expressions.</p>
+
+                    <ul>
+                        <li>If expression: <code>(if &lt;predicate&gt; &lt;consequent&gt; &lt;alternative&gt;)</code>
+                        <li>And and or: <code>(and &lt;e1&gt; ... &lt;en&gt;)</code>, <code>(or &lt;e1&gt; ... &lt;en&gt;)</code>
+                        <li>Cond expression: <code>(cond (&lt;p1&gt; &lt;e1&gt;) ... (&lt;pn&gt; &lt;en&gt;) (else &lt;e&gt;))</code>
+                    </ul>
+                    <div class="fragment">
+                    <p class="padded">The value of an <code>if</code> expression is the value of a sub-expression:</p>
+                    <ul class="smaller">
+                        <li>Evaluate the predicate
+                        <li>Choose a sub-expression: &lt;consequent&gt; or &lt;alternative&gt;
+                        <li>Evaluate that sub-expression to get the value of the whole expression
+                    </ul>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Quotation</h3>
+                    
+                    <p>
+                    <code>'&lt;expression&gt;</code> is shorthand for <code>(quote &lt;expression&gt;)</code><br>
+                    <code>'(1 2)</code> is equivalent to <code>(quote (1 2))</code>
+                    </p>
+                    <p>
+                    The <code>scheme_read</code> parser converts <code>'</code> to a combination that starts with <code>quote</code>. 
+                    </p>
+                    <br>
+                    <div class="fragment padded">
+                    <p>The <code>quote</code> special form evaluates to the quoted expression, which is <em>not</em> evaluated.
+                    </p>
+
+                    <p>
+                    <code>(quote (+ 1 2))</code><br>
+                    evaluates to the three-element Scheme list<br>
+                    <code>(+ 1 2)</code>
+                    </p>
+                    </div>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Symbols & Functions</h2>
+                </section>
+
+                <section>
+                    <h3>Frames</h3>
+
+                    <p>A frame represents an environment by having a parent frame.</p>
+
+                    <p>A frame is an instance of a <code>Frame</code> object,
+                        which has <code>lookup</code> and <code>define</code> methods.</p>
+
+                    <p>In this interpreter, frames do <strong>not</strong> hold return values.</p>
+
+                    <div class="env-diagram" style="grid-row: 1; grid-column: 2">
+                        <div class="env-diagram-frame" data-fragment-index="2">
+                            <div>Global frame</div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>y</td>
+                                    <td>3</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>z</td>
+                                    <td>5</td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="env-diagram-frame"  data-fragment-index="9">
+                            <div>
+                            f1: [parent=Global]
+                            </div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>x</td>
+                                    <td>2</td>
+                                    <td></td>
+                                </tr>
+                                <tr data-fragment-index="11">
+                                    <td>z</td>
+                                    <td>4</td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </section>
+
+                <section>
+                    <h3>Define Expressions</h3>
+                    <p>Define binds a symbol to a value in the first frame of the current environment.<br>
+                    
+                    <code>(define &lt;name&gt; &lt;expression&gt;)</code> <br>
+                    </p>
+
+                    <ul>
+                        <li>Evaluate the <code>&lt;expression&gt;</code>
+                        <li>Bind <code>&lt;name&gt;</code> to its value in the current frame
+                    </ul>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    (define x (+ 1 2))
+                    </code></pre>
+
+                    <Div class="fragment">
+                    <p>Procedure definition is shorthand of define with a lambda expression.<br>
+                        <code class="smaller">(define (&lt;name&gt; &lt;formal parameters&gt;) &lt;body&gt;)</code><br>
+                        <code class="smaller">(define &lt;name&gt; (lambda (&lt;formal parameters&gt;) &lt;body&gt;))</code>
+                    </p>
+                    </div>
+                </section>
+            
+                <section>
+                    <h3>Lambda Expressions</h3>
+
+                    <p>Lambda expressions evaluate to user-defined procedures</p>
+
+                    <code>
+                    (lambda (&lt;formal-parameters&gt;) &lt;body&gt; ... )
+                    </code>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    class LambdaProcedure:
+                        def __init__(self, formals, body, env):
+                            self.formals = formals  # A scheme list of symbols
+                            self.body = body        # A scheme list of expressions
+                            self.env = env          # A Frame instance
+                    </code></pre>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    (lambda (x y) (* x y))
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Applying User-Defined Procedures</h3>
+
+                    <p>To apply a user-defined procedure, create a new frame in which formal parameters are bound
+                        to argument values, whose parent is the env attribute of the procedure.</p>
+                    
+                    <p>Evaluate the body of the procedure in the environment that starts with this new frame.</p>
+
+                    <pre style="font-size:em"><code data-trim data-noescape class="scheme">
+                    (define (demo s)
+                        (if (null? s)
+                            '(3)
+                            (cons (car s) (demo (cdr s)))))
+                    (demo (list 1 2))
+                    </code></pre>
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" width="3000" height="2000" xmlns:ev="http://www.w3.org/2001/xml-events" style="overflow: hidden; "><g id="viewport-20211108050745966" class="svg-pan-zoom_viewport" transform="matrix(1,0,0,1,0,0)" style="transform: matrix(1, 0, 0, 1, 0, 0);"><rect id="SvgjsRect8043" width="119.22599999999998" height="47.562437562437566" x="15" y="182.68731268731273" stroke="#000000" stroke-width="2" fill="#ffffff" rx="10" ry="10"></rect><rect id="SvgjsRect8035" width="119.22599999999998" height="47.562437562437566" x="15" y="125.12487512487513" stroke="#000000" stroke-width="2" fill="#ffffff" rx="10" ry="10"></rect><rect id="SvgjsRect8034" width="77.216" height="38.608" x="207.834" y="90.73426573426573" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect8031" width="77.216" height="38.608" x="300.05" y="90.73426573426573" stroke="black" stroke-width="2" fill="transparent"></rect><rect id="SvgjsRect8014" width="119.22599999999998" height="47.562437562437566" x="15" y="67.56243756243757" stroke="#000000" stroke-width="2" fill="#ffffff" rx="10" ry="10"></rect><rect id="SvgjsRect8004" width="152.83399999999997" height="47.562437562437566" x="15" y="10" stroke="#000000" stroke-width="2" fill="#ffffff" rx="10" ry="10"></rect><text id="SvgjsText8005" font-family="Monaco, monospace" font-size="14" x="25" y="10"><tspan id="SvgjsTspan8006" dy="18.2" x="25">Global frame</tspan></text><text id="SvgjsText8007" font-family="Monaco, monospace" font-size="14" x="35" y="28.781218781218783"><tspan id="SvgjsTspan8008" dy="18.2" x="35">demo</tspan></text><circle id="SvgjsCircle8009" r="2.5" cx="152.83399999999997" cy="43.78121878121878" fill="black"></circle><polygon id="SvgjsPolygon8010" points="241.44199999999998,43.085218781218785 231.44199999999998,48.085218781218785 231.44199999999998,38.085218781218785" fill="black" transform="matrix(0.9999691523191101,-0.007854578932083994,0.007854578932083994,0.9999691523191101,-0.33096832595379055,1.8977543256002605)"></polygon><line id="SvgjsLine8011" x1="152.83399999999997" y1="43.78121878121878" x2="236.44215423840444" y2="43.124491675879206" stroke="black" stroke-width="2"></line><text id="SvgjsText8012" font-family="Monaco, monospace" fill="black" font-size="14" x="246.45943749999992" y="29.889906281218785"><tspan id="SvgjsTspan8013" dy="18.2" x="246.45943749999992">(lambda (s) (if (null? s) (quote (3)) (cons (car s) (demo (cdr s)))))</tspan></text><text id="SvgjsText8015" font-family="Monaco, monospace" font-size="14" x="25" y="67.56243756243757"><tspan id="SvgjsTspan8016" dy="18.2" x="25">Frame f1</tspan></text><text id="SvgjsText8017" font-family="Monaco, monospace" font-size="14" x="35" y="86.34365634365635"><tspan id="SvgjsTspan8018" dy="18.2" x="35">s</tspan></text><circle id="SvgjsCircle8019" r="2.5" cx="119.22599999999998" cy="101.34365634365635" fill="black"></circle><polygon id="SvgjsPolygon8020" points="207.834,110.03826573426574 197.834,115.03826573426574 197.834,105.03826573426574" fill="black" transform="matrix(0.99522028642897,0.09765542217531469,-0.09765542217531469,0.99522028642897,11.739220286040648,-19.770165620321677)"></polygon><line id="SvgjsLine8021" x1="119.22599999999998" y1="101.34365634365635" x2="202.85789856785516" y2="109.54998862338917" stroke="black" stroke-width="2"></line><line id="SvgjsLine8022" x1="246.442" y1="90.73426573426573" x2="246.442" y2="129.34226573426574" stroke="black" stroke-width="2"></line><circle id="SvgjsCircle8023" r="2.5" cx="265.746" cy="110.03826573426574" fill="black"></circle><polygon id="SvgjsPolygon8024" points="300.05,110.03826573426574 290.05,115.03826573426574 290.05,105.03826573426574" fill="black" transform="matrix(1,0,0,1,0,0)"></polygon><line id="SvgjsLine8025" x1="265.746" y1="110.03826573426574" x2="295.05" y2="110.03826573426574" stroke="black" stroke-width="2"></line><line id="SvgjsLine8026" x1="338.658" y1="90.73426573426573" x2="338.658" y2="129.34226573426574" stroke="black" stroke-width="2"></line><text id="SvgjsText8027" font-family="Monaco, monospace" fill="black" font-size="14" x="349.55575" y="96.84295323426574"><tspan id="SvgjsTspan8028" dy="18.2" x="349.55575">()</tspan></text><text id="SvgjsText8029" font-family="Monaco, monospace" fill="black" font-size="14" x="315.150875" y="96.84295323426574"><tspan id="SvgjsTspan8030" dy="18.2" x="315.150875">2</tspan></text><text id="SvgjsText8032" font-family="Monaco, monospace" fill="black" font-size="14" x="222.934875" y="96.84295323426574"><tspan id="SvgjsTspan8033" dy="18.2" x="222.934875">1</tspan></text><text id="SvgjsText8036" font-family="Monaco, monospace" font-size="14" x="25" y="125.12487512487513"><tspan id="SvgjsTspan8037" dy="18.2" x="25">Frame f2</tspan></text><text id="SvgjsText8038" font-family="Monaco, monospace" font-size="14" x="35" y="143.90609390609393"><tspan id="SvgjsTspan8039" dy="18.2" x="35">s</tspan></text><circle id="SvgjsCircle8040" r="2.5" cx="119.22599999999998" cy="158.90609390609393" fill="black"></circle><polygon id="SvgjsPolygon8041" points="300.05,110.03826573426574 290.05,115.03826573426574 290.05,105.03826573426574" fill="black" transform="matrix(0.96536813039491,-0.26089149625435504,0.26089149625435504,0.96536813039491,-18.31675531763966,82.09132432159856)"></polygon><line id="SvgjsLine8042" x1="119.22599999999998" y1="158.90609390609393" x2="295.22315934802543" y2="111.3427232155375" stroke="black" stroke-width="2"></line><text id="SvgjsText8044" font-family="Monaco, monospace" font-size="14" x="25" y="182.68731268731273"><tspan id="SvgjsTspan8045" dy="18.2" x="25">Frame f3</tspan></text><text id="SvgjsText8046" font-family="Monaco, monospace" font-size="14" x="35" y="201.46853146853152"><tspan id="SvgjsTspan8047" dy="18.2" x="35">s</tspan></text><text id="SvgjsText8048" font-family="Monaco, monospace" font-size="14" x="102.422" y="201.46853146853152"><tspan id="SvgjsTspan8049" dy="18.2" x="102.422">()</tspan></text></g><defs><style id="svg-pan-zoom-controls-styles" type="text/css">.svg-pan-zoom-control { cursor: pointer; fill: black; fill-opacity: 0.333; } .svg-pan-zoom-control:hover { fill-opacity: 0.8; } .svg-pan-zoom-control-background { fill: white; fill-opacity: 0.5; } .svg-pan-zoom-control-background { fill-opacity: 0.8; }</style></defs><g id="svg-pan-zoom-controls" transform="translate(2930 1924) scale(0.75)" class="svg-pan-zoom-control"><g id="svg-pan-zoom-zoom-in" transform="translate(30.5 5) scale(0.015)" class="svg-pan-zoom-control"><rect x="0" y="0" width="1500" height="1400" class="svg-pan-zoom-control-background"></rect><path d="M1280 576v128q0 26 -19 45t-45 19h-320v320q0 26 -19 45t-45 19h-128q-26 0 -45 -19t-19 -45v-320h-320q-26 0 -45 -19t-19 -45v-128q0 -26 19 -45t45 -19h320v-320q0 -26 19 -45t45 -19h128q26 0 45 19t19 45v320h320q26 0 45 19t19 45zM1536 1120v-960 q0 -119 -84.5 -203.5t-203.5 -84.5h-960q-119 0 -203.5 84.5t-84.5 203.5v960q0 119 84.5 203.5t203.5 84.5h960q119 0 203.5 -84.5t84.5 -203.5z" class="svg-pan-zoom-control-element"></path></g><g id="svg-pan-zoom-reset-pan-zoom" transform="translate(5 35) scale(0.4)" class="svg-pan-zoom-control"><rect x="2" y="2" width="182" height="58" class="svg-pan-zoom-control-background"></rect><path d="M33.051,20.632c-0.742-0.406-1.854-0.609-3.338-0.609h-7.969v9.281h7.769c1.543,0,2.701-0.188,3.473-0.562c1.365-0.656,2.048-1.953,2.048-3.891C35.032,22.757,34.372,21.351,33.051,20.632z" class="svg-pan-zoom-control-element"></path><path d="M170.231,0.5H15.847C7.102,0.5,0.5,5.708,0.5,11.84v38.861C0.5,56.833,7.102,61.5,15.847,61.5h154.384c8.745,0,15.269-4.667,15.269-10.798V11.84C185.5,5.708,178.976,0.5,170.231,0.5z M42.837,48.569h-7.969c-0.219-0.766-0.375-1.383-0.469-1.852c-0.188-0.969-0.289-1.961-0.305-2.977l-0.047-3.211c-0.03-2.203-0.41-3.672-1.142-4.406c-0.732-0.734-2.103-1.102-4.113-1.102h-7.05v13.547h-7.055V14.022h16.524c2.361,0.047,4.178,0.344,5.45,0.891c1.272,0.547,2.351,1.352,3.234,2.414c0.731,0.875,1.31,1.844,1.737,2.906s0.64,2.273,0.64,3.633c0,1.641-0.414,3.254-1.242,4.84s-2.195,2.707-4.102,3.363c1.594,0.641,2.723,1.551,3.387,2.73s0.996,2.98,0.996,5.402v2.32c0,1.578,0.063,2.648,0.19,3.211c0.19,0.891,0.635,1.547,1.333,1.969V48.569z M75.579,48.569h-26.18V14.022h25.336v6.117H56.454v7.336h16.781v6H56.454v8.883h19.125V48.569z M104.497,46.331c-2.44,2.086-5.887,3.129-10.34,3.129c-4.548,0-8.125-1.027-10.731-3.082s-3.909-4.879-3.909-8.473h6.891c0.224,1.578,0.662,2.758,1.316,3.539c1.196,1.422,3.246,2.133,6.15,2.133c1.739,0,3.151-0.188,4.236-0.562c2.058-0.719,3.087-2.055,3.087-4.008c0-1.141-0.504-2.023-1.512-2.648c-1.008-0.609-2.607-1.148-4.796-1.617l-3.74-0.82c-3.676-0.812-6.201-1.695-7.576-2.648c-2.328-1.594-3.492-4.086-3.492-7.477c0-3.094,1.139-5.664,3.417-7.711s5.623-3.07,10.036-3.07c3.685,0,6.829,0.965,9.431,2.895c2.602,1.93,3.966,4.73,4.093,8.402h-6.938c-0.128-2.078-1.057-3.555-2.787-4.43c-1.154-0.578-2.587-0.867-4.301-0.867c-1.907,0-3.428,0.375-4.565,1.125c-1.138,0.75-1.706,1.797-1.706,3.141c0,1.234,0.561,2.156,1.682,2.766c0.721,0.406,2.25,0.883,4.589,1.43l6.063,1.43c2.657,0.625,4.648,1.461,5.975,2.508c2.059,1.625,3.089,3.977,3.089,7.055C108.157,41.624,106.937,44.245,104.497,46.331z M139.61,48.569h-26.18V14.022h25.336v6.117h-18.281v7.336h16.781v6h-16.781v8.883h19.125V48.569z M170.337,20.14h-10.336v28.43h-7.266V20.14h-10.383v-6.117h27.984V20.14z" class="svg-pan-zoom-control-element"></path></g><g id="svg-pan-zoom-zoom-out" transform="translate(30.5 70) scale(0.015)" class="svg-pan-zoom-control"><rect x="0" y="0" width="1500" height="1400" class="svg-pan-zoom-control-background"></rect><path d="M1280 576v128q0 26 -19 45t-45 19h-896q-26 0 -45 -19t-19 -45v-128q0 -26 19 -45t45 -19h896q26 0 45 19t19 45zM1536 1120v-960q0 -119 -84.5 -203.5t-203.5 -84.5h-960q-119 0 -203.5 84.5t-84.5 203.5v960q0 119 84.5 203.5t203.5 84.5h960q119 0 203.5 -84.5 t84.5 -203.5z" class="svg-pan-zoom-control-element"></path></g></g></svg>
+                </section>
+
+			</div>
+		</div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-menu@2.1.0/menu.js"></script>
+        <!-- The loading of KaTeX is deferred to speed up page rendering -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.js" integrity="sha384-31El76TwmbHj4rF9DyLsygbq6xoIobG0W+jqXim+a3dU9W53tdH3A/ngRPxOzzaB" crossorigin="anonymous"></script>
+        <!-- To automatically render math in text elements, include the auto-render extension: -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"
+            onload="renderMathInElement(document.body, {fleqn: true});"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight, RevealMenu ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge();
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+        </script>
+    </body>
+</html>

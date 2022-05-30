@@ -1,0 +1,930 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Scopes & Tail Calls</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Scopes & <br>Tail Calls</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="29-Scopes_+_Tail_Calls.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Lexical vs. dynamic scopes
+                        <li>Recursion efficiency
+                        <li>Tail recursive functions
+                        <li>Tail call optimization
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Scopes</h2>
+                </section>
+
+                <section>
+                    <h3>Lexical scope</h3>
+                    <p class="smaller">The standard way in which names are looked up in Scheme and Python.</p>
+
+                    <p class="smaller"><strong>Lexical (static) scope</strong>: The parent of a frame is the frame in which a procedure was <em>defined</em></scope>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="scheme">
+                    (define f (lambda (x) (+ x y)))
+                    (define g (lambda (x y) (f (+ x x))))
+                    (g 3 7)
+                    </code></pre>
+
+                    <div class="env-diagram" style="width: 50%; float:left;">
+                        <div class="env-diagram-frame" data-fragment-index="2">
+                            <div>Global frame</div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>f</td>
+                                    <td>→</td>
+                                    <td>λ (x)</td>
+                                </tr>
+                                <tr>
+                                    <td>g</td>
+                                    <td>→</td>
+                                    <td>λ (x, y)</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="env-diagram-frame"  data-fragment-index="9">
+                            <div>
+                            f1: g [parent=Global]
+                            </div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>x</td>
+                                    <td>3</td>
+                                    <td></td>
+                                </tr>
+                                <tr data-fragment-index="11">
+                                    <td>y</td>
+                                    <td>7</td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="env-diagram-frame"  data-fragment-index="9">
+                            <div>
+                            f2: f [parent=Global]
+                            </div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>x</td>
+                                    <td>6</td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <p class="smaller" style="float:right; width: 40%;">What happens when we run this code?
+                        <br>
+                        <span class="fragment">Error: unknown identifier: y</span>
+                    </p>
+                </section>
+
+
+                <section>
+                    <h3>Dynamic scope</h3>
+                    <p class="smaller">An alternate approach to scoping supported by some languages.</p>
+
+                    <p class="smaller"><strong>Dynamic scope</strong>: The parent of a frame is the frame in which a procedure was <em>called</em></scope>
+
+                    <p class="smaller">Scheme includes the <code>mu</code> special form for dynamic scoping.</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="scheme">
+                    (define f (<span style="color:maroon">mu</span> (x) (+ x y)))
+                    (define g (lambda (x y) (f (+ x x))))
+                    (g 3 7)
+                    </code></pre>
+
+                    <div class="env-diagram" style="float: left; width: 50%;">
+                        <div class="env-diagram-frame" data-fragment-index="2">
+                            <div>Global frame</div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>f</td>
+                                    <td>→</td>
+                                    <td>μ (x)</td>
+                                </tr>
+                                <tr>
+                                    <td>g</td>
+                                    <td>→</td>
+                                    <td>λ (x, y)</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="env-diagram-frame"  data-fragment-index="9">
+                            <div>
+                            f1: g [parent=Global]
+                            </div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>x</td>
+                                    <td>3</td>
+                                    <td></td>
+                                </tr>
+                                <tr data-fragment-index="11">
+                                    <td>y</td>
+                                    <td>7</td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="env-diagram-frame"  data-fragment-index="9">
+                            <div>
+                            f2: f [parent=<span style="color:maroon">f1</span>]
+                            </div>
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>x</td>
+                                    <td>6</td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <p class="smaller" style="float:right; width: 40%;">What happens when we run this code?
+                        <br>
+                        <span class="fragment">13</span>
+                    </p>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Recursion efficiency</h2>
+                </section>
+
+                <section>
+                    <h3>Recursion and iteration in Python</h3>
+
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Time</th>
+                                <th>Space</th>
+                        <tbody>
+                            <tr>
+                                <td><pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                                def factorial(n, k):
+                                    while n > 0:
+                                        n = n -1
+                                        k = k * n
+                                    return k
+                                </code></pre>
+                                <td><span class="fragment">Linear</span>
+                                <td><span class="fragment">Constant</span>
+                            <tr>
+                                <td>
+                                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                                    def factorial(n, k):
+                                        if n == 0:
+                                            return k
+                                        else:
+                                            return factorial(n-1, k*n)
+                                    </code></pre>
+                                <td><span class="fragment">Linear</span>
+                                <td><span class="fragment">Linear</span>
+                    </table>
+                </section>
+
+                <section>
+                    <h3>Recursion frames in Python</h3>
+
+                    <p>In Python, recursive calls always create new frames.</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    def factorial(n, k):
+                        if n == 0:
+                            return k
+                        else:
+                            return factorial(n-1, k*n)
+                    </code></pre>
+
+
+                    <p>Active frames over time:</p>
+                    <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="950" height="220" viewBox="0 0 950 220">
+                        <defs>
+                          <style>
+                            .cls-1 {
+                              fill: #d7fdff;
+                            }
+
+                            .cls-2 {
+                              fill: none;
+                              stroke: #000;
+                              stroke-miterlimit: 10;
+                              stroke-width: 1.56px;
+                            }
+
+                            .cls-3 {
+                              fill: #dbdbdb;
+                            }
+
+                            .cls-4 {
+                              font-size: 13px;
+                            }
+
+                            .cls-4, .cls-5 {
+                              font-family: Courier;
+                            }
+
+                            .cls-5 {
+                              font-size: 20.93px;
+                            }
+                          </style>
+                        </defs>
+                        <rect class="cls-1" x="721.56" y="108.49" width="84.09" height="24.91"/>
+                        <rect class="cls-1" x="622.39" y="75.02" width="84.09" height="24.91"/>
+                        <rect class="cls-1" x="520.39" y="39.98" width="84.09" height="24.91"/>
+                        <rect class="cls-1" x="418.16" y="5.72" width="84.09" height="24.91"/>
+                        <line class="cls-2" x1="1.47" y1="178.57" x2="939.7" y2="178.57"/>
+                        <polygon points="935.33 184.33 937.77 178.57 935.33 172.81 949 178.57 935.33 184.33"/>
+                        <rect class="cls-3" x="8.47" y="143.53" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="110.86" y="143.53" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="213.24" y="143.53" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="315.47" y="143.53" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="418.01" y="143.53" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="520.39" y="143.53" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="622.77" y="143.53" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="110.47" y="109.27" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="213.24" y="109.27" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="213.24" y="75.02" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="722.43" y="143.53" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="820.53" y="143.53" width="84.09" height="24.91"/>
+                        <text class="cls-4" transform="translate(114.16 125.95)">fact(3, 1)</text>
+                        <text class="cls-4" transform="translate(216.93 125.95)">fact(3, 1)</text>
+                        <text class="cls-4" transform="translate(216.93 91.7)">fact(2, 3)</text>
+                        <rect class="cls-3" x="315.47" y="108.49" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="315.47" y="74.24" width="84.09" height="24.91"/>
+                        <text class="cls-4" transform="translate(319.32 125.17)">fact(3, 1)</text>
+                        <text class="cls-4" transform="translate(319.32 90.92)">fact(2, 3)</text>
+                        <rect class="cls-3" x="315.47" y="39.98" width="84.09" height="24.91"/>
+                        <text class="cls-4" transform="translate(318.44 56.66)">fact(1, 6)</text>
+                        <rect class="cls-3" x="315.47" y="5.72" width="84.09" height="24.91"/>
+                        <text class="cls-4" transform="translate(319.43 22.4)">fact(0, 6)</text>
+                        <text class="cls-4" transform="translate(457.15 24.17)">6</text>
+                        <rect class="cls-3" x="418.01" y="108.49" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="418.01" y="74.24" width="84.09" height="24.91"/>
+                        <text class="cls-4" transform="translate(421.85 125.17)">fact(3, 1)</text>
+                        <text class="cls-4" transform="translate(421.85 90.92)">fact(2, 3)</text>
+                        <rect class="cls-3" x="418.01" y="39.98" width="84.09" height="24.91"/>
+                        <text class="cls-4" transform="translate(420.98 56.66)">fact(1, 6)</text>
+                        <text class="cls-4" transform="translate(559.45 58.43)">6</text>
+                        <rect class="cls-3" x="520.5" y="108.49" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="520.5" y="74.24" width="84.09" height="24.91"/>
+                        <text class="cls-4" transform="translate(525.38 125.17)">fact(3, 1)</text>
+                        <text class="cls-4" transform="translate(525.38 90.92)">fact(2, 3)</text>
+                        <text class="cls-4" transform="translate(663.95 90.92)">6</text>
+                        <rect class="cls-3" x="622.77" y="108.49" width="84.09" height="24.91"/>
+                        <text class="cls-4" transform="translate(627.66 125.17)">fact(3, 1)</text>
+                        <text class="cls-4" transform="translate(759.44 125.17)">6</text>
+                        <text class="cls-4" transform="translate(30.96 160.21)">Global</text>
+                        <text class="cls-4" transform="translate(133.35 160.21)">Global</text>
+                        <text class="cls-4" transform="translate(229.38 160.21)">Global</text>
+                        <text class="cls-4" transform="translate(337.96 160.21)">Global</text>
+                        <text class="cls-4" transform="translate(440.5 160.21)">Global</text>
+                        <text class="cls-4" transform="translate(542.88 160.21)">Global</text>
+                        <text class="cls-4" transform="translate(645.26 160.21)">Global</text>
+                        <text class="cls-4" transform="translate(744.92 160.21)">Global</text>
+                        <text class="cls-4" transform="translate(843.02 160.21)">Global</text>
+                        <text class="cls-5" transform="translate(390.56 200.12)">Time</text>
+                      </svg>
+
+                    <p class="python-tutor-link">
+                        <a href="https://pythontutor.com/composingprograms.html#code=def%20factorial%28n,%20k%29%3A%0A%20if%20n%20%3D%3D%200%3A%0A%20%20%20%20return%20k%0A%20else%3A%0A%20%20%20%20return%20factorial%28n-1,%20k*n%29%0A%20%20%20%20%0Afactorial%283,%201%29&cumulative=true&curInstr=1&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D" target="_blank">
+                            View in PythonTutor
+                        </a>
+                    </p>
+
+                </section>
+
+                <section>
+                    <h3>Recursion in Scheme</h3>
+
+                    <p>In Scheme interpreters, a tail-recursive function should only require a <strong>constant</strong> number of active frames.</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (define (factorial n k)
+                        (if (= n 0)
+                            k
+                            (factorial (- n 1) (* k n))))
+                    </code></pre>
+
+                    <br>
+                    <p>Active frames over time:</p>
+                    <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="710.37" height="100.19" viewBox="0 0 710.37 100.19">
+                        <defs>
+                          <style>
+                            .cls-1 {
+                              fill: #d7fdff;
+                            }
+
+                            .cls-2 {
+                              fill: none;
+                              stroke: #000;
+                              stroke-miterlimit: 10;
+                              stroke-width: 1.35px;
+                            }
+
+                            .cls-3 {
+                              fill: #dbdbdb;
+                            }
+
+                            .cls-4 {
+                              font-size: 13px;
+                            }
+
+                            .cls-4, .cls-5 {
+                              font-family: Courier;
+                            }
+
+                            .cls-5 {
+                              font-size: 20.93px;
+                            }
+                          </style>
+                        </defs>
+                        <rect class="cls-1" x="518.92" width="84.09" height="24.91"/>
+                        <line class="cls-2" y1="70.07" x2="710.08" y2="70.07"/>
+                        <polygon points="696.69 75.83 699.14 70.07 696.69 64.31 710.37 70.07 696.69 75.83"/>
+                        <rect class="cls-3" x="7.01" y="35.04" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="109.39" y="35.04" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="211.77" y="35.04" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="314.01" y="35.04" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="416.54" y="35.04" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="518.92" y="35.04" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="621.31" y="35.04" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="109" y="0.78" width="84.09" height="24.91"/>
+                        <rect class="cls-3" x="211.77" y="0.78" width="84.09" height="24.91"/>
+                        <text class="cls-4" transform="translate(112.69 17.46)">(fact 3 1)</text>
+                        <text class="cls-4" transform="translate(215.46 17.46)">(fact 2 3)</text>
+                        <rect class="cls-3" x="314.01" width="84.09" height="24.91"/>
+                        <text class="cls-4" transform="translate(317.85 16.68)">(fact 1 6)</text>
+                        <rect class="cls-3" x="416.54" width="84.09" height="24.91"/>
+                        <text class="cls-4" transform="translate(420.38 16.68)">(fact 0 6)</text>
+                        <text class="cls-4" transform="translate(557.99 18.45)">6</text>
+                        <text class="cls-4" transform="translate(29.5 51.72)">Global</text>
+                        <text class="cls-4" transform="translate(131.88 51.72)">Global</text>
+                        <text class="cls-4" transform="translate(227.92 51.72)">Global</text>
+                        <text class="cls-4" transform="translate(336.5 51.72)">Global</text>
+                        <text class="cls-4" transform="translate(439.03 51.72)">Global</text>
+                        <text class="cls-4" transform="translate(541.41 51.72)">Global</text>
+                        <text class="cls-4" transform="translate(643.8 51.71)">Global</text>
+                        <text class="cls-5" transform="translate(389.09 91.63)">Time</text>
+                      </svg>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Tail recursive functions</h3>
+                </section>
+
+                <section>
+                    <h3>Tail recursive functions</h3>
+
+                    <p>In a <strong>tail recursive function</strong>, every recursive call must be a tail call.</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (define (factorial n k)
+                        (if (= n 0)
+                            k
+                            (factorial (- n 1) (* k n))))
+                    </code></pre>
+
+                    <p class="padded">A <strong>tail call</strong> is a call expression in a <strong>tail context</strong>:</p>
+                    <ul>
+                        <li>The last body sub-expression in a <code>lambda</code> expression
+                        <li>Sub-expressions 2 & 3 in a tail context <code>if</code> expression
+                        <li>All non-predicate sub-expressions in a tail context <code>cond</code>
+                        <li>The last sub-expression in a tail context <code>and</code>, <code>or</code>, <code>begin</code>, or <code>let</code>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Example: Length of list</h3>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="scheme">
+                    (define (length s)
+                        (if (null? s) 0
+                        (+ 1 (length (cdr s)) ) )
+                    </code></pre>
+
+                    <p>A call expression is <em>not</em> a tail call if more computation is still required
+                        in the calling procedure.</p>
+
+                    <p>But linear recursive procedures can often be re-written to use tail calls...</p>
+
+                    <pre style="font-size:1.0em" class="fragment"><code data-trim data-noescape class="scheme">
+                    (define (length-tail s)
+                        (define (length-iter s n)
+                            (if (null? s) n
+                            (length-iter (cdr s) (+ 1 n)) ) )
+                        (length-iter s 0) )
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Is it tail recursive?</h3>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="scheme">
+                    ;; Compute the length of s.
+                    (define (length s)
+                        (+ 1 (if (null? s)
+                            -1
+                            (length (cdr s))) ) )
+                    </code></pre>
+                    <p class="fragment">❌ No, because <code>if</code> is not in a tail context.</p>
+
+                    <pre class="padded" style="font-size:0.7em"><code data-trim data-noescape class="scheme">
+                    ;; Return whether s contains v.
+                    (define (contains s v)
+                        (if (null? s)
+                        false
+                        (if (= v (car s))
+                            true
+                            (contains (cdr s) v))))
+                    </code></pre>
+                    <p class="fragment">✅ Yes, because <code>contains</code> is in a tail context <code>if</code>.</p>
+
+                </section>
+
+                <section>
+                    <h3>Is it tail recursive? 2</h3>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="scheme">
+                    ;; Return whether s has any repeated elements.
+                    (define (has-repeat s)
+                        (if (null? s)
+                        false
+                        (if (contains? (cdr s) (car s))
+                            true
+                            (has-repeat (cdr s))) ) )
+                    </code></pre>
+                    <p class="fragment">✅ Yes, because <code>has-repeat</code> is in a tail context.</p>
+
+                    <pre class="padded" style="font-size:0.7em"><code data-trim data-noescape class="scheme">
+                    ;; Return the nth Fibonacci number.
+                    (define (fib n)
+                        (define (fib-iter current k)
+                            (if (= k n)
+                                current
+                                (fib-iter (+ current
+                                            (fib (- k 1)))
+                                          (+ k 1)) ) )
+                        (if (= 1 n) 0 (fib-iter 1 2)))
+                    </code></pre>
+                    <p class="fragment">❌ No, because <code>fib</code> is not in a tail context.</p>
+                </section>
+
+                <section>
+                    <h3>Example: Reduce</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (reduce * '(3 4 5) 2) 120
+                    (reduce (lambda (x y) (cons y x)) '(3 4 5) '(2)) (5 4 3 2)
+                    </code></pre>
+
+                    <div class="fragment">
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (reduce procedure s start)
+                        (if (null? s) start
+                            (reduce procedure
+                                (cdr s)
+                                (procedure start (car s)) ) ) )
+                    </code></pre>
+
+                    <p>Is it tail recursive?<br>
+                    <span class="fragment">✅ Yes, because <code>reduce</code> is in a tail context.</span>
+                    </p>
+
+                    <p class="fragment">However, if <code>procedure</code> is not tail recursive,
+                        then this may still require more than constant space for execution.</p>
+                    </div>
+
+                </section>
+
+
+                <section>
+                    <h3>Example: Map</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (map (lambda (x) (- 5 x)) (list 1 2))
+                    </code></pre>
+
+                    <div class="fragment">
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="scheme">
+                    (define (map procedure s)
+                        (if (null? s)
+                            nil
+                            (cons (procedure (car s))
+                                (map procedure (cdr s))) ) )
+                    </code></pre>
+                    <p>Is it tail recursive?<br>
+                        <span class="fragment">❌ No, because <code>map</code> is not in a tail context.</span>
+                    </p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Example: Map (Tail recursive)</h3>
+
+                    <pre style="font-size:0.7em; height: 500px;"><code data-trim data-noescape class="scheme">
+                    (define (map procedure s)
+                        (define (map-reverse s m)
+                        (if (null? s)
+                            m
+                            (map-reverse (cdr s) (cons (procedure (car s)) m))))
+                        (reverse (map-reverse s nil)))
+
+                    (define (reverse s)
+                        (define (reverse-iter s r)
+                        (if (null? s)
+                            r
+                            (reverse-iter (cdr s) (cons (car s) r))))
+                        (reverse-iter s nil))
+
+                    (map (lambda (x) (- 5 x)) (list 1 2))
+                    </code></pre>
+
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>Tail call optimization<br>
+                    with trampolining</h2>
+                </section>
+
+                <section>
+                    <h3>What the thunk?</h3>
+
+                    <p><strong>Thunk</strong>: An expression wrapped in an argument-less function.</p>
+
+                    <p>Making thunks in Python:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    thunk1 = lambda: 2 * (3 + 4)
+                    thunk2 = lambda: add(2, 4)
+                    </code></pre>
+
+                    <p class="padded">Calling a thunk later:</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    thunk1()
+                    thunk2()
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Trampolining</h3>
+
+                    <p><strong>Trampoline</strong>: A loop that iteratively invokes thunk-returning functions.
+                    </p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    def trampoline(f, *args):
+                        v = f(*args)
+                        while callable(v):
+                            v = v()
+                        return v
+                    </code></pre>
+
+                    <p>The function needs to be thunk-returning! One possibility:</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    def factorial_thunked(n, k):
+                        if n == 0:
+                            return k
+                        else:
+                            return lambda: factorial_thunked(n - 1, k * n)
+                    </code></pre>
+
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                        trampoline(factorial_thunked, 3, 1)
+                        </code></pre>
+
+                        <p class="python-tutor-link smaller">
+                            <a target="_blank" href="https://pythontutor.com/composingprograms.html#code=def%20trampoline%28f,%20*args%29%3A%0A%20%20%20%20v%20%3D%20f%28*args%29%0A%20%20%20%20while%20callable%28v%29%3A%0A%20%20%20%20%20%20%20%20v%20%3D%20v%28%29%0A%20%20%20%20return%20v%0A%0Adef%20factorial_thunked%28n,%20k%29%3A%0A%20%20%20%20if%20n%20%3D%3D%200%3A%0A%20%20%20%20%20%20%20%20return%20k%0A%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20return%20lambda%3A%20factorial_thunked%28n-1,%20k*n%29%0A%20%20%20%20%20%20%20%20%20%20%20%20%0Atrampoline%28factorial_thunked,%203,%201%29&cumulative=true&curInstr=2&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">
+                                View in PythonTutor
+                            </a>
+                        </p>
+                </section>
+
+                <section>
+                    <h3>Demo: Trampolined interpreter</h3>
+
+                    <p>The Scheme project EC is to implement trampolining.
+                        Let's see how it improves the ability to call tail recursive functions...
+                    </p>
+                </section>
+
+			</div>
+		</div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-menu@2.1.0/menu.js"></script>
+        <!-- The loading of KaTeX is deferred to speed up page rendering -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.js" integrity="sha384-31El76TwmbHj4rF9DyLsygbq6xoIobG0W+jqXim+a3dU9W53tdH3A/ngRPxOzzaB" crossorigin="anonymous"></script>
+        <!-- To automatically render math in text elements, include the auto-render extension: -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"
+            onload="renderMathInElement(document.body, {fleqn: true});"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight, RevealMenu ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge();
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+        </script>
+    </body>
+</html>

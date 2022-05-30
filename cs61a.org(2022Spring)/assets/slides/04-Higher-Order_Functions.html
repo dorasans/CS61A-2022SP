@@ -1,0 +1,792 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Higher-Order Functions</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Higher-Order Functions</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="04-Higher-Order_Functions.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Iteration example</li>
+                        <li>Designing functions</li>
+                        <li>Generalization</li>
+                        <li>Higher-order functions</li>
+                        <li>Lambda expressions</li>
+                        <li>Conditional expressions</li>
+                    </ul>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Iteration example</h2>
+                </section>
+
+                <section>
+                    <h3>Virahaṅka-Fibonacci numbers</h3>
+
+                    <p>Discovered by Virahanka in India, 600-800 AD,
+                    later re-discovered in Western mathematics and commonly known as Fibonacci numbers.
+                    </p>
+
+                    <div style="position:relative; white-space:pre; font-size: 1.0em; font-family:monospace">
+0   1   1   2   3   5   8   13   21   34  …<div class="fragment fade-in-then-out" style="position: absolute; top: 44px; left: 40px">+   =</div><div class="fragment fade-in-then-out" style="position: absolute; top: 44px; left: 122px">+   =</div><div class="fragment fade-in-then-out" style="position: absolute; top: 44px; left: 204px">+   =</div><div class="fragment fade-in-then-out" style="position: absolute; top: 44px; left: 286px">+   =</div><div class="fragment fade-in-then-out" style="position: absolute; top: 44px; left: 368px">+   =</div><div class="fragment fade-in-then-out" style="position: absolute; top: 44px; left: 450px">+   =</div><div class="fragment fade-in-then-out" style="position: absolute; top: 44px; left: 526px">+    =</div><div class="fragment fade-in-then-out" style="position: absolute; top: 44px; left: 620px">+    =</div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Virahanka's question</h3>
+                    <p>How many poetic meters exist for a total duration?</p>
+                    <p class="smaller">S = short syllable, L = long syllable</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Duration
+                                <th>Meters
+                                <th>Total
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1
+                                <td>S
+                                <td>1
+                            <tr>
+                                <td>2
+                                <td>SS, L
+                                <td>2
+                            <tr>
+                                <td>3
+                                <td>SSS, SL, LS
+                                <td>3
+                            <tr>
+                                <td>4
+                                <td>SSSS, SSL, SLS, LSS, LL
+                                <td>5
+                            <tr>
+                                <td>5
+                                <td>SSSSS, SSSL, SSLS, SLSS, SLL, LLS, LSL, LSSS
+                                <td>8
+                        </tbody>
+                    </table>
+                    <br>
+                    <p class="smaller"><a target="_blank" href="http://www.sfs.uni-tuebingen.de/~dg/sdarticle.pdf">The So-called Fibonacci Numbers in Ancient and Medieval India</a></p>
+                </section>
+
+                <section>
+                    <h3>Fibonacci's question</h3>
+
+                    <p>How many pairs of rabbits can be bred after N months?</p>
+
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d3/Fibonacci_lapins_2.svg" height="570">
+                    <p class="smaller">Attribution: <a target="_blank" href="https://commons.wikimedia.org/wiki/File:Fibonacci_lapins_2.svg">Fschwarzentruber, Wikipedia</a></p>
+                </section>
+
+                <section>
+                    <h3>Virahanka-Fibonacci number generation</h3>
+
+                    <pre class="no-code-badge" style="font-size:0.9em;"><code data-trim>
+                    VF 0   1   1   2   3   5   8   13   21   34   55 …
+                    N  0   1   2   3   4   5   6   7    8    9    10 …
+                    </code></pre>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    def vf_number(n):
+                        """Compute the nth Virahanka-Fibonacci number, for N >= 1.
+                        >>> vf_number(2)
+                        1
+                        >>> vf_number(6)
+                        8
+                        """
+                        prev = 0  # First Fibonacci number
+                        curr = 1  # Second Fibonacci number
+                        k = 1
+                        while k &lt; n:
+                            (prev, curr) = (curr, prev + curr)
+                            k += 1
+                        return curr
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Golden spiral</h3>
+
+                    <p>The Golden spiral can be approximated by Virahanka-Fibonacci numbers.</p>
+
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/FibonacciSpiral.svg" alt="Golden spiral overlaid on grid" height="470">
+
+                </section>
+
+                <section>
+                    <h3>Go bears!</h3>
+
+                    <p>The Golden spiral is found everywhere in nature...</p>
+
+                    <img src="../images/golden_bear.png" alt="Photo of a bear with a Golden spiral overlaid" height="470">
+                </section>
+
+                <section class="heading-only">
+                    <h2>Designing Functions</h2>
+                </section>
+
+                <section>
+                    <h3>Describing Functions</h3>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    def square(x):
+                        """Returns the square of X."""
+                        return x * x
+                    </code></pre>
+
+                    <table class="smaller">
+                        <thead>
+                            <tr>
+                                <th>Aspect
+                                <th>Example
+                        <tbody>
+                            <tr>
+                                <td>A function's <strong>domain</strong> is the set of all inputs
+                                    it might possibly take as arguments.
+                                <td><code>x</code> is a number
+                            </tr>
+                            <tr>
+                                <td>A function's <strong>range</strong> is the set of output values
+                                    it might possibly return.
+                                <td><code>square</code> returns a non-negative real number
+                            <tr>
+                                <td>A pure function's <strong>behavior</strong> is the relationship
+                                    it creates between input and output.
+                                <td><code>square</code> returns the square of <code>x</code>
+                    </table>
+                </section>
+
+                <section>
+                    <h3>Designing a function</h3>
+
+                    <p>Give each function exactly one job, but make it apply to many related situations.</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    round(1.23)     # 1
+                    round(1.23, 0)  # 1
+                    round(1.23, 1)  # 1.2
+                    round(1.23, 5)  # 1.23
+                    </code></pre>
+
+                    <p><strong>Don't Repeat Yourself (DRY)</strong>: Implement a process just once, execute it many times.</p>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Generalization</h2>
+                </section>
+
+                <section>
+                    <h3>Generalizing patterns with arguments</h3>
+
+                    <p>Geometric shapes have similar area formulas.</p>
+
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th style="vertical-align:middle">Shape</th>
+                                <td><img src="../images/area_square.png" alt="Diagram of square"></td>
+                                <td><img src="../images/area_circle.png" alt="Diagram of circle"></td>
+                                <td><img src="../images/area_hexagon.png" alt="Diagram of hexagon"></td>
+                            </tr>
+                            <tr>
+                                <th style="vertical-align:middle">Area</th>
+                                <td>$$\colorbox{#f8e9eb}{$1$} * r^2$$</td>
+                                <td>$$\colorbox{#f8e9eb}{$\pi$} * r^2$$</td>
+                                <td>$$\colorbox{#f8e9eb}{$\dfrac{3\sqrt{3}}{2}$} * r^2$$</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </section>
+
+                <section>
+                    <h3>A non-generalized approach</h3>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    from math import pi, sqrt
+
+                    def area_square(r):
+                        return r * r
+
+                    def area_circle(r):
+                        return r * r * pi
+
+                    def area_hexagon(r):
+                        return r * r * (3 * sqrt(3) / 2)
+                    </code></pre>
+
+                    <p>How can we generalize the common structure?</p>
+                </section>
+
+                <section>
+                    <h3>Generalized area function</h3>
+
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    from math import pi, sqrt
+
+                    def area(r, shape_constant):
+                        """Return the area of a shape from length measurement R."""
+                        if r &lt; 0:
+                            return 0
+                        return r * r * shape_constant
+
+                    def area_square(r):
+                        return area(r, 1)
+
+                    def area_circle(r):
+                        return area(r, pi)
+
+                    def area_hexagon(r):
+                        return area(r, 3 * sqrt(3) / 2)
+                    </code></pre>
+                </section>
+
+                <section class="heading-only">
+                    <h2>Higher-order functions</h2>
+                </section>
+
+                <section>
+                    <h3>What are higher-order functions?</h3>
+
+                    <p>A function that either:
+                    <ul>
+                        <li>Takes another function as an argument
+                        <li>Returns a function as its result
+                    </ul>
+
+                    <p>All other functions are considered first-order functions.</p>
+                </section>
+
+                <section>
+                    <h3 style="font-size:1.4em;">Generalizing over computational processes</h3>
+
+                    <p>
+                    $$\sum\limits_{k=1}^5 \colorbox{#f8e9eb}{$k$} = 1 + 2 + 3 + 4 + 5 = 15$$
+                    $$\sum\limits_{k=1}^5 \colorbox{#f8e9eb}{$k^3$} = 1^3 + 2^3 + 3^3 + 4^3 + 5^3 = 225$$
+                    $$\sum\limits_{k=1}^5 \colorbox{#f8e9eb}{$\dfrac{8}{(4k - 3)\cdot(4k - 1)}$} = \dfrac{8}{3} + \dfrac{8}{35} + \dfrac{8}{99} + \dfrac{8}{195} + \dfrac{8}{323} = 3.04$$
+                    </p>
+
+                    <p>The common structure among functions may be a <span style="background-color:#f8e9eb">computational process</span>, not just a number.</p>
+
+                </section>
+
+                <section>
+                    <h3>Functions as arguments</h3>
+
+                    <pre style="font-size:0.8em; height: 500px;"><code data-trim data-noescape class="python">
+                    def cube(k):
+                        return k ** 3
+
+                    def summation(n, term):
+                        """Sum the first N terms of a sequence.
+                        >>> summation(5, cube)
+                        225
+                        """
+                        total = 0
+                        k = 1
+                        while k &lt;= n:
+                            total = total + term(k)
+                            k = k + 1
+                        return total
+                    </code></pre>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Functions as return values</h2>
+                </section>
+
+                <section>
+                    <h3>Locally defined functions</h3>
+                    <p>Functions defined within other function bodies are bound to names in a local frame.</p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    def make_adder(n):
+                        """Return a function that takes one argument k
+                           and returns k + n.
+                        >>> add_three = make_adder(3)
+                        >>> add_three(4)
+                        7
+                        """
+                        def adder(k):
+                            return k + n
+                        return adder
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>Call expressions as operator expressions</h3>
+
+                    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="1225.44" height="607.6" viewBox="0 0 1225.44 607.6">
+                        <defs>
+                        <style>
+                            .cls-1, .cls-14, .cls-19, .cls-2, .cls-20 {
+                            fill: none;
+                            }
+
+                            .cls-1, .cls-2 {
+                            stroke: #006837;
+                            }
+
+                            .cls-1, .cls-12, .cls-14, .cls-19, .cls-2, .cls-20, .cls-6 {
+                            stroke-miterlimit: 10;
+                            }
+
+                            .cls-1, .cls-14, .cls-6 {
+                            stroke-width: 2px;
+                            }
+
+                            .cls-3 {
+                            font-size: 41px;
+                            }
+
+                            .cls-13, .cls-15, .cls-16, .cls-3 {
+                            font-family: Courier;
+                            }
+
+                            .cls-4 {
+                            fill: #f15a24;
+                            }
+
+                            .cls-5 {
+                            font-size: 27px;
+                            }
+
+                            .cls-18, .cls-5 {
+                            fill: #fff;
+                            }
+
+                            .cls-12, .cls-6, .cls-7 {
+                            fill: #662d91;
+                            }
+
+                            .cls-12, .cls-6 {
+                            stroke: #662d91;
+                            }
+
+                            .cls-11, .cls-7 {
+                            font-size: 30px;
+                            }
+
+                            .cls-8 {
+                            letter-spacing: 0em;
+                            }
+
+                            .cls-9 {
+                            letter-spacing: 0em;
+                            }
+
+                            .cls-10 {
+                            letter-spacing: -0.01em;
+                            }
+
+                            .cls-11 {
+                            fill: #006837;
+                            }
+
+                            .cls-13 {
+                            font-size: 28px;
+                            }
+
+                            .cls-14 {
+                            stroke: #000;
+                            }
+
+                            .cls-15 {
+                            font-size: 22px;
+                            }
+
+                            .cls-16 {
+                            font-size: 23.6px;
+                            }
+
+                            .cls-17 {
+                            fill: #2e3192;
+                            }
+
+                            .cls-19, .cls-20 {
+                            stroke: #f15a24;
+                            stroke-width: 5px;
+                            }
+
+                            .cls-20 {
+                            stroke-dasharray: 12.12 12.12;
+                            }
+                        </style>
+                        </defs>
+                        <g>
+                            <text class="cls-3" transform="translate(352.82 102.65)"><tspan xml:space="preserve">make_adder(1)(     2    )</tspan></text>
+                            <line class="cls-6" x1="357.52" y1="124.19" x2="656.08" y2="124.19"/>
+                            <text class="cls-7" transform="translate(464.7 162.42)">Operator</text>
+                            <line class="cls-1" x1="693.08" y1="124.31" x2="937.21" y2="124.79"/>
+                            <text class="cls-11" transform="translate(713.98 162.42)">Operand</text>
+                        </g>
+                        <g class="fragment">
+                            <line class="cls-12" x1="326.58" y1="298.81" x2="436.52" y2="123.19"/>
+                            <text class="cls-3" transform="translate(178 338.39)">make_adder(1)</text>
+                            <line class="cls-6" x1="172.61" y1="367.2" x2="413.08" y2="367"/>
+                            <line class="cls-1" x1="441.08" y1="367.31" x2="490.08" y2="367.31"/>
+                        </g>
+                        <g class="fragment">
+                            <line class="cls-12" x1="227.58" y1="458.81" x2="285.61" y2="366.78"/>
+                            <text class="cls-13" transform="translate(62 501.71)">func make_adder...</text>
+                        </g>
+                        <g class="fragment">
+                            <line class="cls-2" x1="463.12" y1="454.81" x2="463.12" y2="367.1"/>
+                            <text class="cls-3" transform="translate(451.6 496.39)">1</text>
+                        </g>
+                        <g class="fragment">
+                            <line class="cls-14" x1="547.21" y1="441.59" x2="870.65" y2="441.59"/>
+                            <line class="cls-14" x1="547.21" y1="521.64" x2="589.17" y2="521.64"/>
+                            <line class="cls-14" x1="870.65" y1="441.59" x2="870.65" y2="503.56"/>
+                            <line class="cls-14" x1="935.21" y1="503.56" x2="870.65" y2="503.56"/>
+                            <line class="cls-14" x1="589.17" y1="521.64" x2="589.08" y2="606.31"/>
+                            <line class="cls-14" x1="935.21" y1="606.6" x2="589.17" y2="606.6"/>
+                            <text class="cls-15" transform="translate(560.96 492.89)">make_adder(n)</text>
+                            <text class="cls-16" transform="translate(612.8 530.28)">def adder(k):<tspan x="0" y="28.32" xml:space="preserve">  return k + n</tspan><tspan x="0" y="56.64">return adder</tspan></text>
+                            <polygon class="cls-17" points="961.08 554.43 928.08 529.25 928.08 579.61 961.08 554.43"/>
+                            <text class="cls-15" transform="translate(975.8 563.68)">func adder(k)</text>
+                            <polygon class="cls-17" points="543.08 483.59 510.08 458.41 510.08 508.77 543.08 483.59"/>
+                        </g>
+                        <g class="fragment">
+                            <rect class="cls-4" x="253.21" y="242.92" width="203.87" height="57.35" rx="28.67"/>
+                            <text class="cls-5" transform="translate(268.95 280.74)">func adder(k)</text>
+                            <g>
+                                <path class="cls-18" d="M1080.4,501.72s-169-179.34-406.82-226.91c-110-22-201.6,5.93-201.6,5.93"/>
+                                <g>
+                                <path class="cls-19" d="M1080.4,501.72s-1.43-1.51-4.19-4.29"/>
+                                <path class="cls-20" d="M1067.55,489c-43.65-41.82-194.63-174.27-394-214.14-70.44-14.09-133.32-7.7-169.45-1.29"/>
+                                <path class="cls-19" d="M498.16,274.62c-2.07.4-4,.8-5.87,1.18"/>
+                                <polygon class="cls-4" points="498.96 261.14 496.54 275.01 504.85 286.39 471.98 280.74 498.96 261.14"/>
+                                </g>
+                            </g>
+                        </g>
+                        <g class="fragment">
+                            <line class="cls-2" x1="840.42" y1="229.81" x2="840.42" y2="124.79"/>
+                            <text class="cls-3" transform="translate(829.5 271.47)">2</text>
+                        </g>
+                        <g class="fragment">
+                            <rect class="cls-4" x="630.08" width="88" height="57.35" rx="28.67"/>
+                            <text class="cls-5" transform="translate(666.08 37.82)">3</text>
+                        </g>
+                    </svg>
+
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Lambda expressions</h2>
+                </section>
+
+                <section>
+                    <h3>Lambda syntax</h3>
+
+                    <p>A <strong>lambda expression</strong> is a simple function definition
+                        that evaluates to a function.</p>
+
+                    <p>The syntax:</p>
+                    <pre style="font-size:1.0em" class="no-code-badge"><code data-trim data-noescape class="python">
+                    lambda &lt;parameters&gt;: &lt;expression&gt;
+                    </code></pre>
+                    <p>A function that takes in <code>parameters</code> and returns the result of <code>expression</code>.</p>
+
+                    <div class="fragment" style="margin-top:40px;">
+                    <p>A lambda version of the <code>square</code> function:</p>
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    square = lambda x: x * x
+                    </code></pre>
+                    <p>A function that takes in parameter <code>x</code> and returns the result of <code>x * x</code>.</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Lambda syntax tips</h3>
+
+                    <p>A lambda expression does <strong>not</strong> contain
+                        return statements or any statements at all.</p>
+
+                    <p>
+                    Incorrect:
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    square = lambda x: return x * x
+                    </code></pre>
+
+                    Correct:
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    square = lambda x: x * x
+                    </code></pre>
+                    </p>
+                </section>
+
+                <section>
+                    <h3 style="font-size:1.4em;">Def statements vs. Lambda expressions</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:45%">
+                                    <pre style="font-size:0.8em"  class="no-code-badge"><code data-trim data-noescape class="python">
+                                    def square(x):
+                                        return x * x
+                                    </code></pre>
+                                </th>
+                                <th style="width:5%">vs</th>
+                                <th style="width:45%"><pre style="font-size:0.8em" class="no-code-badge"><code data-trim data-noescape class="python">
+                                    square = lambda x: x * x
+                                    </code></pre>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="smaller">
+                            <tr>
+                                <td><img src="../images/square_def.png" alt="screenshot of PythonTutor calling a square function defined with def"></td>
+                                <td></td>
+                                <td><img src="../images/square_lambda.png" alt="screenshot of PythonTutor calling a square function defined with lambda"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Both create a function with the same domain, range, and behavior. </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Both bind that function to the name square. </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">Only the <code>def</code> statement gives the function an <strong>intrinsic name</strong>, which shows up in
+                                    environment diagrams but doesn't affect execution (unless the function is printed).
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+
+                <section>
+                    <h3>Lambda as argument</h3>
+
+                    <p>It's convenient to use a lambda expression when you
+                        are passing in a simple function as an argument to another function.</p>
+
+                    <p>Instead of...</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def cube(k):
+                        return k ** 3
+
+                    summation(5, cube)
+                    </code></pre>
+
+                    <p>We can use a lambda:</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    summation(5, lambda k: k ** 3)
+                    </code></pre>
+
+                </section>
+
+                <section class="heading-only">
+                    <h2>Conditional expressions</h2>
+                </section>
+
+                <section>
+                    <h3>Conditional expressions</h3>
+
+                    <p>A conditional expression has the form:</p>
+
+                    <pre style="font-size:1.0em" class="no-code-badge"><code data-trim data-noescape class="python">
+                    &lt;consequent&gt; if &lt;predicate&gt; else &lt;alternative&gt;
+                    </code></pre>
+
+                    <p>Evaluation rule:</p>
+                    <ul>
+                        <li>Evaluate the &lt;predicate&gt; expression.</li>
+                        <li>If it's a true value, the value of the whole expression is the value of the &lt;consequent&gt;.</li>
+                        <li>Otherwise, the value of the whole expression is the value of the &lt;alternative&gt.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Lambdas with conditionals</h3>
+
+                    <p style="margin-top:40px;">This is invalid syntax:
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    lambda x: if x > 0: x else: 0
+                    </code></pre>
+
+                    <p>Conditional expressions to the rescue!</p>
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    lambda x: x if x > 0 else 0
+                    </code></pre>
+                    </p>
+                </section>
+			</div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <!-- The loading of KaTeX is deferred to speed up page rendering -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.js" integrity="sha384-31El76TwmbHj4rF9DyLsygbq6xoIobG0W+jqXim+a3dU9W53tdH3A/ngRPxOzzaB" crossorigin="anonymous"></script>
+        <!-- To automatically render math in text elements, include the auto-render extension: -->
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/contrib/auto-render.min.js" integrity="sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl" crossorigin="anonymous"
+            onload="renderMathInElement(document.body, {fleqn: true});"></script>
+		<script>
+			const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+			Reveal.initialize({
+				hash: true,
+				center: false,
+				slideNumber: true,
+				showNotes: false,
+				margin: 0.1,
+				preloadIframes: true,
+				plugins: [ RevealHighlight ],
+				pdfSeparateFragments: true
+			});
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge(options);
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+		</script>
+	</body>
+</html>

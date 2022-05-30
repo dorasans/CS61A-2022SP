@@ -1,0 +1,1156 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Iterators</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+		<link rel="stylesheet" href="../css/mono-blue.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto:300,400,500|Work+Sans:400,700">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.13.16/dist/katex.min.css" integrity="sha384-6LkG2wmY8FK9E0vU9OOr8UvLwsaqUg9SETfpq4uTCN1agNe8HRdE9ABlk+fVx6gZ" crossorigin="anonymous">
+		<style>
+			.reveal {
+				font-family: "Work Sans", sans-serif;
+			}
+
+			.reveal .slides section {
+				text-align: left;
+				font-size: smaller;
+			}
+
+			.reveal pre {
+				background-color: #f5f5f5;
+				width: 100%;
+				border: 1px solid #ccc;
+				border-radius: 4px;
+				box-shadow: none;
+			}
+
+			.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+				font-family: "Roboto", sans-serif;
+				color: #0072c1;
+			}
+
+			.reveal section.heading-only {
+				text-align:center;
+				padding-top:20%;
+			}
+
+            .no-code-badge .code-badge {
+                display: none;
+            }
+
+            .code-badge-language {
+                display: none;
+            }
+
+			.python-tutor-link {
+				font-size: smaller;
+			}
+
+			.python-tutor-link:before {
+				content: "";
+				display: block;
+				background: url("http://pythontutor.com/favicon.ico") no-repeat;
+				width: 48px;
+				height: 48px;
+				float: left;
+				margin: 0 6px 0 0;
+			}
+
+			.reveal h3 {
+				margin-bottom: 40px;
+			}
+
+            .smaller {
+                font-size: smaller;
+            }
+
+            code {
+                padding: 2px 4px;
+                font-size: 90%;
+                color: #0072c1;
+                background-color: #f9f2f4;
+                border-radius: 4px;
+            }
+
+            p.padded {
+                margin-top: 32px;
+            }
+
+            section .row {
+                display: flex;
+            }
+
+            section .column {
+                flex: 48%;
+                margin: 10px;
+            }
+
+			@media print
+			{
+				.no-print, .no-print *
+				{
+					display: none !important;
+				}
+			}
+
+
+            .regex-input {
+                border:1px solid rgb(204, 204, 204);
+                background: rgb(245, 245, 245);
+                padding: 8px;
+            }
+
+            .regex-input input {
+                font-size: inherit;
+            }
+
+            .regex-input input[type=text]:invalid {
+                background-color: pink;
+            }
+
+		</style>
+        <style>
+            .env-diagram {
+                position: relative;
+                font-family: monospace;
+                font-size: 18px;
+            }
+            .env-diagram-frame table.table {
+                margin: 0px;
+            }
+            .env-diagram .env-diagram-frame, .env-diagram .env-diagram-objects {
+                width: 310px;
+                border-left: 1px solid #aaa;
+                margin-bottom: 15px;
+                padding: 8px;
+            }
+            .env-diagram .env-diagram-frame.current {
+                background: #e2ebf6;
+            }
+            .env-diagram .env-diagram-frame td, .env-diagram .env-diagram-objects td {
+                font-size: smaller;
+            }
+            .env-diagram .env-diagram-connector {
+                color: #005583;
+            }
+            .env-diagram .env-diagram-objects {
+                float: right;
+            }
+            .env-diagram .env-diagram-objects ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            .env-diagram .env-diagram-objects td {
+                width: 230px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-connector {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-objects .env-diagram-trash {
+                padding-top: 6px;
+                margin-top: 12px;
+            }
+            .env-diagram .env-diagram-frame > div {
+                margin-bottom: 10px;
+            }
+            .env-diagram .env-diagram-frame > div input {
+                width: 90px;
+            }
+            .env-diagram .env-diagram-frame > div input:first-of-type {
+                margin-right: 8px;
+            }
+            .env-diagram .env-diagram-frame table {
+                margin-bottom: 0px;
+            }
+            .env-diagram .env-diagram-frame table input {
+                width: 100px;
+            }
+            .env-diagram .env-diagram-frame table tbody td {
+                padding: 2px;
+                padding-right: 6px;
+                height: 24px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:first-child {
+                text-align: right;
+                width: 105px;
+            }
+            .env-diagram .env-diagram-frame table tbody td:nth-child(2) {
+                width: 60px;
+                border-left: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .env-diagram .env-diagram-frame .env-diagram-connector {
+                margin-left: 12px;
+            }
+            .numbered-code ol {
+                line-height: 1.7em;
+                font-size: 1.0em;
+                margin: 20px auto;
+                width: 100%;
+            }
+            .numbered-code li {
+                position: relative;
+            }
+            .numbered-code .line-arrow {
+                position: absolute;
+                right: 8px;
+                bottom: 0px;
+                font-size: 0.7em;
+            }
+            .numbered-code .line-current {
+                color: blue;
+            } 
+            .numbered-code .line-previous {
+                color: rgb(171, 171, 202);
+            } 
+        </style>
+        <style>
+        .circle-marker {
+            position: absolute;
+            background: blue;
+            color: white;
+            font-size: 20px;
+            border-radius: 30px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+        }
+        .circle-marker-arc {
+            position: absolute;
+            width: 60px;
+            height: 90px;
+            background: transparent;
+            border-radius: 100px;
+            border-left: 1px solid blue;
+        }
+        </style>
+        <style>
+        .bordered {
+            border: 1px dashed blue;
+            border-radius: 8px;
+            padding: 6px;
+            --balloon-font-size: 20px;
+        }
+        </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section class="heading-only" style="padding-top:5%">
+                    <h1>Iterators</h1>
+
+					<div class="no-print" style="text-align: left; margin-top: 100px; font-size: 70%;">
+						Tips for navigating the slides:
+						<ul>
+							<li>Press O or Escape for overview mode.</li>
+							<li>Visit <a href="19-Iterators.html?print-pdf" target="_blank">this link</a> for a nice printable version</li>
+							<li>Press the copy icon on the upper right of code blocks to copy the code</li>
+						</ul>
+                    </div>
+
+                    <aside class="speaker-notes">
+                    </aside>
+				</section>
+
+
+                <section>
+                    <h3>Class outline:</h3>
+
+                    <ul>
+                        <li>Iterators
+                        <li>For loops with iterators
+                        <li>Built-in functions for iterators
+                    </ul>
+                </section>
+
+
+				<section>
+					<h3>Reminder: Iterables</h3>
+
+                    <p class="smaller">Lists, tuples, dictionaries, strings, and ranges are all <strong>iterable</strong> objects.</p>
+
+					<pre style="font-size:0.7em;"><code data-trim data-noescape class="python">
+                    my_order = ["Yuca Shepherds Pie", "Pão de queijo", "Guaraná"]
+
+                    ranked_chocolates = ("Dark", "Milk", "White")
+
+                    best_topping = "pineapple"
+
+                    scores = range(1, 21)
+
+                    prices = {"pineapple": 9.99, "pen": 2.99, "pineapple-pen": 19.99}
+                    </code></pre>
+
+                    <aside class="notes">They are all container objects, and contain some sort of sequential values (keys for the dict, characters for the string).</aside>
+                </section>
+
+                <section>
+					<h3>Iterators</h3>
+
+                    <p>An <strong>iterator</strong> is an object that provides sequential access to values, one by one.</p>
+
+                    <p class="smaller"><code>iter(iterable)</code> returns an iterator over the elements of an iterable.</p>
+
+                    <p class="smaller"><code>next(iterator)</code> returns the next element in an iterator.</p>
+
+					<pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    toppings = ["pineapple", "pepper", "mushroom", "roasted red pepper"]
+
+                    topperator = iter(toppings)
+                    next(iter) <span class="fragment" data-fragment-index="1"># 'pineapple'</span>
+                    next(iter) <span class="fragment" data-fragment-index="1"># 'pepper'</span>
+                    next(iter) <span class="fragment" data-fragment-index="1"># 'mushroom'</span>
+                    next(iter) <span class="fragment" data-fragment-index="1"># 'roasted red pepper'</span>
+                    next(iter) <span class="fragment" data-fragment-index="2"># ❌ StopIteration exception</span>
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>A useful detail</h3>
+
+                    <p>Calling <code>iter()</code> on an iterator just returns the iterator:</p>
+
+                    <pre style="font-size:0.8em;"><code data-trim data-noescape class="python">
+                    numbers = ["一つ", "二つ", "三つ"]
+                    num_iter = iter(numbers)
+                    num_iter2 = iter(num_iter)
+
+                    assert num_iter is num_iter2
+                    </code></pre>
+                </section>
+
+
+
+
+                <section>
+					<h3>Making iterators for iterables</h3>
+
+                    <p><code>iter()</code> can return an iterator for any iterable object.</p>
+
+					<pre style="font-size:0.65em"><code data-trim data-noescape class="python">
+                    my_order = ["Yuca Shepherds Pie", "Pão de queijo", "Guaraná"]
+                    order_iter = iter(order)
+                    next(order_iter)  <span class="fragment"># "Yuca Shepherds Pie"</span>
+
+                    ranked_chocolates = ("Dark", "Milk", "White")
+                    chocolate_iter = iter(ranked_chocolates)
+                    next(chocolate_iter)  <span class="fragment"># "Dark"</span>
+
+                    best_topping = "pineapple"
+                    topping_iter = iter(best_topping)
+                    next(topping_iter) <span class="fragment"># "p"</span>
+
+                    scores = range(1, 21)
+                    score_iter = iter(scores)
+                    next(score_iter) <span class="fragment"># 1</span>
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Making iterators for dictionaries</h3>
+
+                    <p>In Python 3.6+, items in a dict are ordered according to when they were added.</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    prices = {"pineapple": 9.99, "pen": 2.99, "pineapple-pen": 19.99}
+                    </code></pre>
+
+                    <p>An iterator for the keys:</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    price_iter = iter(prices.keys())
+                    next(price_iter)  <span class="fragment"># "pineapple"</span>
+                    </code></pre>
+
+                    <p>An iterator for the values:</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    price_iter = iter(prices.values())
+                    next(price_iter)  <span class="fragment"># 9.99</span>
+                    </code></pre>
+
+                    <p>An iterator for key/value tuples:</p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    price_iter = iter(prices.items())
+                    next(price_iter)  <span class="fragment"># ("pineapple", 9.99)</span>
+                    </code></pre>
+                </section>
+
+
+                <section class="heading-only">
+                    <h2>For loops</h2>
+                </section>
+
+
+                <section id="for-loop-execution">
+                    <h3>For loop execution</h3>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    for &lt;name&gt; in &lt;expression&gt;:
+                        &lt;suite&gt;
+                    </code></pre>
+
+                    <ol class="smaller">
+                        <li>Python evaluates <code>&lt;expression&gt;</code> to make sure it's iterable.</li>
+                        <li>Python gets an iterator for the iterable.</li>
+                        <li>Python gets the next value from the iterator and assigns to <code>&lt;name&gt;</code>.</li>
+                        <li>Python executes <code>&lt;suite&gt;</code>.</li>
+                        <li>Python repeats until it sees a StopIteration error.</li>
+                    </ol>
+
+                    <pre style="font-size:0.8em;"><code data-trim data-noescape class="python">
+                    iterator = iter(&lt;expression&gt;)
+                    try:
+                        while True:
+                            &lt;name&gt; = next(iterator)
+                            &lt;suite&gt;
+                    except StopIteration:
+                        pass
+                    </code></pre>
+                </section>
+
+
+                <section>
+					<h3>Iterating over iterables</h3>
+
+                    <p>A standard for-in loop on an iterable
+                        will iterate through all the items from start to finish.</p>
+
+					<pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    my_order = ["Yuca Shepherds Pie", "Pão de queijo", "Guaraná"]
+                    for item in my_order:
+                        print(item)
+                    lowered = [item.lower() for item in my_order]
+                    </code></pre>
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    ranked_chocolates = ("Dark", "Milk", "White")
+                    for chocolate in ranked_chocolates:
+                        print(chocolate)
+                    </code></pre>
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    prices = {"pineapple": 9.99, "pen": 2.99, "pineapple-pen": 19.99}
+                    for product in prices:
+                        print(product, " costs ", prices[product])
+                    discounted = { item: prices[item] * 0.75 for item in prices }
+                    </code></pre>
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    best_topping = "pineapple"
+                    for letter in best_topping:
+                        print(letter)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>For loop with iterator</h3>
+
+                    <p>When used in a for loop, Python will call <code>next()</code> on the iterator
+                        in each iteration:</p>
+
+                    <pre style="font-size:1.0em"><code data-trim data-noescape class="python">
+                    nums = range(1, 4)
+                    num_iter = iter(nums)
+                    for num in num_iter:
+                        print(num)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>For loops with used-up iterators</h3>
+                    
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    nums = range(1, 4)
+                    num_iter = iter(nums)
+                    first = next(num_iter)
+
+                    for num in num_iter:
+                        print(num)
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p>Iterators are mutable! Once the iterator moves forward, it won't return the values that came before.</p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    nums = range(1, 4)
+                    sum = 0
+                    num_iter = iter(nums)
+
+                    for num in num_iter:
+                        print(num)
+                    for num in num_iter:
+                        sum += num
+                    </code></pre>
+                    </div>
+                </section>
+    
+
+
+                <section class="heading-only">
+                    <h2>Use cases for iterators</h2>
+                </section>
+
+                <section>
+                    <h3>Reasons for using iterators</h3>
+                    <p>A code that processes an iterator using <code>iter()</code> or <code>next()</code>
+                        <strong>makes few assumptions about the data itself</strong>.</p>
+                    <ul class="smaller">
+                        <li>Changing the data storage from a list to a tuple, map, or dict 
+                            doesn't require rewriting code.
+                        <li>Others are more likely to be able to use your code on their data.
+                    </ul>
+                    <p>An iterator <strong>bundles together a sequence and a position</strong> with the sequence in a single object.</p>
+                    <ul class="smaller">
+                        <li>Passing that object to another function always retains its position.
+                        <li>Ensures that each element of the sequence is only processed once.
+                        <li>Limits the operations that can be performed to only calling <code>next()</code>.
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Blackjack demo</h3>
+
+                    <table>
+                        <tr>
+                            <td>Player</td>
+                            <td>
+                                <img src="images/blackjackcard_spade_7.svg" alt="7 of spades playing card" style="height:200px;" class="fragment" data-fragment-index="1">
+                                <img src="images/blackjackcard_spade_9.svg" alt="9 of spades playing card" style="height:200px;" class="fragment" data-fragment-index="3">
+                                <img src="images/blackjackcard_spade_5.svg" alt="5 of spades playing card" style="height:200px;" class="fragment" data-fragment-index="5">
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Dealer</td>
+                            <td>
+
+                                <img src="images/blackjackcard_spade_J.svg" alt="J of spades playing card" style="height:200px;" class="fragment" data-fragment-index="2">
+                                <img src="images/blackjackcard_back.svg" alt="Back of playing card" style="height:200px;" class="fragment" data-fragment-index="4">
+                                <img src="images/blackjackcard_spade_A.svg" alt="A of spades playing card" style="height:200px;" class="fragment" data-fragment-index="6">
+                                <img src="images/blackjackcard_spade_10.svg" alt="10 of spades playing card" style="height:200px;" class="fragment" data-fragment-index="7">
+
+                            </td>
+                        </tr>
+                    </table>
+                </section>      
+
+                <section class="heading-only">
+                    <h2>Useful built-in functions</h2>
+                </section>
+
+                <section>
+                    <h3>Functions that return iterables</h3>
+
+                    <table style="font-size:0.7em;">
+                        <thead>
+                            <th>Function</th>
+                            <th>Description</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a target="_blank" href="https://docs.python.org/3/library/functions.html#func-list"><code>list(iterable)</code></a></td>
+                                <td style="padding-bottom:24px;">Returns a list containing all items in <code>iterable</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" href="https://docs.python.org/3/library/functions.html#func-tuple"><code>tuple(iterable)</code></a></td>
+                                <td style="padding-bottom:24px;">Returns a tuple containing all items in <code>iterable</code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" href="https://docs.python.org/3/library/functions.html#sorted"><code>sorted(iterable)</code></a></td>
+                                <td style="padding-bottom:24px;">Returns a sorted list containing all items in <code>iterable</code>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </section>
+
+                <section>
+                    <h3>Functions that return iterators</h3>
+
+                    <table style="font-size:0.7em;">
+                        <thead>
+                            <th>Function</th>
+                            <th>Description</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a target="_blank" href="https://docs.python.org/3/library/functions.html#reversed"><code>reversed(sequence)</code></a></td>
+                                <td style="padding-bottom:24px;">Iterate over item in <code>sequence</code> in reverse order
+                                    <br>
+                                    <a style="font-size:0.8em" target="_blank" href="http://pythontutor.com/visualize.html#code=chocolate_bars%20%3D%20%28%2290%25%22,%20%2270%25%22,%20%2255%25%22%29%0A%0Aworst_first%20%3D%20reversed%28chocolate_bars%29%0A%0Afor%20chocolate%20in%20worst_first%3A%0A%20%20%20%20print%28chocolate%29&cumulative=true&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false">(See example in PythonTutor)</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" href="https://docs.python.org/3/library/functions.html#zip"><code>zip(*iterables)</code></a></td>
+                                <td style="padding-bottom:24px;">Iterate over co-indexed tuples with elements from each of the <code>iterables</code>
+                                    <br>
+                                    <a style="font-size:0.8em" target="_blank" href="http://pythontutor.com/composingprograms.html#code=eng_nums%20%3D%20%5B%22one%22,%20%22two%22,%20%22three%22%5D%0Aesp_nums%20%3D%20%5B%22uno%22,%20%22dos%22,%20%22tres%22%5D%0A%0Azip_iter%20%3D%20zip%28eng_nums,%20esp_nums%29%0Aeng,%20esp%20%3D%20next%28zip_iter%29%0Aprint%28eng,%20esp%29%0A%0Afor%20eng,%20esp%20in%20zip%28eng_nums,%20esp_nums%29%3A%0A%20%20%20%20print%28eng,%20esp%29&cumulative=true&curInstr=0&mode=display&origin=composingprograms.js&py=3&rawInputLstJSON=%5B%5D">(See example in PythonTutor)</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" href="https://docs.python.org/3/library/functions.html#map"><code>map(func, iterable, ...)</code></a></td>
+                                <td style="padding-bottom:24px;">
+                                    Iterate over <code>func(x)</code> for <code>x</code> in <code>iterable</code>
+                                    <br>
+                                    Same as <code>[func(x) for x in iterable]</code>
+                                    <br>
+                                    <a style="font-size:0.8em" target="_blank" href="http://pythontutor.com/visualize.html#code=nums%20%3D%20%5B1,%202,%203,%204,%205%5D%0A%0A%23%20Map%20returns%20an%20iterator%0Asquares1%20%3D%20map%28lambda%20num%3A%20num%20**%202,%20nums%29%0A%0A%23%20Create%20a%20list%20of%20all%20the%20elements%20from%20the%20iterator%0Asquares1%20%3D%20list%28squares1%29%0A%0A%23%20Compare%20to...%0Asquares2%20%3D%20%5Bnum**2%20for%20num%20in%20nums%5D&cumulative=true&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false">(See example in PythonTutor)</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><a target="_blank" href="https://docs.python.org/3/library/functions.html#filter"><code>filter(func, iterable)</code></a></td>
+                                <td style="padding-bottom:24px;">Iterate over <code>x</code> in <code>iterable</code> if <code>func(x)</code>
+                                    <br>
+                                    Same as <code>[x for x in iterable if func(x)]</code>
+                                    <br>
+                                    <a style="font-size:0.8em;" target="_blank" href="http://pythontutor.com/visualize.html#code=nums%20%3D%20%5B1,%202,%203,%204,%205%5D%0A%0A%23%20Filter%20returns%20an%20iterator%0Aeven1%20%3D%20filter%28lambda%20num%3A%20num%20%25%202%20%3D%3D%200,%20nums%29%0A%0A%23%20Create%20a%20list%20of%20all%20the%20elements%20from%20the%20iterator%0Aeven1%20%3D%20list%28even1%29%0A%0A%23%20Compare%20to...%0Aeven2%20%3D%20%5Bnum%20for%20num%20in%20nums%20if%20num%20%25%202%20%3D%3D%200%5D&cumulative=true&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false">(See example in PythonTutor)</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                </section>
+
+
+                <section>
+                    <h3>Built-in map function</h3>
+
+                    <p>
+                    <a target="_blank" href="https://docs.python.org/3/library/functions.html#map"><code>map(func, iterable)</code></a>:
+                    Applies <code>func(x)</code> for <code>x</code> in <code>iterable</code>
+                    and returns an <code>iterator</code>
+                    </p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    def double(num):
+                        return num * 2
+
+                    for num in map(double, [1, 2, 3]):
+                        print(num)
+                    </code></pre>
+
+                    <pre style="font-size:0.7em; margin-bottom:40px;"><code data-trim data-noescape class="python">
+                    for word in map(lambda text: text.lower(), ["SuP", "HELLO", "Hi"]):
+                        print(word)
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p>Turn the iterator into a list using <code>list()</code></p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    doubled = list(map(double, [1, 2, 3]))
+
+                    lowered = list(map(lambda text: text.lower(), ["SuP", "HELLO", "Hi"]))
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Exercise: Termified</h3>
+
+                    <p>Let's implement this <em>without</em> using a list comprehension.</p>
+
+                    <pre style="font-size:0.8em; margin-bottom:48px;"><code data-trim data-noescape class="python">
+                    def termified(n, term):
+                        """Returns every the result of calling TERM
+                        on each element in the range from 0 to N (inclusive).
+
+                        >>> termified(5, lambda x: 2 ** x)
+                        [1, 2, 4, 8, 16, 32]
+                        """
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise: Termified (solution)</h3>
+
+                    <p>Using map:</p>
+
+                    <pre style="font-size:0.8em; margin-bottom:48px;"><code data-trim data-noescape class="python">
+                    def termified(n, term):
+                        """Returns every the result of calling TERM
+                        on each element in the range from 0 to N (inclusive).
+
+                        >>> termified(5, lambda x: 2 ** x)
+                        [1, 2, 4, 8, 16, 32]
+                        """
+                        return list(map(term, range(n + 1)))
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p class="padded">Compare to list comprehension version:</p>
+
+                    <pre style="font-size:0.8em; margin-bottom:48px;"><code data-trim data-noescape class="python">
+                    def termified(n, term):
+                        return [term(x) for x in range(n + 1)]
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Built-in filter function</h3>
+
+                    <p>
+                    <a target="_blank" href="https://docs.python.org/3/library/functions.html#filter"><code>filter(func, iterable)</code></a>:
+                    Returns an iterator from the items of <code>iterable</code> where <code>func(item)</code> is true.
+                    </p>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    def is_fourletterword(text):
+                        return len(text) == 4
+
+                    for word in filter(is_fourletterword, ["braid", "bode", "brand", "band"]):
+                        print(word)
+                    </code></pre>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    for num in filter(lambda x: x % 2 == 0, [1, 2, 3, 4]):
+                        print(num)
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p>Turn the iterator into a list using <code>list()</code></p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    filtered = list(is_fourletterword, ["braid", "bode", "brand", "band"]))
+
+                    evens = list(filter(lambda x: x % 2 == 0, [1, 2, 3, 4]))
+                    </code></pre>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h3>Exercise: Divisors</h3>
+
+                    <p>Let's implement this <em>without</em> using a list comprehension.</p>
+
+                    <pre style="font-size:1.0em; margin-bottom:48px;"><code data-trim data-noescape class="python">
+                    def divisors(n):
+                        """Returns all the divisors of N.
+
+                        >>> divisors(12)
+                        [1, 2, 3, 4, 6]
+                        """
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise: Divisors (solution)</h3>
+
+                    <p>Using filter:</p>
+
+                    <pre style="font-size:0.9em; margin-bottom:48px;"><code data-trim data-noescape class="python">
+                    def divisors(n):
+                        """Returns all the divisors of N.
+
+                        >>> divisors(12)
+                        [1, 2, 3, 4, 6]
+                        """
+                        return list(filter(lambda x: n % x == 0, range(1, n)))
+                    </code></pre>
+
+                    <div class="fragment">
+                        <p class="padded">Compare to list comprehension version:</p>
+                        <pre style="font-size:0.9em; margin-bottom:48px;"><code data-trim data-noescape class="python">
+                        def divisors(n):
+                            return [x for x in range(1, n) if n % x == 0]
+                        </code></pre>
+                    </div>
+                </section>
+                
+                <section>
+                    <h3>Built-in zip function</h3>
+
+                    <p class="smaller">
+                    <a target="_blank" href="https://docs.python.org/3/library/functions.html#zip"><code>zip(*iterables)</code></a>:
+                    Returns an <code>iterator</code> that aggregates elements from each of the <code>iterables</code> into co-indexed pairs
+                    </p>
+
+                    <pre style="font-size:0.65em"><code data-trim data-noescape class="python">
+                    # From:                   <span class="fragment" data-fragment-index="1"># To:</span>
+                    ["one", "two", "three"]   <span class="fragment" data-fragment-index="1">--> ("one", "uno")  ("two", "dos")  ("three", "tres")</span>
+                    ["uno", "dos", "tres"]
+                    </code></pre>
+    
+                    <div class="fragment" data-fragment-index="2">
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    english_nums = ["one", "two", "three"]
+                    spanish_nums = ["uno", "dos", "tres"]
+                    
+                    zip_iter = zip(english_nums, spanish_nums)
+                    english, spanish = next(zip_iter)
+                    print(english, spanish)
+                    
+                    for english, spanish in zip(english_nums, spanish_nums):
+                        print(english, spanish)
+                    </code></pre>
+
+                    <p class="smaller padded">Turn the iterator into a list using <code>list()</code></p>
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    zipped = list(zip(english_nums, spanish_nums))
+                    </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Exercise: matches</h3>
+
+                    <p>List comprehensions are allowed for this one...</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def matches(a, b):
+                        """Return the number of values k such that A[k] == B[k].
+                        >>> matches([1, 2, 3, 4, 5], [3, 2, 3, 0, 5])
+                        3
+                        >>> matches("abdomens", "indolence")
+                        4
+                        >>> matches("abcd", "dcba")
+                        0
+                        >>> matches("abcde", "edcba")
+                        1
+                        >>> matches("abcdefg", "edcba")
+                        1
+                        """
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise: matches (solution)</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def matches(a, b):
+                        """Return the number of values k such that A[k] == B[k].
+                        >>> matches([1, 2, 3, 4, 5], [3, 2, 3, 0, 5])
+                        3
+                        >>> matches("abdomens", "indolence")
+                        4
+                        >>> matches("abcd", "dcba")
+                        0
+                        >>> matches("abcde", "edcba")
+                        1
+                        >>> matches("abcdefg", "edcba")
+                        1
+                        """
+                        return sum([1 for a, b in zip(a, b) if a == b])
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise: List of lists</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def list_o_lists(n):
+                        """Assuming N >= 0, return the list consisting of N lists:
+                        [1], [1, 2], [1, 2, 3], ... [1, 2, ... N].
+                        >>> list_o_lists(0)
+                        []
+                        >>> list_o_lists(1)
+                        [[1]]
+                        >>> list_o_lists(5)
+                        [[1], [1, 2], [1, 2, 3], [1, 2, 3, 4], [1, 2, 3, 4, 5]]
+                        """
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise: List of lists (solution)</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def list_o_lists(n):
+                        """Assuming N >= 0, return the list consisting of N lists:
+                        [1], [1, 2], [1, 2, 3], ... [1, 2, ... N].
+                        >>> list_o_lists(0)
+                        []
+                        >>> list_o_lists(1)
+                        [[1]]
+                        >>> list_o_lists(5)
+                        [[1], [1, 2], [1, 2, 3], [1, 2, 3, 4], [1, 2, 3, 4, 5]]
+                        """
+                        return [list(range(1, i + 1)) for i in range(1, n+1)]
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise: Palindrome</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    def palindrome(s):
+                        """Return whether s is the same sequence backward and forward.
+
+                        >>> palindrome([3, 1, 4, 1, 5])
+                        False
+                        >>> palindrome([3, 1, 4, 1, 3])
+                        True
+                        >>> palindrome('seveneves')
+                        True
+                        >>> palindrome('seven eves')
+                        False
+                        """
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Exercise: Palindrome (solution)</h3>
+
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    def palindrome(s):
+                        """Return whether s is the same sequence backward and forward.
+                        ​
+                        >>> palindrome([3, 1, 4, 1, 5])
+                        False
+                        >>> palindrome([3, 1, 4, 1, 3])
+                        True
+                        >>> palindrome('seveneves')
+                        True
+                        >>> palindrome('seven eves')
+                        False
+                        """
+                        return all([a == b for a, b in zip(s, reversed(s))])
+                        # OR
+                        return list(s) == list(reversed(s))
+                    </code></pre>
+                </section>
+
+
+                
+                <section class="heading-only">
+                    <h2>Icon project</h2>
+                    <img src="images/screenshot_icondisplay.png" alt="Screenshot of icon displaying project" height="250"/>
+                </section>
+
+                <section>
+                    <h3>Icon design</h3>
+
+                    <img src="images/icon_design.svg"/>
+                </section>
+
+                <section>
+                    <h3>An OOP Icon</h3>
+
+                    <p>Goal: Use OOP to represent an Icon with pixels at a particular
+                        location with a particular color.
+                    </p>
+
+                    <img src="https://ka-perseus-images.s3.amazonaws.com/774cbb61de674df2c41e64ed127d24b2c3d56622.png" alt="Diagram of icon with pixels">
+                </section>
+
+
+                <section>
+                    <h3>The Color class</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    class Color:
+
+                        def __init__(self, r, g, b):
+                            self.r = r
+                            self.g = g
+                            self.b = b
+
+                        def __repr__(self):
+                            return f"Color({self.r},{self.g},{self.b})"
+
+                        def to_hex(self):
+                            return f"#{self.r:02x}{self.g:02x}{self.b:02x}"
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    red = Color(255, 0, 0)
+                    print(red.to_hex())
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>The Pixel class</h3>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    class Pixel:
+                        def __init__(self, x, y, r, g, b):
+                            self.x = x
+                            self.y = y
+                            self.color = Color(r, g, b)
+
+                        def __repr__(self):
+                            return f"Pixel({self.x},{self.y},{self.color})"
+                    </code></pre>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    pixel = Pixel(0, 7, 255, 0, 0)
+                    print(pixel.color.to_hex())
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>The Icon class</h3>
+
+                    <pre style="font-size:0.55em"><code data-trim data-noescape class="python">
+                    class Icon:
+
+                        def __init__(self, width, height, pixels=None):
+                            self.width = width
+                            self.height = height
+                            self.pixels = pixels
+                            if not self.pixels:
+                                self.pixels = [ Pixel(x, y, 0, 0, 0)
+                                    for x in range(width) for y in range(height)]
+
+                        def __repr__(self):
+                            pixels = ",".join([repr(pixel) for pixel in self.pixels])
+                            return f"Icon({self.width}, {self.height}, {self.pixels})"
+                    </code></pre>
+
+                    <pre style="font-size:0.6em"><code data-trim data-noescape class="python">
+                    icon = Icon(2, 2, [Pixel(0, 0, 255, 0, 0),
+                        Pixel(0, 1, 255, 50, 0),
+                        Pixel(1, 0, 255, 100, 0),
+                        Pixel(1, 1, 255, 150, 0)])
+
+                    for pixel in icon.pixels:
+                        pixel.color.g += 50
+                    </code></pre>
+
+                </section>
+
+                <section>
+                    <h3>The DisplayFrame class</h3>
+
+                    <pre style="font-size:0.5em; height:530px;"><code data-trim data-noescape class="python">
+                    from tkinter import Canvas, Frame, BOTH, font
+
+                    class DisplayFrame(Frame):
+
+                        def __init__(self):
+                            super().__init__()
+                            self.pack(fill=BOTH, expand=1)
+                            self.canvas = Canvas(self)
+                            self.canvas.pack(fill=BOTH, expand=1)
+
+                        def draw_icon(self, icon):
+                            x_offset = 50
+                            y_offset = 50
+                            pixel_size = 20
+
+                            for pixel in icon.pixels:
+                                top_left_x = x_offset + pixel.x * pixel_size
+                                top_left_y = y_offset + pixel.y * pixel_size
+                                self.canvas.create_rectangle(
+                                    top_left_x,
+                                    top_left_y,
+                                    top_left_x + pixel_size,
+                                    top_left_y + pixel_size,
+                                    outline="",
+                                    fill=pixel.color.to_hex())
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>All together</h3>
+
+                    <pre style="font-size:0.7em"><code data-trim data-noescape class="python">
+                    from tkinter import Tk
+
+                    from icon import Icon, Pixel, Color
+                    from display_frame import DisplayFrame
+
+                    # Initialize the Tkinter frame and canvas
+                    root = Tk()
+
+                    display = DisplayFrame()
+                    display.draw_icon(icon)
+
+                    # Run Tkinter loop
+                    root.mainloop()
+                    </code></pre>
+
+                    <p>Visit the <a  target="_blank" href="https://replit.com/@PamelaFox2/IconModule">Repl.it demo</a>
+                        to see all the classes used with the <a target="_blank" href="https://docs.python.org/3/library/tkinter.html">Python tkinter package</a>
+                         for graphics rendering.</p>
+                </section>
+
+                <section>
+                    <h3>Iterator-producing functions</h3>
+
+                    <p>What happens if we...</p>
+
+                    <p>map the pixels?</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    changer = lambda p: Pixel(p.x, p.y,
+                        p.x * 30,
+                        p.color.g + 30,
+                        p.y * 30)
+                    icon.pixels = list(map(changer, icon.pixels))
+                    </code></pre>
+                    <br>
+                    <p>filter the pixels?</p>
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    is_odd = lambda p: p.x % 2 == 0
+                    icon.pixels = list(filter(is_odd, icon.pixels))
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Iterable-processing functions</h3>
+
+                    <p>What happens if we ask for the min and max of the pixels?</p>
+
+                    <pre style="font-size:0.9em"><code data-trim data-noescape class="python">
+                    max_pix = max(icon.pixels)
+                    min_pix = min(icon.pixels)
+                    </code></pre>
+
+                    <div class="fragment">
+                    <p>Python doesn't know how to compare <code>Pixel</code> instances! Two options:
+                    <ul>
+                        <li>Implement dunder methods (<code>__eq__</code>, <code>__lt__</code>, etc)
+                        <li>Pass in a key function that returns a numerical value:
+                    </ul>
+
+                    <pre style="font-size:0.8em"><code data-trim data-noescape class="python">
+                    rgb_adder = lambda p: p.color.r + p.color.g + p.color.b
+                    max_pix = max(icon.pixels, key=rgb_adder)
+                    min_pix = min(icon.pixels, key=rgb_adder)
+                    </code></pre>
+                    </div>
+                </section>
+
+			</div>
+		</div>
+
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/highlight/highlight.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/highlightjs-badge@0.1.9/highlightjs-badge.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/reveal.js-menu@2.1.0/menu.js"></script>
+        <script>
+            const srcUrlPrefix = "https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/";
+            Reveal.initialize({
+                hash: true,
+                center: false,
+                slideNumber: true,
+                showNotes: false,
+                margin: 0.1,
+                preloadIframes: true,
+                plugins: [ RevealHighlight, RevealMenu ],
+                pdfSeparateFragments: true
+            });
+
+            // add HighlightJS-badge (options are optional)
+            var options = {
+                copyIconContent: "📄",
+                checkIconContent: "✅"
+            };
+            window.highlightJsBadge();
+
+            if (window.location.search == "?print-pdf") {
+                var uncounted = document.querySelectorAll("[data-visibility='uncounted']");
+                uncounted.forEach(node => {
+                    node.parentNode.classList.add("no-print")
+                })
+            }
+        </script>
+    </body>
+</html>
