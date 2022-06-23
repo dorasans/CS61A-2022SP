@@ -1,0 +1,6 @@
+'hop-correct', (0, 70)
+'digit_index_factory-correct', (512, 70)
+'lambda_curry2-correct', (1024, 70)
+'count_cond-correct', (1536, 70)
+'composite_identity-correct', (2048, 70)
+'cycle-correct', (2560, 70)
