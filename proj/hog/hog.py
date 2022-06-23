@@ -1,5 +1,8 @@
 """CS 61A Presents The Game of Hog."""
 
+from pickle import NONE
+
+from pyrsistent import s
 from dice import six_sided, four_sided, make_test_dice
 from ucb import main, trace, interact
 
@@ -195,7 +198,10 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     # END PROBLEM 5
     # (note that the indentation for the problem 7 prompt (***YOUR CODE HERE***) might be misleading)
     # BEGIN PROBLEM 7
-    "*** YOUR CODE HERE ***"
+    # "*** YOUR CODE HERE ***"
+        leader,message = say(score0,score1,leader)
+        if message: print(message)
+
     # END PROBLEM 7
     return score0, score1
 
@@ -230,6 +236,21 @@ def announce_lead_changes(score0, score1, last_leader=None):
     """
     # BEGIN PROBLEM 6
     "*** YOUR CODE HERE ***"
+    leader = None
+    message = None
+    if score0==score1:
+        return None,None
+    elif score0>score1:
+        leader = 0
+        if leader!=last_leader:
+           message = "Player 0 takes the lead by "+str(score0-score1)
+    elif score1>score0:
+        leader = 1
+        if leader!=last_leader:
+            message = "Player 1 takes the lead by "+str(score1-score0)
+    return leader,message
+
+
     # END PROBLEM 6
 
 
@@ -239,7 +260,7 @@ def both(f, g):
     >>> say_both = both(say_scores, announce_lead_changes)
     >>> player, message = say_both(10, 0)
     >>> print(message)
-    Player 0 now has 10 and now Player 1 has 0
+    Player 0 now has 10 and now Player 1 has 0*
     Player 0 takes the lead by 10
     >>> player, message = say_both(10, 8, player)
     >>> print(message)
@@ -296,6 +317,15 @@ def make_averaged(original_function, total_samples=1000):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    def inside(*args):
+        sum = 0
+        i=0
+        while i<total_samples:
+             result = original_function(*args)
+             sum+=result
+             i+=1
+        return sum/total_samples
+    return inside
     # END PROBLEM 8
 
 
@@ -309,7 +339,18 @@ def max_scoring_num_rolls(dice=six_sided, total_samples=1000):
     1
     """
     # BEGIN PROBLEM 9
-    "*** YOUR CODE HERE ***"
+    # "*** YOUR CODE HERE ***"
+    i = 1
+    max = 0
+    s = 0
+    averaged_dice = make_averaged(roll_dice,total_samples)
+    while i <=10:
+        max_average = averaged_dice(i,dice)
+        if max_average>max:
+            max = max_average
+            s = i
+        i+=1
+    return s
     # END PROBLEM 9
 
 
@@ -350,7 +391,12 @@ def hefty_hogs_strategy(score, opponent_score, threshold=8, num_rolls=6):
     returns NUM_ROLLS otherwise.
     """
     # BEGIN PROBLEM 10
-    return 6  # Remove this line once implemented.
+    s = hefty_hogs(score,opponent_score)
+    if s>=threshold:
+        return 0
+    else:
+        return num_rolls
+    # return 6  # Remove this line once implemented.
     # END PROBLEM 10
 
 
@@ -360,7 +406,10 @@ def hog_pile_strategy(score, opponent_score, threshold=8, num_rolls=6):
     Otherwise, it returns NUM_ROLLS.
     """
     # BEGIN PROBLEM 11
-    return 6  # Remove this line once implemented.
+    if hog_pile(score+take_turn(0,score,opponent_score),opponent_score)!=0:
+        return 0
+    else: return hefty_hogs_strategy(score,opponent_score,threshold,num_rolls)
+    # return 6  # Remove this line once implemented.
     # END PROBLEM 11
 
 
@@ -370,6 +419,7 @@ def final_strategy(score, opponent_score):
     *** YOUR DESCRIPTION HERE ***
     """
     # BEGIN PROBLEM 12
+
     return 6  # Remove this line once implemented.
     # END PROBLEM 12
 
