@@ -1,3 +1,4 @@
 'neighbor_digits-correct', (0, 70)
 'has_subseq-correct', (512, 70)
 'num_eights-correct', (1024, 70)
+'pingpong-correct', (1536, 70)

@@ -65,19 +65,28 @@ def pingpong(n):
     True
     """
     "*** YOUR CODE HERE ***"
-    if n==0:
-        return 0
-    elif n==1:
-        return 1
-    elif num_eights(n-1) or (n-1)%8==0:
-        if pingpong(n-1)>pingpong(n-2):
-            return pingpong(n-1)-1
+    """
+    wrong solution
+    """
+    # if n==0: 
+    #     return 0
+    # elif n==1:
+    #     return 1
+    # elif num_eights(n-1) or (n-1)%8==0:
+    #     return pingpong(n-2)
+    # else:
+    #     return pingpong(n-1)*2-pingpong(n-2)
+    """
+    right solution
+    """
+    def helper(n,i,curr,direction):
+        if i==n:
+            return curr
+        elif i%8==0 or num_eights(i):
+            return helper(n,i+1,curr-direction,-direction)
         else:
-            return pingpong(n-1)+1
-    elif pingpong(n-1)>pingpong(n-2):
-        return pingpong(n-1)+1
-    else:
-        return pingpong(n-1)-1
+            return helper(n,i+1,curr+direction,direction)
+    return helper(n,1,1,1)
 
 
 def get_larger_coin(coin):
