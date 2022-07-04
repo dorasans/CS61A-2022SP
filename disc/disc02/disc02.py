@@ -68,11 +68,24 @@ def match_k(k):
     >>> match_k(2)(123123)
     False
     """
-    def check(n):
-        i=0
-        while 10**(i+k)<n:
-            if (n//(10**i))%10!=(n//(10**(i+k))%10):
+    """
+    方法一
+    """
+    # def check(n):
+    #     i=0
+    #     while 10**(i+k)<n:
+    #         if (n//(10**i))%10!=(n//(10**(i+k))%10):
+    #             return False
+    #         i+=1
+    #     return True
+    # return check
+    """
+    方法二
+    """
+    def check(x):
+        while x//(10**k):
+            if x%10!=x//(10**k)%10:
                 return False
-            i+=1
+            x//=10
         return True
     return check
