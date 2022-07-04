@@ -143,3 +143,17 @@ def count_coins(change):
     True
     """
     "*** YOUR CODE HERE ***"
+    def helper(c,coin):
+        if c==0:
+            return 1
+        elif c<0:
+            return 0
+        elif coin==None:
+            return 0
+        elif c<coin:
+            return 0
+        else:
+            return helper(c-coin,coin)+helper(c,get_larger_coin(coin))
+    return helper(change,1)
+count_coins(200)
+
