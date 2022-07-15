@@ -199,19 +199,38 @@ def sphinx_swaps(start, goal, limit):
     """
     # BEGIN PROBLEM 6
     # assert False, 'Remove this line'
-    k = min(len(start),len(goal))-1
-    m = abs(len(start)-len(goal))
-    if k<0:
-        return 0
-    elif start[k]==goal[k]:
-        if sphinx_swaps(start[0:k],goal[0:k],limit)+m>limit:
-            return
-        return sphinx_swaps(start[0:k],goal[0:k],limit)+m
-    elif start[k]!=goal[k]:
-        if sphinx_swaps(start[0:k],goal[0:k],limit)+1+m>limit:
-            return
-        return sphinx_swaps(start[0:k],goal[0:k],limit)+1+m
+    """我的做法有一点小问题"""
+    # k = min(len(start),len(goal))-1
+    # m = abs(len(goal)-len(start))
+    # if k<0:
+    #     return 0
+    # elif start[k]==goal[k]:
+    #     if sphinx_swaps(start[0:k],goal[0:k],limit)+m>limit:
+    #         return limit+1
+    #     return sphinx_swaps(start[0:k],goal[0:k],limit)+m
+    # elif start[k]!=goal[k]:
+    #     if sphinx_swaps(start[0:k],goal[0:k],limit)+1+m>limit:
+    #         return limit+1
+    #     return sphinx_swaps(start[0:k],goal[0:k],limit)+1+m
+    """正确答案的做法"""
+    len_diff = abs(len(start) - len(goal))
+    min_len = min(len(start), len(goal))
 
+    count = 0
+    def helper(cur_index):
+        nonlocal count #非常重要 这里声明了此处的count是全局的count
+        if cur_index == -1:
+            return
+        
+        if start[cur_index] != goal[cur_index]:
+            count = count + 1
+            # if the number of changes is greater than limit, stop recursion
+            if count + len_diff > limit:
+                return
+        helper(cur_index - 1)
+
+    helper(min_len - 1)
+    return count + len_diff   
     # END PROBLEM 6
 
 
