@@ -251,24 +251,28 @@ def minimum_mewtations(start, goal, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    assert False, 'Remove this line'
-
-    if ______________:  # Fill in the condition
+    # assert False, 'Remove this line'
+    ##不会
+    if limit<0:  # Fill in the condition
         # BEGIN
         "*** YOUR CODE HERE ***"
+        return 0
         # END
 
-    elif ___________:  # Feel free to remove or add additional cases
+    elif len(start)==0 or len(goal)==0:  # Feel free to remove or add additional cases
         # BEGIN
         "*** YOUR CODE HERE ***"
+        return len(start) + len(goal)
         # END
-
+    elif start[0] == goal[0]:
+        return minimum_mewtations(start[1:],goal[1:],limit)
     else:
-        add = ...  # Fill in these lines
-        remove = ...
-        substitute = ...
+        add = minimum_mewtations(start,goal[1:],limit-1)  # Fill in these lines
+        remove = minimum_mewtations(start[1:],goal,limit-1)
+        substitute = minimum_mewtations(start[1:],goal[1:],limit-1)
         # BEGIN
         "*** YOUR CODE HERE ***"
+        return 1+min(add,remove,substitute)
         # END
 
 
