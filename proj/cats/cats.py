@@ -1,5 +1,6 @@
 """Typing test implementation"""
 
+from os import times
 from tabnanny import check
 from utils import lower, split, remove_punctuation, lines_from_file
 from ucb import main, interact, trace
@@ -315,6 +316,23 @@ def report_progress(sofar, prompt, user_id, upload):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    count = 0
+    i = 0
+    if len(sofar)==0:
+        upload({'id': user_id,'progress': 0.0})
+        return 0.0
+    else:
+        while i<min(len(sofar),len(prompt)):
+            if sofar[i]==prompt[i]:
+                count+=1
+            else:
+                rate = count/len(prompt)
+                upload({'id': user_id,'progress': rate})
+                return rate
+            i+=1
+        rate = count/len(prompt)
+        upload({'id': user_id,'progress': rate})
+        return rate
     # END PROBLEM 8
 
 
@@ -337,6 +355,15 @@ def time_per_word(words, times_per_player):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    match = {}
+    d= [[0 for i in range(len(times_per_player[0])-1)] for j in range(len(times_per_player))]
+    for i in range(len(times_per_player)):
+        j = 0
+        for j in range(len(times_per_player[0])-1):
+            d[i][j]=times_per_player[i][j+1]-times_per_player[i][j]
+    match['words']=words
+    match['times']=d     
+    return match
     # END PROBLEM 9
 
 
@@ -359,6 +386,19 @@ def fastest_words(match):
     word_indices = range(len(match["words"]))    # contains an *index* for each word
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
+    result = [[] for j in player_indices]
+    times = match['times']
+    words = match['words']
+    for i in word_indices:
+        min = times[0][i]
+        flag = 0
+        for j in player_indices:
+            if times[j][i]<min:
+                min=times[j][i]
+                flag = j
+        result[flag].append(words[i])
+    return result
+
     # END PROBLEM 10
 
 
